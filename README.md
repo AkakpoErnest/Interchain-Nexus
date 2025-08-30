@@ -14,6 +14,7 @@ Interchain Nexus is an epic blockchain quest where players can mint unique Pione
 - **IPFS Metadata**: Decentralized storage for NFT metadata and artwork
 - **Responsive UI**: Modern, dark-themed interface with smooth animations
 - **Smart Contract Integration**: Full ERC721 implementation with custom functionality
+- **Simplified Interface**: Streamlined pioneer selection and minting without status checking
 
 ## 🏗️ Architecture
 
@@ -249,6 +250,7 @@ The app automatically detects supported networks. To manually add networks to Me
 - Browse the four Pioneer cards
 - Click on a Pioneer to view details
 - Read the Pioneer's story and characteristics
+- No status checking - direct selection and minting
 
 ### 3. Mint NFT
 - Click "Mint Pioneer NFT" button
@@ -389,6 +391,9 @@ const getChainName = (chainId: number | undefined) => {
 3. **Deployed to Flare Testnet** - Contract live at `0x6858dF5365ffCbe31b5FE68D9E6ebB81321F7F86`
 4. **Updated Contract Configuration** - Added deployed contract addresses
 5. **Fixed Hardhat Compatibility** - Downgraded to v2.26.3 for Node.js compatibility
+6. **Removed Pioneer Status Checking** - Eliminated pioneer status verification from choose page
+7. **Removed Journey Interface** - Deleted Identity Guardian's Journey component
+8. **Removed Supply Tracker** - Eliminated supply tracking component that was showing errors
 
 ### Issues Resolved
 - ✅ "Cannot read properties of undefined (reading 'id')" error
@@ -396,6 +401,9 @@ const getChainName = (chainId: number | undefined) => {
 - ✅ Hardhat ESM/CJS compatibility
 - ✅ Contract compilation and deployment
 - ✅ BigInt JSON serialization
+- ✅ Pioneer status checking errors
+- ✅ Supply tracker "Unable to load supply data" error
+- ✅ Journey interface complexity
 
 ## 🤝 Contributing
 
