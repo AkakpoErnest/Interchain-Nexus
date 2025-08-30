@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: "Interchain Nexus: A Digital Odyssey",
   description: "Embark on an epic blockchain quest across multiple chains",
   generator: "v0.app",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
 }
 
 export default function RootLayout({
