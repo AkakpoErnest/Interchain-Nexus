@@ -358,3 +358,4 @@ export function useTransactionStatus(hash: Hash | undefined, chainId: number) {
     isConfirming: state === 'confirming',
   }
 }
+

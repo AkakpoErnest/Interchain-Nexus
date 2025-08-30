@@ -76,10 +76,10 @@ module.exports = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 1135,
     },
-    liskTestnet: {
-      url: process.env.LISK_TESTNET_RPC_URL || "https://rpc.api.testnet.lisk.com",
+    liskSepolia: {
+      url: process.env.LISK_TESTNET_RPC_URL || "https://rpc.sepolia-api.lisk.com",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 1135, // Lisk testnet uses same chain ID as mainnet
+      chainId: 4202, // Lisk Sepolia testnet chain ID
     },
   },
   

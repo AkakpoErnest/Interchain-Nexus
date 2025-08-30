@@ -21,9 +21,16 @@ async function main() {
   const network = await ethers.provider.getNetwork();
   console.log("🌐 Network:", network.name, "(Chain ID:", network.chainId.toString() + ")");
   
-  // Get initial total supply
+  // Get initial total supply and max supply
   const totalSupply = await flareOracleSeer.totalSupply();
+  const maxSupply = await flareOracleSeer.MAX_SUPPLY();
+  const remainingSupply = await flareOracleSeer.remainingSupply();
+  const isMintingAvailable = await flareOracleSeer.isMintingAvailable();
+  
   console.log("📊 Initial total supply:", totalSupply.toString());
+  console.log("📊 Maximum supply:", maxSupply.toString());
+  console.log("📊 Remaining supply:", remainingSupply.toString());
+  console.log("📊 Minting available:", isMintingAvailable);
   
   // Prepare deployment info
   const deploymentInfo = {
@@ -35,6 +42,9 @@ async function main() {
     deploymentTime: new Date().toISOString(),
     baseURI: "Not set",
     totalSupply: totalSupply.toString(),
+    maxSupply: maxSupply.toString(),
+    remainingSupply: remainingSupply.toString(),
+    isMintingAvailable: isMintingAvailable,
     features: [
       "Oracle prediction accuracy tracking",
       "Data verification system",

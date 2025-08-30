@@ -193,47 +193,47 @@ export function GameJourney({ pioneerType, isActive }: GameJourneyProps) {
         return {
           title: "Identity Guardian's Journey",
           subtitle: "Keeper of Names",
-          description: "Protect and manage digital identities in the decentralized world.",
+          description: "Protect and manage digital identities in the decentralized world. Master ENS domains, verify identities, and build trust networks.",
           color: "from-purple-500 to-pink-600",
           icon: <Shield className="h-8 w-8" />,
           steps: [
             {
               id: 1,
-              title: "Identity Basics",
-              description: "Learn about decentralized identity and naming systems",
-              reward: "Identity Badge + 100 XP",
+              title: "Name Realm Awakening",
+              description: "Awaken in the ethereal realm of ENS and embrace your Guardian powers",
+              reward: "Guardian Badge + 100 XP",
               completed: true,
               icon: <Shield className="h-5 w-5" />
             },
             {
               id: 2,
-              title: "ENS Mastery",
-              description: "Master Ethereum Name Service and domain management",
-              reward: "ENS Badge + 250 XP",
+              title: "Domain Forest Navigation",
+              description: "Navigate through the mystical domain forest and discover prime domains",
+              reward: "Domain Badge + 250 XP",
               completed: true,
               icon: <Globe className="h-5 w-5" />
             },
             {
               id: 3,
-              title: "Identity Verification",
-              description: "Learn about identity verification and attestation",
-              reward: "Verification Badge + 500 XP",
+              title: "Domain Guardian Battle",
+              description: "Face the Domain Guardian and claim the Prime Domain",
+              reward: "Battle Badge + 500 XP",
               completed: false,
               icon: <Eye className="h-5 w-5" />
             },
             {
               id: 4,
-              title: "Identity Protocol Builder",
-              description: "Build identity protocols and verification systems",
-              reward: "Builder Badge + 1000 XP",
+              title: "Identity Citadel Infiltration",
+              description: "Infiltrate the Identity Citadel and reach the inner sanctum",
+              reward: "Stealth Badge + 1000 XP",
               completed: false,
               icon: <Zap className="h-5 w-5" />
             },
             {
               id: 5,
-              title: "Identity Guardian Master",
-              description: "Become a recognized identity guardian in the ecosystem",
-              reward: "Guardian Badge + 2000 XP + Special NFT",
+              title: "Name Realm Restoration",
+              description: "Restore the Name Realm and become the ultimate Identity Guardian",
+              reward: "Master Badge + 2000 XP + Special NFT",
               completed: false,
               icon: <Trophy className="h-5 w-5" />
             }
@@ -331,3 +331,4 @@ export function GameJourney({ pioneerType, isActive }: GameJourneyProps) {
     </Card>
   )
 }
+

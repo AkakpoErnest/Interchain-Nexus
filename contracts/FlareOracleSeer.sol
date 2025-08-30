@@ -16,6 +16,8 @@ contract FlareOracleSeer is ERC721, Ownable, ReentrancyGuard {
     
     Counters.Counter private _tokenIds;
     
+    // No maximum supply limit - infinite minting allowed
+    
     // Oracle Seer specific data
     struct OracleSeerData {
         string name;
@@ -61,9 +63,10 @@ contract FlareOracleSeer is ERC721, Ownable, ReentrancyGuard {
         address player,
         string memory name,
         string memory title
-    ) external onlyOwner nonReentrant {
+    ) external nonReentrant {
         require(!_hasOracleSeer[player], "Player already has Oracle Seer");
         require(player != address(0), "Invalid player address");
+        // No supply limit - infinite minting allowed
         
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
@@ -86,6 +89,39 @@ contract FlareOracleSeer is ERC721, Ownable, ReentrancyGuard {
         _safeMint(player, newTokenId);
         
         emit OracleSeerMinted(player, newTokenId, name);
+    }
+    
+    /**
+     * @dev Public minting function for users to mint their own Oracle Seer
+     * @param pioneerType The type of pioneer (for compatibility with frontend)
+     * @param playerAddress The address of the player minting the NFT
+     */
+    function mintPioneer(uint256 pioneerType, address playerAddress) public nonReentrant {
+        require(!_hasOracleSeer[playerAddress], "Player already has Oracle Seer");
+        require(playerAddress != address(0), "Invalid player address");
+        require(msg.sender == playerAddress, "Can only mint for yourself");
+        
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current();
+        
+        _oracleSeerData[newTokenId] = OracleSeerData({
+            name: "Oracle Seer",
+            title: "Truth Seeker of the Cosmos",
+            realm: "Flare",
+            rarity: "Epic",
+            mintedAt: block.timestamp,
+            isActive: true,
+            oracleAccuracy: 0,
+            dataVerified: 0,
+            predictionsMade: 0
+        });
+        
+        _playerOracleSeer[playerAddress] = newTokenId;
+        _hasOracleSeer[playerAddress] = true;
+        
+        _safeMint(playerAddress, newTokenId);
+        
+        emit OracleSeerMinted(playerAddress, newTokenId, "Oracle Seer");
     }
     
     /**
@@ -161,6 +197,13 @@ contract FlareOracleSeer is ERC721, Ownable, ReentrancyGuard {
      */
     function totalSupply() external view returns (uint256) {
         return _tokenIds.current();
+    }
+    
+    /**
+     * @dev Check if minting is still available (always true for infinite supply)
+     */
+    function isMintingAvailable() external view returns (bool) {
+        return true; // Always available since there's no supply limit
     }
     
     /**

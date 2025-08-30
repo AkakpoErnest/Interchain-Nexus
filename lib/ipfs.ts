@@ -268,3 +268,4 @@ export const PIONEER_METADATA_TEMPLATES = {
     stats: { foresight: 62, intuition: 40, prophecy: 58 },
   },
 } as const
+

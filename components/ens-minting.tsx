@@ -8,6 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { 
   useHasPioneer, 
   usePlayerPioneer, 
@@ -15,8 +17,6 @@ import {
   useMintPioneer, 
   useMintTransactionReceipt,
   useTotalSupply,
-  useRemainingSupply,
-  useMaxSupply,
   useIsMintingAvailable,
   useContractInfo
 } from '@/lib/hooks/usePioneerContract'
@@ -27,57 +27,56 @@ import {
   getNetworkConfig 
 } from '@/lib/blockchain'
 import { getContractAddress } from '@/lib/contract-config'
-import { Loader2, CheckCircle, XCircle, ExternalLink, Zap } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, ExternalLink, Shield, User, Globe, Star } from 'lucide-react'
 import { TransactionStatusEnhanced } from './transaction-status-enhanced'
 import { NetworkSwitcher } from './network-switcher'
 
-interface NFTMintingProps {
-  selectedPioneerType?: PioneerType
+interface ENSMintingProps {
   onMintComplete?: (tokenId: bigint, pioneerData: any) => void
   onError?: (error: Error) => void
 }
 
-export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFTMintingProps) {
+export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
   const [mintStep, setMintStep] = useState<'idle' | 'minting' | 'confirming' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [guardianName, setGuardianName] = useState<string>('')
+  const [guardianTitle, setGuardianTitle] = useState<string>('')
+
+  // ENS-specific chain ID (Ethereum Sepolia)
+  const ensChainId = 11155111
 
   // Contract hooks
-  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, chainId)
-  const { data: playerPioneerTokenId } = usePlayerPioneer(address, chainId)
-  const { data: pioneerData, isLoading: pioneerDataLoading } = usePioneerData(playerPioneerTokenId, chainId)
-  const { data: totalSupply } = useTotalSupply(chainId)
-  const { data: remainingSupply } = useRemainingSupply(chainId)
-  const { data: maxSupply } = useMaxSupply(chainId)
-  const { data: isMintingAvailable } = useIsMintingAvailable(chainId)
-  const { name: contractName, symbol: contractSymbol } = useContractInfo(chainId)
+  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, ensChainId)
+  const { data: playerPioneerTokenId } = usePlayerPioneer(address, ensChainId)
+  const { data: pioneerData, isLoading: pioneerDataLoading } = usePioneerData(playerPioneerTokenId, ensChainId)
+  const { data: totalSupply } = useTotalSupply(ensChainId)
+  const { data: isMintingAvailable } = useIsMintingAvailable(ensChainId)
+  const { name: contractName, symbol: contractSymbol } = useContractInfo(ensChainId)
   
   // Minting hooks
   const { mintPioneer, hash, error: mintError, isPending } = useMintPioneer()
   const { data: receipt, isLoading: isConfirming, error: receiptError } = useMintTransactionReceipt(hash)
 
   // Check if chain is supported
-  const isChainSupported = chainId ? isSupportedChain(chainId) : false
-  const networkConfig = isChainSupported && chainId ? getNetworkConfig(chainId) : null
+  const isChainSupported = isSupportedChain(ensChainId)
+  const networkConfig = getNetworkConfig(ensChainId)
 
-  // Get pioneer type info
-  const pioneerInfo = selectedPioneerType !== undefined ? getPioneerTypeInfo(selectedPioneerType) : null
-
-  // Always allow minting - no supply limit
-  const calculatedMintingAvailable = true
+  // Get ENS Identity Guardian info
+  const pioneerInfo = getPioneerTypeInfo(PioneerType.IDENTITY_GUARDIAN)
 
   // Handle minting process
   const handleMint = async () => {
-    if (!address || !selectedPioneerType || !isChainSupported || !chainId) return
+    if (!address || !isChainSupported || !guardianName.trim() || !guardianTitle.trim()) return
 
     try {
       setMintStep('minting')
       setErrorMessage('')
       
-      await mintPioneer(selectedPioneerType, address, chainId)
+      await mintPioneer(PioneerType.IDENTITY_GUARDIAN, address, ensChainId)
     } catch (error) {
-      console.error('Minting error:', error)
+      console.error('ENS Minting error:', error)
       setMintStep('error')
       setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred')
       onError?.(error instanceof Error ? error : new Error('Unknown error'))
@@ -93,19 +92,24 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
       
       // Store the minted pioneer data for story flow
       const mintedPioneerData = {
-        id: selectedPioneerType,
-        name: pioneerInfo?.name || 'Unknown Pioneer',
-        title: pioneerInfo?.title || 'Unknown Title',
-        realm: pioneerInfo?.realm || 'Unknown Realm',
-        rarity: pioneerInfo?.rarity || 'Common',
-        stats: { community: 50, innovation: 50, engagement: 50 },
-        image: pioneerInfo?.image || '/placeholder.jpg',
-        description: pioneerInfo?.description || 'A mysterious pioneer from the interchain.',
-        lore: 'Born from the digital realm, this pioneer seeks to restore balance to the Interchain Nexus.',
-        story: 'Your journey begins now. As a newly minted pioneer, you hold the power to shape the future of the Interchain Nexus. The fractured realms await your arrival, and only you can restore the harmony that once existed between all blockchain ecosystems.',
-        abilities: ['Blockchain Navigation', 'Cross-Chain Communication', 'Protocol Mastery'],
-        mission: 'Restore balance to the Interchain Nexus and unite all blockchain ecosystems.',
-        passiveBuff: `${pioneerInfo?.realm} puzzles get +25% success rate`
+        id: PioneerType.IDENTITY_GUARDIAN,
+        name: guardianName || pioneerInfo?.name || 'Identity Guardian',
+        title: guardianTitle || pioneerInfo?.title || 'Keeper of Names',
+        realm: pioneerInfo?.realm || 'ENS',
+        rarity: pioneerInfo?.rarity || 'Epic',
+        stats: { 
+          domainsManaged: 0, 
+          identitiesVerified: 0, 
+          attestationsIssued: 0, 
+          trustScore: 100 
+        },
+        image: pioneerInfo?.image || '/ens_identity_guardian_card_refined.png',
+        description: pioneerInfo?.description || 'A guardian of digital identity and name resolution.',
+        lore: 'Born from the realm of names, this guardian seeks to protect and manage digital identities across the Interchain Nexus.',
+        story: 'Your journey as an Identity Guardian begins now. You hold the power to manage ENS domains, verify identities, and issue attestations. The fractured Name Realm awaits your arrival, and only you can restore the harmony of digital identity.',
+        abilities: ['Domain Management', 'Identity Verification', 'Attestation Issuance', 'Trust Building'],
+        mission: 'Protect digital identities and restore order to the Name Realm.',
+        passiveBuff: 'ENS puzzles get +25% success rate'
       }
       
       // Store pioneer data for story flow
@@ -122,7 +126,7 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
       setMintStep('error')
       setErrorMessage('Transaction was reverted')
     }
-  }, [receipt, playerPioneerTokenId, totalSupply, pioneerInfo, onMintComplete])
+  }, [receipt, playerPioneerTokenId, totalSupply, pioneerInfo, guardianName, guardianTitle, onMintComplete])
 
   // Handle errors
   useEffect(() => {
@@ -145,7 +149,7 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
         <CardContent className="p-6">
           <div className="flex items-center justify-center space-x-2">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Checking pioneer status...</span>
+            <span>Checking Identity Guardian status...</span>
           </div>
         </CardContent>
       </Card>
@@ -159,16 +163,16 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <CheckCircle className="h-5 w-5 text-green-500" />
-            <span>Pioneer Already Minted</span>
+            <span>Identity Guardian Already Minted</span>
           </CardTitle>
           <CardDescription>
-            You already have a pioneer NFT in your wallet
+            You already have an Identity Guardian NFT in your wallet
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-3">
             <img 
-              src={pioneerInfo?.image || '/placeholder.jpg'} 
+              src={pioneerInfo?.image || '/ens_identity_guardian_card_refined.png'} 
               alt={pioneerData.name}
               className="w-16 h-16 rounded-lg object-cover"
             />
@@ -184,36 +188,15 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
             <p>Minted: {new Date(Number(pioneerData.mintedAt) * 1000).toLocaleDateString()}</p>
           </div>
 
-          {networkConfig && (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full"
-              onClick={() => window.open(`${networkConfig.blockExplorers.default.url}/token/${getContractAddress(chainId)}?a=${playerPioneerTokenId}`, '_blank')}
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              View on {networkConfig.blockExplorers.default.name}
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-    )
-  }
-
-  // Chain not supported
-  if (!isChainSupported) {
-    return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="p-6">
-          <Alert>
-            <XCircle className="h-4 w-4" />
-            <AlertDescription>
-              {chainId 
-                ? `This network (Chain ID: ${chainId}) is not supported. Please switch to a supported network.`
-                : 'No network detected. Please connect your wallet and switch to a supported network.'
-              }
-            </AlertDescription>
-          </Alert>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full"
+            onClick={() => window.open(`${networkConfig.blockExplorers.default.url}/token/${getContractAddress(ensChainId)}?a=${playerPioneerTokenId}`, '_blank')}
+          >
+            <ExternalLink className="h-4 w-4 mr-2" />
+            View on {networkConfig.blockExplorers.default.name}
+          </Button>
         </CardContent>
       </Card>
     )
@@ -227,23 +210,7 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
           <Alert>
             <XCircle className="h-4 w-4" />
             <AlertDescription>
-              Please connect your wallet to mint a pioneer NFT.
-            </AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  // No pioneer type selected
-  if (selectedPioneerType === undefined) {
-    return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="p-6">
-          <Alert>
-            <XCircle className="h-4 w-4" />
-            <AlertDescription>
-              Please select a pioneer type to mint.
+              Please connect your wallet to mint an Identity Guardian NFT.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -255,8 +222,8 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <Zap className="h-5 w-5" />
-          <span>Mint Pioneer NFT</span>
+          <Shield className="h-5 w-5" />
+          <span>Mint Identity Guardian NFT</span>
         </CardTitle>
         <CardDescription>
           Mint your {pioneerInfo?.name} NFT on {networkConfig?.name}
@@ -264,31 +231,77 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Network Switcher */}
-        {selectedPioneerType !== undefined && (
-          <NetworkSwitcher 
-            pioneerType={selectedPioneerType}
-            onNetworkSwitched={() => {
-              console.log('Network switched successfully')
-            }}
-            onError={(error) => {
-              console.error('Network switch error:', error)
-              setErrorMessage(error.message)
-            }}
-          />
-        )}
+        <NetworkSwitcher 
+          pioneerType={PioneerType.IDENTITY_GUARDIAN}
+          onNetworkSwitched={() => {
+            console.log('Network switched successfully')
+          }}
+          onError={(error) => {
+            console.error('Network switch error:', error)
+            setErrorMessage(error.message)
+          }}
+        />
+
+        {/* Guardian Customization */}
+        <div className="space-y-3">
+          <div>
+            <Label htmlFor="guardianName">Guardian Name</Label>
+            <Input
+              id="guardianName"
+              placeholder="Enter your guardian's name"
+              value={guardianName}
+              onChange={(e) => setGuardianName(e.target.value)}
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label htmlFor="guardianTitle">Guardian Title</Label>
+            <Input
+              id="guardianTitle"
+              placeholder="Enter your guardian's title"
+              value={guardianTitle}
+              onChange={(e) => setGuardianTitle(e.target.value)}
+              className="mt-1"
+            />
+          </div>
+        </div>
+
         {/* Pioneer Preview */}
         <div className="flex items-center space-x-3 p-4 border rounded-lg">
           <img 
-            src={pioneerInfo?.image || '/placeholder.jpg'} 
+            src={pioneerInfo?.image || '/ens_identity_guardian_card_refined.png'} 
             alt={pioneerInfo?.name}
             className="w-16 h-16 rounded-lg object-cover"
           />
           <div>
-            <h3 className="font-semibold">{pioneerInfo?.name}</h3>
-            <p className="text-sm text-muted-foreground">{pioneerInfo?.title}</p>
+            <h3 className="font-semibold">{guardianName || pioneerInfo?.name}</h3>
+            <p className="text-sm text-muted-foreground">{guardianTitle || pioneerInfo?.title}</p>
             <div className="flex space-x-2 mt-1">
               <Badge variant="secondary">{pioneerInfo?.realm}</Badge>
               <Badge variant="outline">{pioneerInfo?.rarity}</Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Identity Guardian Abilities */}
+        <div className="space-y-2">
+          <h4 className="font-semibold text-sm">Identity Guardian Abilities:</h4>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="flex items-center space-x-1">
+              <Globe className="h-3 w-3" />
+              <span>Domain Management</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <User className="h-3 w-3" />
+              <span>Identity Verification</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Shield className="h-3 w-3" />
+              <span>Attestation Issuance</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Star className="h-3 w-3" />
+              <span>Trust Building</span>
             </div>
           </div>
         </div>
@@ -298,14 +311,13 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
           <p>Contract: {contractName} ({contractSymbol})</p>
           <p>Network: {networkConfig?.name}</p>
           <p>Total Supply: {totalSupply?.toString() || '0'} / Unlimited</p>
-          <p>Remaining: Unlimited</p>
           <div className="flex items-center space-x-2">
             <span>Status:</span>
             <Badge 
-              variant={calculatedMintingAvailable ? "default" : "destructive"}
-              className={calculatedMintingAvailable ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}
+              variant={isMintingAvailable ? "default" : "destructive"}
+              className={isMintingAvailable ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}
             >
-              {calculatedMintingAvailable ? "Available" : "Sold Out"}
+              {isMintingAvailable ? "Available" : "Sold Out"}
             </Badge>
           </div>
         </div>
@@ -351,7 +363,7 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
           <Alert>
             <CheckCircle className="h-4 w-4" />
             <AlertDescription>
-              Pioneer NFT minted successfully! Your NFT is now in your wallet.
+              Identity Guardian NFT minted successfully! Your NFT is now in your wallet.
             </AlertDescription>
           </Alert>
         )}
@@ -360,14 +372,14 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
         {hash && (
           <TransactionStatusEnhanced
             hash={hash}
-            chainId={chainId}
-            title="Minting Pioneer NFT"
-            description="Your Pioneer NFT is being minted on the blockchain"
+            chainId={ensChainId}
+            title="Minting Identity Guardian NFT"
+            description="Your Identity Guardian NFT is being minted on the blockchain"
             onSuccess={(receipt) => {
-              console.log('Mint transaction confirmed:', receipt)
+              console.log('ENS Mint transaction confirmed:', receipt)
             }}
             onError={(error) => {
-              console.error('Mint transaction failed:', error)
+              console.error('ENS Mint transaction failed:', error)
               setErrorMessage(error.message)
             }}
           />
@@ -376,7 +388,7 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
         {/* Mint Button */}
         <Button 
           onClick={handleMint}
-          disabled={isPending || isConfirming || mintStep === 'success' || !calculatedMintingAvailable}
+          disabled={isPending || isConfirming || mintStep === 'success' || !isMintingAvailable || !guardianName.trim() || !guardianTitle.trim()}
           className="w-full"
         >
           {isPending || isConfirming ? (
@@ -391,8 +403,8 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
             </>
           ) : (
             <>
-              <Zap className="h-4 w-4 mr-2" />
-              Mint Pioneer NFT
+              <Shield className="h-4 w-4 mr-2" />
+              Mint Identity Guardian NFT
             </>
           )}
         </Button>
@@ -400,5 +412,3 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
     </Card>
   )
 }
-
-

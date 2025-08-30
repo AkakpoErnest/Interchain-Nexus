@@ -72,6 +72,48 @@ export function useTotalSupply(chainId: number | undefined) {
   })
 }
 
+// Hook to get remaining supply
+export function useRemainingSupply(chainId: number | undefined) {
+  const { contractAddress, abi } = usePioneerContract(chainId)
+
+  return useReadContract({
+    address: contractAddress,
+    abi,
+    functionName: 'remainingSupply',
+    query: {
+      enabled: !!contractAddress && !!chainId,
+    },
+  })
+}
+
+// Hook to get max supply
+export function useMaxSupply(chainId: number | undefined) {
+  const { contractAddress, abi } = usePioneerContract(chainId)
+
+  return useReadContract({
+    address: contractAddress,
+    abi,
+    functionName: 'MAX_SUPPLY',
+    query: {
+      enabled: !!contractAddress && !!chainId,
+    },
+  })
+}
+
+// Hook to check if minting is available
+export function useIsMintingAvailable(chainId: number | undefined) {
+  const { contractAddress, abi } = usePioneerContract(chainId)
+
+  return useReadContract({
+    address: contractAddress,
+    abi,
+    functionName: 'isMintingAvailable',
+    query: {
+      enabled: !!contractAddress && !!chainId,
+    },
+  })
+}
+
 // Hook to get pioneer type information
 export function usePioneerTypeInfo(pioneerType: PioneerType, chainId: number | undefined) {
   const { contractAddress, abi } = usePioneerContract(chainId)
@@ -136,11 +178,15 @@ export function useMintPioneer() {
     
     if (!contractAddress) throw new Error('Contract address not found for this chain')
     
+    // Optimize gas settings for different networks
+    const gasConfig = getGasConfigForChain(chainId)
+    
     return writeContract({
       address: contractAddress,
       abi,
       functionName: 'mintPioneer',
       args: [pioneerType, playerAddress],
+      ...gasConfig,
     })
   }
 
@@ -152,10 +198,43 @@ export function useMintPioneer() {
   }
 }
 
+// Get optimized gas configuration for different chains
+function getGasConfigForChain(chainId: number) {
+  switch (chainId) {
+    case 114: // Flare Testnet - often slower, use higher gas
+      return {
+        gas: 500000n, // Higher gas limit
+        gasPrice: 25000000000n, // 25 gwei - higher gas price for faster confirmation
+      }
+    case 84532: // Base Sepolia
+      return {
+        gas: 300000n,
+        gasPrice: 1000000000n, // 1 gwei
+      }
+    case 11155111: // Ethereum Sepolia
+      return {
+        gas: 300000n,
+        gasPrice: 2000000000n, // 2 gwei
+      }
+    case 314159: // Filecoin Calibration
+      return {
+        gas: 400000n,
+        gasPrice: 1000000000n, // 1 gwei
+      }
+    default:
+      return {
+        gas: 300000n,
+        gasPrice: 1000000000n, // 1 gwei default
+      }
+  }
+}
+
 // Hook to wait for mint transaction
 export function useMintTransactionReceipt(hash: Hash | undefined) {
   return useWaitForTransactionReceipt({
     hash,
+    timeout: 300000, // 5 minutes timeout for Flare testnet
+    pollingInterval: 2000, // Check every 2 seconds
   })
 }
 

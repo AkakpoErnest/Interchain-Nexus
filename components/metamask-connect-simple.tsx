@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from 'wagmi'
-import { injected } from 'wagmi/connectors'
+import { metaMask } from 'wagmi/connectors'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { baseSepolia, sepolia, filecoinCalibration, flareTestnet, liskSepolia } from 'wagmi/chains'
@@ -14,6 +14,19 @@ export function MetaMaskConnectSimple() {
   const { disconnect } = useDisconnect()
   const { switchChain } = useSwitchChain()
   const [showNetworks, setShowNetworks] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return (
+      <div className="flex items-center gap-3">
+        <div className="w-32 h-10 bg-gray-700 rounded animate-pulse"></div>
+      </div>
+    )
+  }
 
   const supportedChains = [
     { chain: liskSepolia, name: 'Lisk Sepolia', color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
@@ -36,7 +49,7 @@ export function MetaMaskConnectSimple() {
   }
 
   const handleConnect = () => {
-    connect({ connector: injected() })
+    connect({ connector: metaMask() })
   }
 
   const handleSwitchChain = (chainId: number) => {

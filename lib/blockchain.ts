@@ -3,7 +3,7 @@ import { CONTRACT_ADDRESSES } from './contract-config'
 
 // Pioneer types enum matching the smart contract
 export enum PioneerType {
-  SOCIAL_ARCHITECT = 0,    // Base - Builder of Worlds
+  SOCIAL_ARCHITECT = 0,    // Lisk - Builder of Worlds
   IDENTITY_GUARDIAN = 1,   // ENS - Keeper of Names  
   DATA_WEAVER = 2,         // Filecoin - Archivist of the Nexus
   ORACLE_SEER = 3          // Flare - Truth Seeker of the Cosmos
@@ -41,6 +41,27 @@ export const PIONEER_ABI = [
     inputs: [],
     name: 'totalSupply',
     outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'player', type: 'address' }],
+    name: 'hasPioneer',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'player', type: 'address' }],
+    name: 'getPlayerPioneer',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'isMintingAvailable',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -116,10 +137,11 @@ export const PIONEER_ABI = [
     type: 'function',
   },
   // Write functions
+
   {
     inputs: [
-      { internalType: 'enum Pioneer.PioneerType', name: 'pioneerType', type: 'uint8' },
-      { internalType: 'address', name: 'player', type: 'address' },
+      { internalType: 'uint256', name: 'pioneerType', type: 'uint256' },
+      { internalType: 'address', name: 'playerAddress', type: 'address' },
     ],
     name: 'mintPioneer',
     outputs: [],
@@ -228,6 +250,13 @@ export const NETWORK_CONFIG = {
     rpcUrls: { default: { http: ['https://rpc.api.lisk.com'] } },
     blockExplorers: { default: { name: 'LiskScan', url: 'https://liskscan.com' } },
   },
+  4202: {
+    name: 'Lisk Sepolia',
+    chainId: 4202,
+    nativeCurrency: { name: 'Lisk', symbol: 'LSK', decimals: 18 },
+    rpcUrls: { default: { http: ['https://rpc.api.testnet.lisk.com'] } },
+    blockExplorers: { default: { name: 'LiskScan Testnet', url: 'https://testnet.liskscan.com' } },
+  },
 } as const
 
 // Helper functions
@@ -263,9 +292,9 @@ export function getPioneerTypeInfo(type: PioneerType) {
     [PioneerType.SOCIAL_ARCHITECT]: {
       name: 'The Social Architect',
       title: 'Builder of Worlds',
-      realm: 'Base',
+      realm: 'Lisk',
       rarity: 'Epic',
-      description: 'Master of community protocols and social applications',
+      description: 'Master of community protocols and social applications (Unlimited Supply)',
       image: '/base_social_architect_card_refined.png',
     },
     [PioneerType.IDENTITY_GUARDIAN]: {
@@ -306,4 +335,28 @@ export function getPioneerTypeFromRealm(realm: string): PioneerType | null {
   }
   
   return realmMap[realm as keyof typeof realmMap] || null
+}
+
+// Map Pioneer types to their corresponding chain IDs
+export function getChainIdForPioneerType(pioneerType: PioneerType): number {
+  const chainMap = {
+    [PioneerType.SOCIAL_ARCHITECT]: 84532, // Base Sepolia
+    [PioneerType.IDENTITY_GUARDIAN]: 11155111, // Ethereum Sepolia (ENS)
+    [PioneerType.DATA_WEAVER]: 314159, // Filecoin Calibration
+    [PioneerType.ORACLE_SEER]: 114, // Flare Testnet
+  }
+  
+  return chainMap[pioneerType]
+}
+
+// Get the network name for a Pioneer type
+export function getNetworkNameForPioneerType(pioneerType: PioneerType): string {
+  const networkMap = {
+    [PioneerType.SOCIAL_ARCHITECT]: 'Base Sepolia',
+    [PioneerType.IDENTITY_GUARDIAN]: 'Ethereum Sepolia',
+    [PioneerType.DATA_WEAVER]: 'Filecoin Calibration',
+    [PioneerType.ORACLE_SEER]: 'Flare Testnet',
+  }
+  
+  return networkMap[pioneerType]
 }

@@ -93,3 +93,4 @@ echo "   npm run deploy:flare-testnet"
 echo "   npm run deploy:lisk-testnet"
 echo ""
 echo "📚 See docs/TESTNET_DEPLOYMENT_GUIDE.md for detailed instructions"
+

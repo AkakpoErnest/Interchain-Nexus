@@ -2,7 +2,7 @@
 
 import { WagmiProvider, createConfig, http } from 'wagmi'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { injected } from 'wagmi/connectors'
+import { injected, metaMask } from 'wagmi/connectors'
 import { baseSepolia, sepolia, filecoinCalibration, flareTestnet, liskSepolia } from 'wagmi/chains'
 
 // Create a query client
@@ -15,7 +15,8 @@ const supportedChains = [liskSepolia, baseSepolia, sepolia, filecoinCalibration,
 const config = createConfig({
   chains: supportedChains,
   connectors: [
-    injected(), // MetaMask and other injected wallets
+    metaMask(), // Prioritize MetaMask specifically
+    injected(), // Fallback for other injected wallets
   ],
   transports: {
     [liskSepolia.id]: http(),

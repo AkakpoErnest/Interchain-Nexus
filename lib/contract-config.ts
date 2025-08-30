@@ -30,17 +30,17 @@ export const CONTRACT_ADDRESSES = {
   14: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FLARE || '0x0000000000000000000000000000000000000000',
   },
-  // Flare Testnet - Oracle Seer Contract
+  // Flare Testnet - Oracle Seer Contract (Unlimited Supply + Public Minting)
   114: {
-    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FLARE_TESTNET || '0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF',
+    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FLARE_TESTNET || '0x2D6E6A6430F0121d6949D743DF54730b40C5c74F',
   },
   // Lisk Mainnet
   1135: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_LISK || '0x0000000000000000000000000000000000000000',
   },
-  // Lisk Sepolia Testnet
+  // Lisk Sepolia Testnet (using unlimited version for easier testing)
   4202: {
-    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_LISK_SEPOLIA || '0x0000000000000000000000000000000000000000',
+    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_LISK_SEPOLIA || '0x5FbDB2315678afecb367f032d93F642f64180aa3',
   },
 } as const
 
