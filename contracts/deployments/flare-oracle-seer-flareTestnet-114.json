@@ -1,0 +1,17 @@
+{
+  "contractName": "FlareOracleSeer",
+  "contractAddress": "0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF",
+  "network": "flareTestnet",
+  "chainId": "114",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "deploymentTime": "2025-08-30T14:48:35.448Z",
+  "baseURI": "Not set",
+  "totalSupply": "0",
+  "features": [
+    "Oracle prediction accuracy tracking",
+    "Data verification system",
+    "Prediction making functionality",
+    "Soulbound NFTs (non-transferable)",
+    "Flare network integration"
+  ]
+}

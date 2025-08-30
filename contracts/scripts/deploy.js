@@ -1,130 +1,77 @@
 const { ethers } = require("hardhat");
+const fs = require('fs');
+const path = require('path');
 
 async function main() {
-  console.log("🚀 Starting Interchain Nexus contract deployment...\n");
+  console.log("🚀 Starting Pioneer contract deployment...");
 
-  // Get the deployer account
-  const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts with account:", deployer.address);
-  console.log("Account balance:", (await deployer.getBalance()).toString(), "wei\n");
-
-  // Deploy Pioneer NFT contract
-  console.log("📜 Deploying Pioneer NFT contract...");
+  // Get the contract factory
   const Pioneer = await ethers.getContractFactory("Pioneer");
-  const pioneer = await Pioneer.deploy();
-  await pioneer.deployed();
-  console.log("✅ Pioneer contract deployed to:", pioneer.address);
-
-  // Deploy RealmQuest contract
-  console.log("\n🎮 Deploying RealmQuest contract...");
-  const RealmQuest = await ethers.getContractFactory("RealmQuest");
-  const realmQuest = await RealmQuest.deploy(pioneer.address);
-  await realmQuest.deployed();
-  console.log("✅ RealmQuest contract deployed to:", realmQuest.address);
-
-  // Deploy NexusCore contract
-  console.log("\n💎 Deploying NexusCore contract...");
-  const NexusCore = await ethers.getContractFactory("NexusCore");
-  const nexusCore = await NexusCore.deploy();
-  await nexusCore.deployed();
-  console.log("✅ NexusCore contract deployed to:", nexusCore.address);
-
-  // Deploy LiskConsensus contract (if LSK token address is provided)
-  let liskConsensus;
-  if (process.env.LSK_TOKEN_ADDRESS) {
-    console.log("\n🔗 Deploying LiskConsensus contract...");
-    const LiskConsensus = await ethers.getContractFactory("LiskConsensus");
-    liskConsensus = await LiskConsensus.deploy(process.env.LSK_TOKEN_ADDRESS);
-    await liskConsensus.deployed();
-    console.log("✅ LiskConsensus contract deployed to:", liskConsensus.address);
-  }
-
-  // Set up contract relationships
-  console.log("\n🔧 Setting up contract relationships...");
   
-  // Set RealmQuest contract in NexusCore
-  await nexusCore.setRealmQuestContract(realmQuest.address);
-  console.log("✅ Set RealmQuest contract in NexusCore");
-
-  // Set NexusCore contract in RealmQuest
-  await realmQuest.setNexusCoreContract(nexusCore.address);
-  console.log("✅ Set NexusCore contract in RealmQuest");
-
-  // Set base URI for Pioneer NFTs
-  const pioneerBaseURI = process.env.PIONEER_BASE_URI || "https://api.interchainnexus.com/pioneer/";
-  await pioneer.setBaseURI(pioneerBaseURI);
-  console.log("✅ Set Pioneer base URI:", pioneerBaseURI);
-
-  // Set base URI for NexusCore NFTs
-  const nexusBaseURI = process.env.NEXUS_BASE_URI || "https://api.interchainnexus.com/nexus/";
-  await nexusCore.setBaseURI(nexusBaseURI);
-  console.log("✅ Set NexusCore base URI:", nexusBaseURI);
-
-  // Deploy contracts to different networks if specified
+  // Deploy the contract
+  console.log("📦 Deploying Pioneer contract...");
+  const pioneer = await Pioneer.deploy();
+  
+  // Wait for deployment to complete
+  await pioneer.waitForDeployment();
+  
+  const pioneerAddress = await pioneer.getAddress();
+  console.log("✅ Pioneer contract deployed to:", pioneerAddress);
+  
+  // Get network information
   const network = await ethers.provider.getNetwork();
-  console.log("\n🌐 Deployed to network:", network.name, "(Chain ID:", network.chainId, ")");
-
-  // Print deployment summary
-  console.log("\n📋 Deployment Summary:");
-  console.log("======================");
-  console.log("Pioneer Contract:", pioneer.address);
-  console.log("RealmQuest Contract:", realmQuest.address);
-  console.log("NexusCore Contract:", nexusCore.address);
-  if (liskConsensus) {
-    console.log("LiskConsensus Contract:", liskConsensus.address);
+  console.log("🌐 Network:", network.name, "(Chain ID:", network.chainId, ")");
+  
+  // Verify deployment
+  const totalSupply = await pioneer.totalSupply();
+  console.log("📊 Initial total supply:", totalSupply.toString());
+  
+  // Set base URI if provided
+  const baseURI = process.env.BASE_URI;
+  if (baseURI) {
+    console.log("🔗 Setting base URI:", baseURI);
+    await pioneer.setBaseURI(baseURI);
+    console.log("✅ Base URI set successfully");
   }
-  console.log("Deployer:", deployer.address);
-  console.log("Network:", network.name, "(Chain ID:", network.chainId, ")");
-
+  
+  // Output deployment information
+  console.log("\n📋 Deployment Summary:");
+  console.log("Contract Address:", pioneerAddress);
+  console.log("Network:", network.name);
+  console.log("Chain ID:", network.chainId);
+  console.log("Base URI:", baseURI || "Not set");
+  
   // Save deployment info to file
   const deploymentInfo = {
+    contractAddress: pioneerAddress,
     network: network.name,
     chainId: network.chainId,
-    deployer: deployer.address,
-    contracts: {
-      Pioneer: pioneer.address,
-      RealmQuest: realmQuest.address,
-      NexusCore: nexusCore.address,
-      ...(liskConsensus && { LiskConsensus: liskConsensus.address })
-    },
-    timestamp: new Date().toISOString(),
-    baseURIs: {
-      Pioneer: pioneerBaseURI,
-      NexusCore: nexusBaseURI
-    }
+    baseURI: baseURI || "",
+    deployedAt: new Date().toISOString(),
+    deployer: (await ethers.getSigners())[0].address
   };
+  
 
-  const fs = require('fs');
-  const deploymentFile = `deployments/${network.name}-${network.chainId}.json`;
   
   // Create deployments directory if it doesn't exist
-  if (!fs.existsSync('deployments')) {
-    fs.mkdirSync('deployments');
+  const deploymentsDir = path.join(__dirname, '..', 'deployments');
+  if (!fs.existsSync(deploymentsDir)) {
+    fs.mkdirSync(deploymentsDir, { recursive: true });
   }
   
-  fs.writeFileSync(deploymentFile, JSON.stringify(deploymentInfo, null, 2));
-  console.log(`\n💾 Deployment info saved to: ${deploymentFile}`);
-
-  // Verify contracts if on a supported network
-  if (network.chainId !== 31337 && network.chainId !== 1337) {
-    console.log("\n🔍 Verifying contracts...");
-    console.log("Run the following commands to verify contracts:");
-    console.log(`npx hardhat verify --network ${network.name} ${pioneer.address}`);
-    console.log(`npx hardhat verify --network ${network.name} ${realmQuest.address} "${pioneer.address}"`);
-    console.log(`npx hardhat verify --network ${network.name} ${nexusCore.address}`);
-    if (liskConsensus) {
-      console.log(`npx hardhat verify --network ${network.name} ${liskConsensus.address} "${process.env.LSK_TOKEN_ADDRESS}"`);
-    }
-  }
-
+  // Save deployment info
+  const deploymentFile = path.join(deploymentsDir, `${network.name}-${network.chainId}.json`);
+  fs.writeFileSync(deploymentFile, JSON.stringify(deploymentInfo, (key, value) =>
+    typeof value === 'bigint' ? value.toString() : value, 2));
+  console.log("💾 Deployment info saved to:", deploymentFile);
+  
   console.log("\n🎉 Deployment completed successfully!");
-  console.log("\nNext steps:");
-  console.log("1. Update your frontend with the new contract addresses");
-  console.log("2. Set up IPFS for metadata storage");
-  console.log("3. Configure wallet connection in your app");
-  console.log("4. Test the contracts with sample transactions");
+  console.log("🔍 You can verify the contract on the block explorer");
+  console.log("📝 Use the following command to verify:");
+  console.log(`npx hardhat verify --network ${network.name} ${pioneerAddress}`);
 }
 
+// Handle errors
 main()
   .then(() => process.exit(0))
   .catch((error) => {

@@ -23,6 +23,42 @@ The Interchain Nexus integrates with multiple blockchain ecosystems, each repres
                         ┌─────────────────┐
                         │   Governance    │
                         │                 │
+                        │ Consensus Weaver│
+                        │                 │
+                        │ Council Chambers│
+                        │                 │
+                        │Governance Puzzles│
+                        │                 │
+                        │ Council Mark    │
+                        └─────────────────┘
+                                │
+                                ▼
+┌─────────────────┬─────────────────┬─────────────────┬─────────────────┐
+│     Ethereum    │    Polkadot     │     Privacy     │      Zama       │
+│                 │                 │                 │                 │
+│Aetherial Alchemist│Chrono Synthesizer│Shadow Weaver  │Confidential Guardian│
+│                 │                 │                 │                 │
+│ Alchemy Labs    │ Time Chambers   │Shadow Realm    │Confidential Vault│
+│                 │                 │                 │                 │
+│Transmutation Puzzles│Synthesis Puzzles│Stealth Puzzles│Encryption Puzzles│
+│                 │                 │                 │                 │
+│ Alchemy Stone   │ Time Crystal    │ Shadow Cloak   │ Confidential Key│
+└─────────────────┴─────────────────┴─────────────────┴─────────────────┘
+                                │
+                                ▼
+┌─────────────────┬─────────────────┬─────────────────┐
+│     Citrea      │   Symbiotic     │   Advanced      │
+│                 │                 │                 │
+│ Bitcoin Oracle  │Security Architect│   Protocols     │
+│                 │                 │                 │
+│ Bitcoin Forge   │Security Markets │Future Realms    │
+│                 │                 │                 │
+│Bitcoin Puzzles  │Security Puzzles │Coming Soon...   │
+│                 │                 │                 │
+│ Bitcoin Seal    │ Security Token  │   TBD           │
+└─────────────────┴─────────────────┴─────────────────┘
+                        │   Governance    │
+                        │                 │
                         │Consensus Weaver │
                         │                 │
                         │Council Chambers │
@@ -111,6 +147,30 @@ const chains = [
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     rpcUrls: { default: 'https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY' },
     blockExplorers: { default: { name: 'Etherscan', url: 'https://etherscan.io' } }
+  },
+  {
+    id: 137,
+    name: 'Polygon',
+    network: 'matic',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+    rpcUrls: { default: 'https://polygon-rpc.com' },
+    blockExplorers: { default: { name: 'PolygonScan', url: 'https://polygonscan.com' } }
+  },
+  {
+    id: 42161,
+    name: 'Arbitrum',
+    network: 'arbitrum',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: { default: 'https://arb1.arbitrum.io/rpc' },
+    blockExplorers: { default: { name: 'Arbiscan', url: 'https://arbiscan.io' } }
+  },
+  {
+    id: 10,
+    name: 'Optimism',
+    network: 'optimism',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: { default: 'https://mainnet.optimism.io' },
+    blockExplorers: { default: { name: 'OptimismScan', url: 'https://optimistic.etherscan.io' } }
   },
   {
     id: 314,

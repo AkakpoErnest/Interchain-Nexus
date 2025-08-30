@@ -1,35 +1,36 @@
-"use client"
+'use client'
 
-import '@rainbow-me/rainbowkit/styles.css'
-import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit'
-import { WagmiProvider } from 'wagmi'
-import { mainnet, base } from 'wagmi/chains'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import { http } from 'viem'
+import { WagmiProvider, createConfig, http } from 'wagmi'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { injected } from 'wagmi/connectors'
+import { baseSepolia, sepolia, filecoinCalibration, flareTestnet, liskSepolia } from 'wagmi/chains'
 
-// Configure the supported chains (simplified to avoid extension conflicts)
-const config = getDefaultConfig({
-  appName: 'Interchain Nexus',
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'your-project-id',
-  chains: [mainnet, base],
+// Create a query client
+const queryClient = new QueryClient()
+
+// Define supported chains - Lisk Sepolia first as default
+const supportedChains = [liskSepolia, baseSepolia, sepolia, filecoinCalibration, flareTestnet] as const
+
+// Create wagmi config
+const config = createConfig({
+  chains: supportedChains,
+  connectors: [
+    injected(), // MetaMask and other injected wallets
+  ],
   transports: {
-    [mainnet.id]: http(),
-    [base.id]: http(),
+    [liskSepolia.id]: http(),
+    [baseSepolia.id]: http(),
+    [sepolia.id]: http(),
+    [filecoinCalibration.id]: http(),
+    [flareTestnet.id]: http(),
   },
 })
-
-const queryClient = new QueryClient()
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          modalSize="compact"
-          showRecentTransactions={false}
-        >
-          {children}
-        </RainbowKitProvider>
+        {children}
       </QueryClientProvider>
     </WagmiProvider>
   )

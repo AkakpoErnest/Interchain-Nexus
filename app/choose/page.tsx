@@ -7,7 +7,11 @@ import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { motion, AnimatePresence } from "framer-motion"
 import { PioneerStoryModal } from "@/components/pioneer-story-modal"
+import { NFTMinting } from "@/components/nft-minting"
+import { MetaMaskConnectSimple } from "@/components/metamask-connect-simple"
+import { GameJourney } from "@/components/game-journey"
 import { BookOpen } from "lucide-react"
+import { PioneerType, getPioneerTypeFromRealm } from "@/lib/blockchain"
 
 // Pioneer Card data based on the provided images
 const pioneerCards = [
@@ -86,57 +90,57 @@ const pioneerCards = [
     mission: "Foster unity and consensus across all blockchain ecosystems, ensuring collective wisdom guides the Interchain Nexus.",
     passiveBuff: "ALL puzzles get +15% success rate (universal bonus)"
   },
-  // Rare Locked Cards
+  // Advanced Blockchain Protocol Cards
   {
     id: 6,
-    name: "The Aetherial Alchemist",
-    title: "Transmuter of Realms",
-    realm: "Ethereum",
+    name: "The Confidential Guardian",
+    title: "Keeper of Hidden Truths",
+    realm: "Zama",
     rarity: "Legendary",
-    stats: { alchemy: 70, transmutation: 65, wisdom: 60 },
-    image: "/aetherial_alchemist_card.png",
-    description: "A master of ethereal alchemy who can transmute data across different blockchain realms. Their power lies in transforming one form of digital matter into another.",
-    lore: "Born from the primordial chaos of the first smart contract, the Alchemist learned to transmute the very essence of blockchain data.",
-    story: "In the early days of Ethereum, when smart contracts were still mysterious and powerful, the Aetherial Alchemist emerged from the convergence of code and consciousness. They discovered the ancient art of digital alchemy - the ability to transmute data, tokens, and even entire protocols from one form to another. Their mastery over the ethereal realm allows them to bridge the gap between different blockchain ecosystems, transforming incompatible data structures into harmonious ones. They are the keeper of the Philosopher's Stone of blockchain - the secret to perfect interoperability.",
-    abilities: ["Data Transmutation", "Cross-Chain Alchemy", "Protocol Synthesis"],
-    mission: "Master the art of digital alchemy to create perfect interoperability between all blockchain realms.",
-    passiveBuff: "Cross-chain puzzles get +30% success rate",
+    stats: { confidentiality: 72, encryption: 68, privacy: 70 },
+    image: "/aetherial_alchemist_card.png", // Using existing image for now
+    description: "A master of confidential computing who protects sensitive data through Fully Homomorphic Encryption. Their power lies in processing encrypted data without ever decrypting it.",
+    lore: "Born from the convergence of mathematics and cryptography, the Guardian learned to keep secrets so well that even they cannot see them.",
+    story: "When the first confidential smart contract was deployed, the Confidential Guardian emerged from the mathematical realm of Fully Homomorphic Encryption. They witnessed the tragedy of data breaches, the violation of privacy, and the erosion of trust that came from exposing sensitive information. Through their mastery of Zama's confidential computing protocols, they learned to process encrypted data, execute confidential transactions, and maintain privacy while enabling composability. They are the guardian of confidential computing, the keeper of encrypted secrets, and the protector who ensures that sensitive data remains private even during computation. Their sacred duty is to maintain the confidentiality of all sensitive operations in the Interchain Nexus.",
+    abilities: ["Confidential Computing", "Encrypted Processing", "Privacy Preservation"],
+    mission: "Enable confidential smart contracts and protect sensitive data through advanced cryptographic techniques.",
+    passiveBuff: "Zama puzzles get +30% success rate",
     isLocked: true,
-    unlockRequirement: "Complete all 5 realm quests to unlock"
+    unlockRequirement: "Complete all 5 realm puzzles and achieve 100% completion rate"
   },
   {
     id: 7,
-    name: "The Chrono Synthesizer",
-    title: "Time Weaver",
-    realm: "Polkadot",
+    name: "The Bitcoin Oracle",
+    title: "Seer of the Original Chain",
+    realm: "Citrea",
     rarity: "Legendary",
-    stats: { time: 75, synthesis: 68, control: 62 },
-    image: "/chrono_synthesizer_card.png",
-    description: "A master of temporal manipulation who can synthesize events across different time periods and blockchain epochs. They control the flow of time itself.",
-    lore: "From the temporal void between blocks, the Synthesizer weaves the threads of time, connecting past, present, and future.",
-    story: "When the first blockchain fork created a temporal paradox, the Chrono Synthesizer was born from the convergence of time streams. They discovered the ability to manipulate blockchain time itself - to rewind transactions, fast-forward consensus, and synthesize events from different epochs. Their power allows them to see the consequences of actions before they happen, to undo mistakes, and to create perfect timing for complex multi-chain operations. They are the guardian of blockchain causality, ensuring that the flow of time remains consistent across all realms.",
-    abilities: ["Temporal Manipulation", "Event Synthesis", "Causality Control"],
-    mission: "Master the flow of time across all blockchain realms to ensure perfect synchronization.",
-    passiveBuff: "Time-based puzzles get +30% success rate",
+    stats: { bitcoin: 75, rollup: 65, security: 70 },
+    image: "/chrono_synthesizer_card.png", // Using existing image for now
+    description: "A master of Bitcoin rollups who brings smart contract functionality to the original blockchain. Their power lies in bridging Bitcoin's security with EVM compatibility.",
+    lore: "From the depths of Bitcoin's proof-of-work, the Oracle learned to bring programmable money to the most secure blockchain in existence.",
+    story: "When the first Bitcoin rollup was proposed, the Bitcoin Oracle emerged from the convergence of Bitcoin's security and Ethereum's programmability. They witnessed the limitations of Bitcoin's scripting language, the need for smart contracts on the most secure blockchain, and the potential of zero-knowledge proofs to bridge these worlds. Through their mastery of Citrea's Bitcoin rollup technology, they learned to bring EVM compatibility to Bitcoin while maintaining its security guarantees. They are the guardian of Bitcoin's evolution, the seer of programmable money, and the oracle who ensures that Bitcoin can participate in the smart contract revolution. Their sacred duty is to bring the power of smart contracts to the most secure blockchain in the Interchain Nexus.",
+    abilities: ["Bitcoin Integration", "Rollup Mastery", "Security Bridging"],
+    mission: "Bring smart contract functionality to Bitcoin while maintaining its security and decentralization.",
+    passiveBuff: "Citrea puzzles get +30% success rate",
     isLocked: true,
-    unlockRequirement: "Achieve 100% completion in any 3 realms"
+    unlockRequirement: "Complete all 5 realm puzzles and achieve 100% completion rate"
   },
   {
     id: 8,
-    name: "The Shadow Weaver",
-    title: "Master of Secrets",
-    realm: "Privacy",
+    name: "The Security Architect",
+    title: "Builder of Shared Defenses",
+    realm: "Symbiotic",
     rarity: "Legendary",
-    stats: { stealth: 72, privacy: 70, secrets: 68 },
-    image: "/shadow_weaver_card.png",
-    description: "A master of privacy and secrecy who operates in the shadows of the interchain. They protect the most sensitive data and transactions.",
-    lore: "In the dark corners of the blockchain, where privacy meets power, the Shadow Weaver guards the secrets that must never be revealed.",
-    story: "Born from the collective need for privacy in an increasingly transparent world, the Shadow Weaver emerged from the shadows of zero-knowledge proofs and privacy protocols. They mastered the art of operating in complete secrecy while maintaining the integrity of the interchain. Their power lies in their ability to hide transactions, protect identities, and guard the most sensitive data without compromising the trust and security of the network. They are the guardian of privacy, the keeper of secrets, and the protector of those who must operate in the shadows.",
-    abilities: ["Privacy Protection", "Secret Keeping", "Shadow Operations"],
-    mission: "Protect the privacy and secrets of the interchain while maintaining its integrity and trust.",
-    passiveBuff: "Privacy puzzles get +30% success rate",
+    stats: { security: 70, staking: 68, economics: 65 },
+    image: "/shadow_weaver_card.png", // Using existing image for now
+    description: "A master of shared security who creates economic security markets across blockchain networks. Their power lies in optimizing security through shared stake.",
+    lore: "From the economic models of proof-of-stake, the Architect learned to create security markets that benefit all participants.",
+    story: "When the first shared security protocol was designed, the Security Architect emerged from the convergence of economic security and cross-chain coordination. They witnessed the inefficiency of isolated security models, the waste of duplicated stake, and the potential of shared security to create stronger, more efficient networks. Through their mastery of Symbiotic's shared security protocol, they learned to create markets where networks can access security from those who have stake to provide, and stake providers can maximize their returns across multiple networks. They are the guardian of economic security, the architect of shared defenses, and the builder who ensures that security is optimized across all blockchain networks. Their sacred duty is to create efficient security markets in the Interchain Nexus.",
+    abilities: ["Security Optimization", "Economic Modeling", "Cross-Chain Coordination"],
+    mission: "Create efficient security markets that allow networks to access security and stake providers to maximize returns.",
+    passiveBuff: "Symbiotic puzzles get +30% success rate",
     isLocked: true,
-    unlockRequirement: "Complete 50 secret achievements"
+    unlockRequirement: "Complete all 5 realm puzzles and achieve 100% completion rate"
   }
 ]
 
@@ -183,6 +187,25 @@ export default function ChoosePage() {
       window.location.href = "/play"
     }, 2000)
   }
+
+  const handleNFTMintComplete = (tokenId: bigint, pioneerData: any) => {
+    console.log('NFT minted successfully:', { tokenId, pioneerData })
+    setMintComplete(true)
+    
+    // Redirect to play page after a delay
+    setTimeout(() => {
+      window.location.href = "/play"
+    }, 2000)
+  }
+
+  const handleNFTMintError = (error: Error) => {
+    console.error('NFT minting error:', error)
+    setIsMinting(false)
+  }
+
+  // Get the selected pioneer type for NFT minting
+  const selectedPioneerData = selectedCard ? pioneerCards.find(card => card.id === selectedCard) : null
+  const selectedPioneerType = selectedPioneerData ? getPioneerTypeFromRealm(selectedPioneerData.realm) : undefined
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -237,9 +260,7 @@ export default function ChoosePage() {
               <Badge variant="secondary" className="hidden sm:flex glow bg-purple-600/80 text-white">
                 pioneer.eth
               </Badge>
-              <Button variant="outline" className="glow-hover bg-transparent border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black">
-                Connect Wallet
-              </Button>
+              <MetaMaskConnectSimple />
             </div>
           </div>
         </div>
@@ -495,24 +516,23 @@ export default function ChoosePage() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                  <Button 
-                    size="lg" 
-                    className="text-xl px-16 py-8 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 border-2 border-cyan-400 shadow-2xl transform hover:scale-105 transition-all duration-300"
-                    onClick={handleMint}
-                    disabled={isMinting}
-                  >
-                    {isMinting ? (
-                      <span className="flex items-center space-x-3">
-                        <span className="animate-spin">⟳</span>
-                        <span>Minting Pioneer Card...</span>
-                      </span>
-                    ) : (
-                      <span className="flex items-center space-x-3">
-                        <span>MINT & BEGIN QUEST</span>
-                      </span>
-                    )}
-                  </Button>
-                  <div className="absolute -inset-2 bg-gradient-to-r from-cyan-600/30 to-purple-600/30 blur-xl opacity-75"></div>
+                  <NFTMinting
+                    selectedPioneerType={selectedPioneerType || undefined}
+                    onMintComplete={handleNFTMintComplete}
+                    onError={handleNFTMintError}
+                  />
+                </motion.div>
+                
+                <motion.div
+                  className="relative"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                >
+                  <GameJourney 
+                    pioneerType={selectedPioneerType || PioneerType.ORACLE_SEER}
+                    isActive={true}
+                  />
                 </motion.div>
               </div>
             )}

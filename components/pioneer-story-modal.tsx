@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -27,6 +27,26 @@ interface PioneerStoryModalProps {
 }
 
 export function PioneerStoryModal({ pioneer, isOpen, onClose }: PioneerStoryModalProps) {
+  // Handle escape key to close modal
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
   return (
@@ -50,8 +70,11 @@ export function PioneerStoryModal({ pioneer, isOpen, onClose }: PioneerStoryModa
             <Button
               variant="ghost"
               size="sm"
-              className="absolute top-4 right-4 z-10 text-white hover:bg-white/10"
-              onClick={onClose}
+              className="absolute top-4 right-4 z-50 text-white hover:bg-white/20 bg-black/20 border border-white/20 rounded-full w-8 h-8 p-0 flex items-center justify-center"
+              onClick={(e) => {
+                e.stopPropagation()
+                onClose()
+              }}
             >
               <X className="h-4 w-4" />
             </Button>
@@ -165,8 +188,11 @@ export function PioneerStoryModal({ pioneer, isOpen, onClose }: PioneerStoryModa
                   Realm: <span className="text-cyan-400 font-medium">{pioneer.realm}</span>
                 </div>
                 <Button
-                  onClick={onClose}
-                  className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onClose()
+                  }}
+                  className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white px-6 py-2"
                 >
                   Close Story
                 </Button>

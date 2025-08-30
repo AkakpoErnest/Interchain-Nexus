@@ -1,0 +1,37 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "main": "hardhat.config.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:base": "hardhat run scripts/deploy.js --network base",
+    "deploy:base-sepolia": "hardhat run scripts/deploy.js --network baseSepolia",
+    "deploy:ethereum": "hardhat run scripts/deploy.js --network ethereum",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "deploy:filecoin": "hardhat run scripts/deploy.js --network filecoin",
+    "deploy:filecoin-testnet": "hardhat run scripts/deploy.js --network filecoinTestnet",
+    "deploy:flare": "hardhat run scripts/deploy.js --network flare",
+    "deploy:flare-testnet": "hardhat run scripts/deploy.js --network flareTestnet",
+    "deploy:lisk-testnet": "hardhat run scripts/deploy.js --network liskTestnet",
+    "deploy:flare-oracle-seer": "hardhat run scripts/deploy-flare-oracle-seer.js --network flareTestnet",
+    "deploy:base-social-architect": "hardhat run scripts/deploy-base-social-architect.js --network baseSepolia",
+    "deploy:filecoin-data-weaver": "hardhat run scripts/deploy-filecoin-data-weaver.js --network filecoinTestnet",
+    "deploy:ens-identity-guardian": "hardhat run scripts/deploy-ens-identity-guardian.js --network sepolia",
+    "verify:base": "hardhat verify --network base",
+    "verify:base-sepolia": "hardhat verify --network baseSepolia",
+    "deploy:all-testnets": "hardhat run scripts/deploy-all-testnets.js",
+    "node": "hardhat node"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@openzeppelin/contracts": "^4.9.6",
+    "dotenv": "^17.2.1",
+    "hardhat": "^2.26.3"
+  }
+}
