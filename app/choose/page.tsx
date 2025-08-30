@@ -6,56 +6,137 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { motion, AnimatePresence } from "framer-motion"
+import { PioneerStoryModal } from "@/components/pioneer-story-modal"
+import { BookOpen } from "lucide-react"
 
 // Pioneer Card data based on the provided images
 const pioneerCards = [
   {
     id: 1,
     name: "The Social Architect",
-    title: "Builder",
+    title: "Builder of Worlds",
     realm: "Base",
     rarity: "Epic",
-    stats: { creativity: 95, leadership: 88, innovation: 92 },
+    stats: { creativity: 58, leadership: 52, innovation: 60 },
     image: "/base_social_architect_card_refined.png",
-    description: "A master builder who creates social protocols and community structures. Specializes in Base ecosystem development.",
-    lore: "Born from the digital ether, the Social Architect weaves communities from code and connection. Their creations span across the Base ecosystem, building bridges between minds and machines.",
-    passiveBuff: "Builder puzzles get +25% success rate"
+    description: "A visionary who designs and builds community protocols and social applications on Base.",
+    lore: "From the digital dust, the Architect weaves threads of connection, forging communities that thrive on the Base network. Their creations are the bedrock of the new interchain society.",
+    story: "In the early days of the Interchain Nexus, when chaos reigned and protocols clashed, the Social Architect emerged from the Base ecosystem. Born from the collective will of developers seeking a better way to build, they discovered the power of community-driven protocols. Their first creation, the 'Harmony Protocol,' allowed different blockchain communities to communicate and share resources seamlessly. Now, they stand as the guardian of social infrastructure, ensuring that every voice in the interchain has a platform to be heard.",
+    abilities: ["Community Building", "Protocol Design", "Social Engineering"],
+    mission: "Build bridges between all blockchain communities and create the social infrastructure for the Interchain Nexus.",
+    passiveBuff: "Base puzzles get +25% success rate"
   },
   {
     id: 2,
     name: "The Identity Guardian",
-    title: "Protector",
+    title: "Keeper of Names",
     realm: "ENS",
     rarity: "Epic",
-    stats: { security: 95, wisdom: 90, protection: 88 },
+    stats: { security: 60, wisdom: 45, protection: 58 },
     image: "/ens_identity_guardian_card_refined.png",
-    description: "A guardian of digital identity and names. Protects the sacred registry of ENS names across the cosmos.",
-    lore: "In the realm of names, where identity is power, the Guardian stands eternal. They protect the sacred registry, ensuring no name is lost to the void.",
-    passiveBuff: "Identity puzzles get +25% success rate"
+    description: "A protector of digital identities, ensuring the integrity of ENS names across the cosmos.",
+    lore: "In the vast expanse of the interchain, the Guardian stands as a bulwark against anonymity, ensuring every entity has a true name. Their vigilance on ENS safeguards the very essence of digital being.",
+    story: "When the Great Name War threatened to tear apart the interchain, the Identity Guardian arose from the ENS registry. Once a simple protocol, they became sentient through the collective will of millions seeking true digital identity. They witnessed the chaos when names were stolen, identities were forged, and trust was broken. Now, they patrol the name space with unwavering dedication, ensuring that every .eth name is authentic, every identity is verified, and every soul in the interchain can be truly known. Their sacred duty is to maintain the integrity of the name registry, for without true names, there can be no trust in the Interchain Nexus.",
+    abilities: ["Identity Verification", "Name Protection", "Trust Enforcement"],
+    mission: "Protect the sacred registry of ENS names and ensure every entity in the interchain has a true, verifiable identity.",
+    passiveBuff: "ENS puzzles get +25% success rate"
   },
   {
     id: 3,
     name: "The Data Weaver",
-    title: "Archivist",
+    title: "Archivist of the Nexus",
     realm: "Filecoin",
     rarity: "Epic",
-    stats: { knowledge: 95, precision: 92, memory: 90 },
+    stats: { knowledge: 56, precision: 60, memory: 48 },
     image: "/filecoin_data_weaver_card_refined.png",
-    description: "A master of data storage and retrieval. Weaves information across the decentralized Filecoin network.",
+    description: "A master of decentralized storage, preserving the collective memory across the decentralized Filecoin network.",
     lore: "In the vast archives of Filecoin, the Weaver spins threads of data into eternal tapestries. Nothing is forgotten, nothing is lost in their domain.",
-    passiveBuff: "Archive puzzles get +25% success rate"
+    story: "Born from the collective memory of the interchain, the Data Weaver emerged when the first data was lost to the void. They witnessed the tragedy of forgotten transactions, lost smart contracts, and erased histories. Through their connection to the Filecoin network, they learned to weave data into unbreakable threads of storage, ensuring that every piece of information, every transaction, every moment of the interchain's history is preserved forever. They are the keeper of all knowledge, the guardian of memory, and the weaver of the eternal archive that spans across all chains. Their sacred duty is to ensure that nothing is ever truly lost in the Interchain Nexus.",
+    abilities: ["Data Preservation", "Memory Weaving", "Archive Management"],
+    mission: "Preserve all knowledge and data across the interchain, ensuring nothing is ever lost to the void.",
+    passiveBuff: "Filecoin puzzles get +25% success rate"
   },
   {
     id: 4,
     name: "The Oracle Seer",
-    title: "Prophet",
+    title: "Truth Seeker of the Cosmos",
     realm: "Flare",
     rarity: "Epic",
-    stats: { foresight: 95, intuition: 88, prophecy: 90 },
+    stats: { foresight: 62, intuition: 40, prophecy: 58 },
     image: "/flare_oracle_seer_card_refined.png",
     description: "A seer who reads the patterns of randomness and fate. Harnesses Flare's oracle network for divination.",
     lore: "Through the mists of uncertainty, the Seer peers into the future. Their connection to Flare's oracles grants them glimpses of destiny itself.",
-    passiveBuff: "Oracle puzzles get +25% success rate"
+    story: "When the first oracle spoke truth to the interchain, the Oracle Seer was born from the convergence of data streams and cosmic consciousness. They witnessed the chaos of false information, manipulated prices, and corrupted data feeds that threatened to destroy trust across all chains. Through their deep connection to Flare's oracle network, they learned to see through the veil of uncertainty, to read the true patterns of randomness, and to divine the authentic data that flows through the interchain. They are the guardian of truth, the seeker of authentic information, and the prophet who ensures that every oracle speaks with the voice of reality. Their sacred duty is to maintain the integrity of all data feeds in the Interchain Nexus.",
+    abilities: ["Truth Divination", "Data Verification", "Oracle Communication"],
+    mission: "Ensure all oracle data is authentic and true, maintaining the integrity of information across the interchain.",
+    passiveBuff: "Flare puzzles get +25% success rate"
+  },
+  {
+    id: 5,
+    name: "The Consensus Weaver",
+    title: "Harmonizer of the Realms",
+    realm: "Governance",
+    rarity: "Epic",
+    stats: { consensus: 50, diplomacy: 60, unity: 45 },
+    image: "/lisk_consensus_weaver_card_refined.png",
+    description: "A master of multi-chain governance, fostering unity and consensus across all realms. Their presence ensures stability and collective decision-making.",
+    lore: "In the council chambers of governance, the Weaver brings order from chaos. Their wisdom guides the interchain nexus toward unity and progress.",
+    story: "When the Great Fork threatened to split the interchain into warring factions, the Consensus Weaver emerged from the collective will of all blockchain communities seeking harmony. They witnessed the devastation of failed governance, the chaos of competing proposals, and the tragedy of communities torn apart by disagreement. Through their mastery of consensus mechanisms and governance protocols, they learned to weave together the disparate voices of the interchain, creating harmony from discord and unity from division. They are the guardian of collective wisdom, the weaver of consensus, and the harmonizer who ensures that every voice contributes to the greater good. Their sacred duty is to maintain the balance of governance across all realms in the Interchain Nexus.",
+    abilities: ["Consensus Building", "Governance Orchestration", "Harmony Weaving"],
+    mission: "Foster unity and consensus across all blockchain ecosystems, ensuring collective wisdom guides the Interchain Nexus.",
+    passiveBuff: "ALL puzzles get +15% success rate (universal bonus)"
+  },
+  // Rare Locked Cards
+  {
+    id: 6,
+    name: "The Aetherial Alchemist",
+    title: "Transmuter of Realms",
+    realm: "Ethereum",
+    rarity: "Legendary",
+    stats: { alchemy: 70, transmutation: 65, wisdom: 60 },
+    image: "/aetherial_alchemist_card.png",
+    description: "A master of ethereal alchemy who can transmute data across different blockchain realms. Their power lies in transforming one form of digital matter into another.",
+    lore: "Born from the primordial chaos of the first smart contract, the Alchemist learned to transmute the very essence of blockchain data.",
+    story: "In the early days of Ethereum, when smart contracts were still mysterious and powerful, the Aetherial Alchemist emerged from the convergence of code and consciousness. They discovered the ancient art of digital alchemy - the ability to transmute data, tokens, and even entire protocols from one form to another. Their mastery over the ethereal realm allows them to bridge the gap between different blockchain ecosystems, transforming incompatible data structures into harmonious ones. They are the keeper of the Philosopher's Stone of blockchain - the secret to perfect interoperability.",
+    abilities: ["Data Transmutation", "Cross-Chain Alchemy", "Protocol Synthesis"],
+    mission: "Master the art of digital alchemy to create perfect interoperability between all blockchain realms.",
+    passiveBuff: "Cross-chain puzzles get +30% success rate",
+    isLocked: true,
+    unlockRequirement: "Complete all 5 realm quests to unlock"
+  },
+  {
+    id: 7,
+    name: "The Chrono Synthesizer",
+    title: "Time Weaver",
+    realm: "Polkadot",
+    rarity: "Legendary",
+    stats: { time: 75, synthesis: 68, control: 62 },
+    image: "/chrono_synthesizer_card.png",
+    description: "A master of temporal manipulation who can synthesize events across different time periods and blockchain epochs. They control the flow of time itself.",
+    lore: "From the temporal void between blocks, the Synthesizer weaves the threads of time, connecting past, present, and future.",
+    story: "When the first blockchain fork created a temporal paradox, the Chrono Synthesizer was born from the convergence of time streams. They discovered the ability to manipulate blockchain time itself - to rewind transactions, fast-forward consensus, and synthesize events from different epochs. Their power allows them to see the consequences of actions before they happen, to undo mistakes, and to create perfect timing for complex multi-chain operations. They are the guardian of blockchain causality, ensuring that the flow of time remains consistent across all realms.",
+    abilities: ["Temporal Manipulation", "Event Synthesis", "Causality Control"],
+    mission: "Master the flow of time across all blockchain realms to ensure perfect synchronization.",
+    passiveBuff: "Time-based puzzles get +30% success rate",
+    isLocked: true,
+    unlockRequirement: "Achieve 100% completion in any 3 realms"
+  },
+  {
+    id: 8,
+    name: "The Shadow Weaver",
+    title: "Master of Secrets",
+    realm: "Privacy",
+    rarity: "Legendary",
+    stats: { stealth: 72, privacy: 70, secrets: 68 },
+    image: "/shadow_weaver_card.png",
+    description: "A master of privacy and secrecy who operates in the shadows of the interchain. They protect the most sensitive data and transactions.",
+    lore: "In the dark corners of the blockchain, where privacy meets power, the Shadow Weaver guards the secrets that must never be revealed.",
+    story: "Born from the collective need for privacy in an increasingly transparent world, the Shadow Weaver emerged from the shadows of zero-knowledge proofs and privacy protocols. They mastered the art of operating in complete secrecy while maintaining the integrity of the interchain. Their power lies in their ability to hide transactions, protect identities, and guard the most sensitive data without compromising the trust and security of the network. They are the guardian of privacy, the keeper of secrets, and the protector of those who must operate in the shadows.",
+    abilities: ["Privacy Protection", "Secret Keeping", "Shadow Operations"],
+    mission: "Protect the privacy and secrets of the interchain while maintaining its integrity and trust.",
+    passiveBuff: "Privacy puzzles get +30% success rate",
+    isLocked: true,
+    unlockRequirement: "Complete 50 secret achievements"
   }
 ]
 
@@ -63,9 +144,21 @@ export default function ChoosePage() {
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const [isMinting, setIsMinting] = useState(false)
   const [mintComplete, setMintComplete] = useState(false)
+  const [storyModalOpen, setStoryModalOpen] = useState(false)
+  const [selectedPioneerForStory, setSelectedPioneerForStory] = useState<any>(null)
 
   const handleCardSelect = (cardId: number) => {
     setSelectedCard(cardId)
+  }
+
+  const handleLearnMore = (pioneer: any) => {
+    setSelectedPioneerForStory(pioneer)
+    setStoryModalOpen(true)
+  }
+
+  const handleCloseStory = () => {
+    setStoryModalOpen(false)
+    setSelectedPioneerForStory(null)
   }
 
   const handleMint = async () => {
@@ -215,23 +308,44 @@ export default function ChoosePage() {
                 className="relative"
               >
                 <Card
-                  className={`relative overflow-hidden transition-all duration-300 cursor-pointer ${
-                    selectedCard === card.id 
+                  className={`relative overflow-hidden transition-all duration-300 ${
+                    card.isLocked 
+                      ? "cursor-not-allowed opacity-60" 
+                      : "cursor-pointer"
+                  } ${
+                    selectedCard === card.id && !card.isLocked
                       ? "ring-4 ring-cyan-400 scale-110 shadow-2xl shadow-cyan-400/50" 
-                      : "hover:scale-105 hover:shadow-xl hover:shadow-purple-400/30"
+                      : !card.isLocked
+                      ? "hover:scale-105 hover:shadow-xl hover:shadow-purple-400/30"
+                      : ""
                   } bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm border-2 ${
-                    selectedCard === card.id ? "border-cyan-400" : "border-slate-600"
+                    selectedCard === card.id && !card.isLocked ? "border-cyan-400" : 
+                    card.isLocked ? "border-gray-600" : "border-slate-600"
                   }`}
-                  onClick={() => handleCardSelect(card.id)}
+                  onClick={() => !card.isLocked && handleCardSelect(card.id)}
                 >
                   <CardHeader className="pb-2">
                     <div className="aspect-[3/4] rounded-lg overflow-hidden mb-4 relative">
                       <img 
                         src={card.image} 
                         alt={card.name} 
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" 
+                        className={`w-full h-full object-cover transition-transform duration-300 ${
+                          !card.isLocked ? "hover:scale-110" : ""
+                        }`} 
                       />
-                      {selectedCard === card.id && (
+                      {card.isLocked && (
+                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="w-12 h-12 mx-auto mb-2 bg-gray-600 rounded-full flex items-center justify-center">
+                              <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                              </svg>
+                            </div>
+                            <p className="text-xs text-gray-300 font-medium">LOCKED</p>
+                          </div>
+                        </div>
+                      )}
+                      {selectedCard === card.id && !card.isLocked && (
                         <motion.div
                           className="absolute inset-0 bg-gradient-to-t from-cyan-400/30 to-transparent border-2 border-cyan-400 rounded-lg"
                           initial={{ opacity: 0 }}
@@ -240,7 +354,11 @@ export default function ChoosePage() {
                         />
                       )}
                       <div className="absolute top-2 right-2">
-                        <Badge className="bg-purple-600/80 text-white border-purple-400">
+                        <Badge className={`${
+                          card.rarity === "Legendary" 
+                            ? "bg-gradient-to-r from-yellow-600 to-orange-600 text-white border-yellow-400" 
+                            : "bg-purple-600/80 text-white border-purple-400"
+                        }`}>
                           {card.rarity}
                         </Badge>
                       </div>
@@ -252,32 +370,87 @@ export default function ChoosePage() {
                   </CardHeader>
                   
                   <CardContent className="space-y-4">
-                    <p className="text-sm text-gray-300 leading-relaxed">{card.description}</p>
-                    
-                    {/* Stats */}
-                    <div className="space-y-2">
-                      {Object.entries(card.stats).map(([stat, value]) => (
-                        <div key={stat} className="flex justify-between items-center">
-                          <span className="capitalize text-gray-400 text-sm">{stat}</span>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transition-all duration-500"
-                                style={{ width: `${value}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-cyan-400 font-bold text-sm w-8">{value}</span>
+                    {card.isLocked ? (
+                      // Locked Card Content
+                      <>
+                        <div className="text-center space-y-3">
+                          <p className="text-sm text-gray-400 leading-relaxed">{card.description}</p>
+                          
+                          {/* Unlock Requirement */}
+                          <div className="p-3 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-lg border border-yellow-400/30">
+                            <p className="text-xs text-yellow-300 font-medium text-center">
+                              🔒 {card.unlockRequirement}
+                            </p>
+                          </div>
+                          
+                          {/* Locked Stats Preview */}
+                          <div className="space-y-2 opacity-50">
+                            {Object.entries(card.stats).map(([stat, value]) => (
+                              <div key={stat} className="flex justify-between items-center">
+                                <span className="capitalize text-gray-500 text-sm">{stat}</span>
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-16 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full"
+                                      style={{ width: `${value}%` }}
+                                    ></div>
+                                  </div>
+                                  <span className="text-yellow-400 font-bold text-sm w-8">{value}</span>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
+                      </>
+                    ) : (
+                      // Unlocked Card Content
+                      <>
+                        <p className="text-sm text-gray-300 leading-relaxed">{card.description}</p>
+                        
+                        {/* Stats */}
+                        <div className="space-y-2">
+                          {Object.entries(card.stats).map(([stat, value]) => (
+                            <div key={stat} className="flex justify-between items-center">
+                              <span className="capitalize text-gray-400 text-sm">{stat}</span>
+                              <div className="flex items-center space-x-2">
+                                <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
+                                  <div 
+                                    className="h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transition-all duration-500"
+                                    style={{ width: `${value}%` }}
+                                  ></div>
+                                </div>
+                                <span className="text-cyan-400 font-bold text-sm w-8">{value}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {/* Passive Buff */}
+                        <div className="p-3 bg-gradient-to-r from-cyan-600/20 to-purple-600/20 rounded-lg border border-cyan-400/30">
+                          <p className="text-xs text-cyan-300 font-medium text-center">{card.passiveBuff}</p>
+                        </div>
+                        
+                        {/* Learn More Button */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-cyan-400/50 text-cyan-300 hover:bg-cyan-400/10 hover:border-cyan-400"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleLearnMore(card)
+                          }}
+                        >
+                          <BookOpen className="h-4 w-4 mr-2" />
+                          Learn More
+                        </Button>
+                      </>
+                    )}
                     
-                    {/* Passive Buff */}
-                    <div className="p-3 bg-gradient-to-r from-cyan-600/20 to-purple-600/20 rounded-lg border border-cyan-400/30">
-                      <p className="text-xs text-cyan-300 font-medium text-center">{card.passiveBuff}</p>
-                    </div>
-                    
-                    <Badge className="w-full justify-center bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
+                    <Badge className={`w-full justify-center ${
+                      card.rarity === "Legendary" 
+                        ? "bg-gradient-to-r from-yellow-600 to-orange-600 text-white border-0" 
+                        : "bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0"
+                    }`}>
                       {card.realm} Realm
                     </Badge>
                   </CardContent>
@@ -361,6 +534,15 @@ export default function ChoosePage() {
           </motion.div>
         </div>
       </main>
+
+      {/* Story Modal */}
+      {selectedPioneerForStory && (
+        <PioneerStoryModal
+          pioneer={selectedPioneerForStory}
+          isOpen={storyModalOpen}
+          onClose={handleCloseStory}
+        />
+      )}
     </div>
   )
 }
