@@ -10,14 +10,14 @@ import { PioneerStoryModal } from "@/components/pioneer-story-modal"
 import { NFTMinting } from "@/components/nft-minting"
 import { ENSMinting } from "@/components/ens-minting"
 import { MetaMaskConnectSimple } from "@/components/metamask-connect-simple"
-import { GameJourney } from "@/components/game-journey"
+
 import { NetworkSpeedIndicator } from "@/components/network-speed-indicator"
-import { SupplyTracker } from "@/components/supply-tracker"
-import { DebugPioneerStatus } from "@/components/debug-pioneer-status"
+
+
 import { BookOpen, CheckCircle, Play, Package } from "lucide-react"
 import { PioneerType, getPioneerTypeFromRealm, getChainIdForPioneerType, getNetworkNameForPioneerType, getPioneerTypeInfo } from "@/lib/blockchain"
 import { useAccount, useChainId } from 'wagmi'
-import { useHasPioneer, usePlayerPioneer, usePioneerData } from '@/lib/hooks/usePioneerContract'
+
 
 // Pioneer Card data based on the provided images
 const pioneerCards = [
@@ -157,12 +157,8 @@ export default function ChoosePage() {
   const [storyModalOpen, setStoryModalOpen] = useState(false)
   const [selectedPioneerForStory, setSelectedPioneerForStory] = useState<any>(null)
   
-  // Check if user has a pioneer
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
-  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, chainId)
-  const { data: playerPioneerTokenId } = usePlayerPioneer(address, chainId)
-  const { data: pioneerData } = usePioneerData(playerPioneerTokenId, chainId)
 
   const handleCardSelect = (cardId: number) => {
     setSelectedCard(cardId)
@@ -220,190 +216,13 @@ export default function ChoosePage() {
   const selectedPioneerData = selectedCard ? pioneerCards.find(card => card.id === selectedCard) : null
   const selectedPioneerType = selectedPioneerData ? getPioneerTypeFromRealm(selectedPioneerData.realm) : undefined
 
-  // Show loading state while checking pioneer status
-  if (hasPioneerLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-gray-300">Checking your Pioneer status...</p>
-        </div>
-      </div>
-    )
-  }
 
-  // Show minted status if user already has a pioneer
-  if (hasPioneer && pioneerData) {
-    const pioneerTypeInfo = getPioneerTypeInfo(pioneerData.pioneerType)
-    
-    return (
-      <div className="min-h-screen relative overflow-hidden">
-        <DebugPioneerStatus />
-        {/* Dynamic Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-15"
-          style={{
-            backgroundImage: "url('/cyberpunk-archer-with-glowing-bow.png')"
-          }}
-        ></div>
-        
-        {/* Animated overlay */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-purple-500/10 to-pink-500/10"></div>
-        </div>
 
-        {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-cyan-400/30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center space-x-4">
-                <img 
-                  src="/LOGO WITHOUT WORD.png" 
-                  alt="Interchain Nexus Logo" 
-                  className="w-8 h-8"
-                />
-                <a href="/" className="text-xl font-bold text-cyan-400 text-glow hover:opacity-80 transition-opacity">
-                  Interchain Nexus
-                </a>
-                <div className="hidden md:flex space-x-6">
-                  <Button variant="ghost" className="glow-hover text-gray-300 hover:text-cyan-400">
-                    <a href="/inventory">Inventory</a>
-                  </Button>
-                  <Button variant="ghost" className="glow-hover text-gray-300 hover:text-cyan-400">
-                    <a href="/play">Play</a>
-                  </Button>
-                  <Button variant="ghost" className="glow-hover text-gray-300 hover:text-cyan-400">
-                    Leaderboard
-                  </Button>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <Badge variant="secondary" className="hidden sm:flex glow bg-purple-600/80 text-white">
-                  pioneer.eth
-                </Badge>
-                <MetaMaskConnectSimple />
-              </div>
-            </div>
-          </div>
-        </nav>
 
-        {/* Main Content */}
-        <main className="pt-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <motion.div
-              className="text-center mb-12 relative z-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h1 className="text-5xl sm:text-7xl font-bold mb-4">
-                <span className="bg-gradient-to-r from-green-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                  PIONEER MINTED
-                </span>
-              </h1>
-              <p className="text-xl text-gray-300 mb-8">
-                Your Pioneer NFT has been successfully minted!
-              </p>
-            </motion.div>
-
-            {/* Pioneer Card Display */}
-            <motion.div
-              className="max-w-2xl mx-auto mb-12"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <Card className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm border-2 border-green-400/50">
-                <CardHeader className="text-center">
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden mb-4 relative max-w-xs mx-auto">
-                    <img 
-                      src={pioneerTypeInfo.image} 
-                      alt={pioneerData.name} 
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-green-400/20 to-transparent"></div>
-                    <div className="absolute top-2 right-2">
-                      <Badge className="bg-green-600/80 text-white border-green-400">
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Minted
-                      </Badge>
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl font-bold text-green-300 mb-2">{pioneerData.name}</CardTitle>
-                  <p className="text-lg text-purple-300 font-medium">{pioneerData.title}</p>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <div className="text-center space-y-3">
-                    <p className="text-gray-300 leading-relaxed">{pioneerTypeInfo.description}</p>
-                    
-                    <div className="flex justify-center space-x-4">
-                      <Badge className="bg-purple-600/80 text-white px-4 py-2">
-                        {pioneerData.realm} Realm
-                      </Badge>
-                      <Badge className="bg-cyan-600/80 text-white px-4 py-2">
-                        {pioneerData.rarity}
-                      </Badge>
-                    </div>
-                    
-                    <div className="p-3 bg-gradient-to-r from-green-600/20 to-cyan-600/20 rounded-lg border border-green-400/30">
-                      <p className="text-sm text-green-300 font-medium">
-                        Token ID: {playerPioneerTokenId?.toString()}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Action Buttons */}
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <a 
-                href="/inventory"
-                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 inline-flex items-center"
-              >
-                <Package className="h-5 w-5 mr-2" />
-                Check Inventory
-              </a>
-              
-              <a 
-                href="/play"
-                className="bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 inline-flex items-center"
-              >
-                <Play className="h-5 w-5 mr-2" />
-                Start Game
-              </a>
-            </motion.div>
-
-            {/* Success Message */}
-            <motion.div
-              className="mt-8 max-w-md mx-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-            >
-              <Alert className="border-green-500/50 bg-green-500/10">
-                <CheckCircle className="h-4 w-4 text-green-400" />
-                <AlertDescription className="text-center text-green-300">
-                  Your Pioneer NFT is ready! You can now explore the Interchain Nexus and begin your journey across the realms.
-                </AlertDescription>
-              </Alert>
-            </motion.div>
-          </div>
-        </main>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <DebugPioneerStatus />
+
       {/* Dynamic Background with your new images */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900"></div>
       <div 
@@ -750,17 +569,7 @@ export default function ChoosePage() {
                   )}
                 </motion.div>
                 
-                <motion.div
-                  className="relative"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                >
-                  <GameJourney 
-                    pioneerType={selectedPioneerType || PioneerType.ORACLE_SEER}
-                    isActive={true}
-                  />
-                </motion.div>
+
               </div>
             )}
             
@@ -780,15 +589,7 @@ export default function ChoosePage() {
             )}
           </motion.div>
 
-          {/* Supply Tracker */}
-          <motion.div
-            className="mt-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <SupplyTracker />
-          </motion.div>
+
         </div>
       </main>
 
