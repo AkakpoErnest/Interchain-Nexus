@@ -1,0 +1,16 @@
+# Ignore smart contract files for frontend deployment
+contracts/
+docs/
+*.sol
+hardhat.config.js
+
+# Ignore development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignore build artifacts
+.next/
+node_modules/
+*.log
