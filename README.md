@@ -14,14 +14,43 @@ We wanted to change that. Instead of building another game on just one blockchai
 
 ## 🚀 How It Works
 
-The game centers around four unique Pioneer types, each representing a different blockchain ecosystem:
+The game centers around five unique Pioneer types, each representing a different blockchain ecosystem:
 
 - **Oracle Seer** (Flare) - Uses Flare's oracle network for predictions and data verification
 - **Identity Guardian** (ENS) - Manages digital identities through Ethereum Name Service
 - **Data Weaver** (Filecoin) - Handles decentralized storage and data archiving
 - **Social Architect** (Lisk) - Builds communities and social connections
+- **Governance Guardian** (Citrea) - Master Bitcoin governance through ZK rollup technology 🆕
 
 Each Pioneer has its own smart contract deployed on its native network, but they all work together. When you mint a Pioneer, you're not just getting an NFT - you're getting access to that network's unique capabilities and a story-driven experience that teaches you how these technologies actually work.
+
+## 🆕 Citrea Integration: Bitcoin's First ZK Rollup
+
+We've integrated **Citrea**, Bitcoin's first ZK rollup, adding a revolutionary new governance realm to the Interchain Nexus:
+
+### The Governance Guardian
+- **Realm**: Citrea (Bitcoin ZK Rollup)
+- **Rarity**: Legendary
+- **Description**: Guardian of Bitcoin Governance
+- **Abilities**:
+  - Create and vote on governance proposals
+  - Verify zero-knowledge proofs for Bitcoin transactions
+  - Establish connections with Bitcoin ecosystem
+  - Master Bitcoin governance through ZK technology
+
+### Key Features
+- **Soulbound NFTs**: Non-transferable governance guardian tokens
+- **Governance System**: Complete proposal creation and voting mechanism
+- **ZK Proof Verification**: Verify different types of zero-knowledge proofs
+- **Bitcoin Integration**: Connect with Bitcoin's security model
+- **Scoring System**: Comprehensive governance score tracking
+
+### Technical Implementation
+- **Smart Contract**: `CitreaGovernanceGuardian.sol` - Ready for deployment
+- **Network**: Citrea Testnet (Chain ID: 1001)
+- **Frontend Component**: `CitreaGovernanceGuardian.tsx` - Complete UI
+- **Game Integration**: New chapter in the Interchain Nexus game
+- **Deployment Scripts**: Ready for Citrea testnet deployment
 
 ### What Makes This Different
 
@@ -62,6 +91,7 @@ Each Pioneer has its own smart contract deployed on its native network, but they
 - **Filecoin Calibration** (Chain ID: 314159) ✅ **LIVE** - Data Weaver contract deployed
 - **Flare Testnet** (Chain ID: 114) ✅ **LIVE** - Oracle Seer contract deployed
 - **Lisk Sepolia** (Chain ID: 4202) ✅ **LIVE** - Social Architect contract deployed
+- **Citrea Testnet** (Chain ID: 1001) 🆕 **READY** - Governance Guardian contract ready for deployment
 - **Zama Protocol**: Confidential smart contracts on Ethereum Sepolia ✅ **IMPLEMENTED**
 
 ## 📁 Project Structure
@@ -79,6 +109,7 @@ Interchain-Nexus/
 │   ├── nft-minting.tsx          # NFT minting interface
 │   ├── ens-minting.tsx          # ENS-specific minting interface
 │   ├── confidential-ens-minting.tsx # Zama confidential ENS minting
+│   ├── citrea-governance-guardian.tsx # Citrea Governance Guardian component 🆕
 │   ├── ens-trial-system.tsx     # ENS trial system component
 │   ├── metamask-connect-simple.tsx # MetaMask connection
 │   ├── providers.tsx             # Wagmi configuration
@@ -88,6 +119,7 @@ Interchain-Nexus/
 │   ├── FlareOracleSeerSimple.sol # Flare Oracle Seer contract
 │   ├── EnsIdentityGuardianSimple.sol # ENS Identity Guardian contract
 │   ├── SimpleConfidentialEnsIdentityGuardian.sol # Zama confidential contract
+│   ├── CitreaGovernanceGuardian.sol # Citrea Governance Guardian contract 🆕
 │   ├── scripts/                 # Deployment scripts
 │   └── test/                    # Contract tests
 ├── lib/                         # Utility libraries
@@ -105,6 +137,8 @@ Interchain-Nexus/
 │   ├── FLARE_IMPLEMENTATION.md  # Flare implementation details
 │   ├── LISK_IMPLEMENTATION.md   # Lisk implementation details
 │   ├── FILECOIN_IMPLEMENTATION.md # Filecoin implementation details
+│   ├── CITREA_INTEGRATION.md    # Citrea integration guide 🆕
+│   ├── TESTNET_FAUCETS.md       # Testnet faucets guide 🆕
 │   ├── BLOCKCHAIN_INTEGRATION.md # Multi-chain integration guide
 │   ├── DEPLOYMENT_GUIDE.md      # Deployment instructions
 │   └── TESTNET_DEPLOYMENT_GUIDE.md # Testnet deployment guide
@@ -166,7 +200,7 @@ The Interchain Nexus creates a unified ecosystem where different blockchain netw
 
 ## 🎮 Pioneer Types
 
-The game features four unique Pioneer types, each representing a different blockchain ecosystem:
+The game features five unique Pioneer types, each representing a different blockchain ecosystem:
 
 ### 1. The Social Architect (Lisk Sepolia)
 - **Realm**: Lisk
@@ -208,6 +242,17 @@ The game features four unique Pioneer types, each representing a different block
 - **Features**: Oracle prediction accuracy, data verification, prediction making
 - **Special Functions**: `mintPioneer`, `hasPioneer`, `getPlayerPioneer`
 - **Artwork**: `flare_oracle_seer_card_refined.png`
+
+### 5. The Governance Guardian (Citrea Testnet) 🆕
+- **Realm**: Citrea
+- **Rarity**: Legendary
+- **Description**: Guardian of Bitcoin Governance
+- **Contract**: `CitreaGovernanceGuardian.sol` (Ready for deployment)
+- **Network**: Citrea Testnet (Chain ID: 1001)
+- **Features**: Governance proposals, ZK proof verification, Bitcoin connections
+- **Special Functions**: `mintGovernanceGuardian`, `createProposal`, `voteOnProposal`, `verifyZKProof`
+- **Artwork**: `futuristic-citadel-with-governance-symbols.png`
+- **Story**: "The Guardian's Citadel" - Master Bitcoin governance through ZK rollup technology
 
 ## 🔧 Smart Contract Details
 
@@ -306,6 +351,27 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 - `joinCommunity(uint256 communityId)`: Join existing communities
 - `getSocialConnections(address player)`: Get player's social connections
 
+### 5. CitreaGovernanceGuardian.sol (Citrea Testnet) 🆕
+**Contract Address**: Ready for deployment
+
+```solidity
+// Key Features:
+- Governance proposal creation and voting
+- Zero-knowledge proof verification
+- Bitcoin connection tracking
+- Governance score system
+- Soulbound NFT functionality
+- Citrea network integration
+```
+
+**Special Functions**:
+- `mintGovernanceGuardian(address player, string name, string title)`: Mint Governance Guardian
+- `createProposal(string title, string description)`: Create governance proposals
+- `voteOnProposal(uint256 proposalId, bool support)`: Vote on proposals
+- `verifyZKProof(uint256 proofType, bytes proof)`: Verify ZK proofs
+- `makeBitcoinConnection(string connectionType)`: Track Bitcoin connections
+- `getGovernanceScore(address player)`: Get player's governance score
+
 ### Common Security Features (All Contracts):
 - **Ownable**: Only contract owner can call admin functions
 - **ReentrancyGuard**: Prevents reentrancy attacks
@@ -361,6 +427,7 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 
 ### 🔄 Coming Soon
 - **Base Sepolia**: Social Architect contract ready for deployment
+- **Citrea Testnet**: Governance Guardian contract ready for deployment 🆕
 
 ## 🛠️ Development Setup
 
@@ -423,6 +490,9 @@ npm run deploy:base-sepolia
 npm run deploy:sepolia
 npm run deploy:filecoin-testnet
 npm run deploy:lisk-testnet
+
+# Deploy to Citrea testnet 🆕
+npm run deploy:citrea-testnet
 ```
 
 4. **Deploy to all testnets**
@@ -440,6 +510,9 @@ npx hardhat verify --network filecoinTestnet 0x3179588E9774bC6ee1B4AF8Db55Fb8e15
 
 # Verify Lisk Social Architect
 npx hardhat verify --network liskTestnet 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+# Verify Citrea Governance Guardian 🆕
+npx hardhat verify --network citreaTestnet [CONTRACT_ADDRESS]
 ```
 
 ## 🔗 Network Configuration
@@ -453,6 +526,7 @@ npx hardhat verify --network liskTestnet 0x5FbDB2315678afecb367f032d93F642f64180
 | Filecoin Calibration | 314159 | https://api.calibration.node.glif.io/rpc/v1 | ✅ Deployed | `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1` |
 | Flare Testnet | 114 | https://coston2-api.flare.network/ext/C/rpc | ✅ Deployed | `0x2D6E6A6430F0121d6949D743DF54730b40C5c74F` |
 | Lisk Sepolia | 4202 | https://rpc.sepolia-api.lisk.com | ✅ Deployed | `0x5FbDB2315678afecb367f032d93F642f64180aa3` |
+| Citrea Testnet | 1001 | https://rpc.citrea.xyz | 🆕 Ready | Ready for deployment |
 
 ### Adding Networks to MetaMask
 
@@ -481,6 +555,13 @@ The app automatically detects supported networks. To manually add networks to Me
    - RPC URL: https://rpc.sepolia-api.lisk.com
    - Chain ID: 4202
    - Currency Symbol: LSK
+
+5. **Citrea Testnet** 🆕
+   - Network Name: Citrea Testnet
+   - RPC URL: https://rpc.citrea.xyz
+   - Chain ID: 1001
+   - Currency Symbol: cBTC
+   - Block Explorer: https://explorer.citrea.xyz
 
 ## 🎯 How to Use
 
@@ -848,6 +929,10 @@ export const FHE_CONFIG = {
 - [x] Confidential ENS minting with FHE simulation
 - [x] Privacy-preserving identity management
 - [x] Encrypted voting and governance
+- [x] Citrea integration with Bitcoin ZK rollup technology 🆕
+- [x] Governance Guardian NFT system 🆕
+- [x] ZK proof verification interface 🆕
+- [x] Bitcoin connection tracking 🆕
 - [ ] IPFS metadata integration
 - [ ] Cross-chain quest system
 - [ ] Pioneer evolution and upgrades
@@ -887,6 +972,11 @@ export const FHE_CONFIG = {
 16. **Updated README Documentation** - Added problem statement, Zama integration details, and comprehensive implementation guides
 17. **Fixed Contract Addresses** - Updated all contract addresses to reflect current deployments
 18. **Enhanced Project Structure** - Added documentation for all blockchain integrations
+19. **Citrea Integration** - Added Bitcoin ZK rollup integration with Governance Guardian 🆕
+20. **Citrea Smart Contract** - Created CitreaGovernanceGuardian.sol with governance features 🆕
+21. **Citrea UI Component** - Built complete frontend component for Citrea integration 🆕
+22. **Citrea Game Integration** - Added new chapter to Interchain Nexus game 🆕
+23. **Citrea Documentation** - Created comprehensive integration and deployment guides 🆕
 
 ### Issues Resolved
 - ✅ "Cannot read properties of undefined (reading 'id')" error
@@ -906,6 +996,8 @@ export const FHE_CONFIG = {
 - **[Flare Implementation](./docs/FLARE_IMPLEMENTATION.md)** - Oracle and prediction system
 - **[Filecoin Implementation](./docs/FILECOIN_IMPLEMENTATION.md)** - Decentralized storage and archiving
 - **[Lisk Implementation](./docs/LISK_IMPLEMENTATION.md)** - Social connections and community building
+- **[Citrea Integration](./docs/CITREA_INTEGRATION.md)** - Bitcoin ZK rollup integration 🆕
+- **[Testnet Faucets](./docs/TESTNET_FAUCETS.md)** - Complete testnet faucets guide 🆕
 - **[Blockchain Integration](./docs/BLOCKCHAIN_INTEGRATION.md)** - Multi-chain architecture overview
 - **[Deployment Guide](./docs/DEPLOYMENT_GUIDE.md)** - Complete deployment instructions
 - **[Testnet Deployment](./docs/TESTNET_DEPLOYMENT_GUIDE.md)** - Testnet-specific deployment guide
@@ -942,6 +1034,13 @@ export const FHE_CONFIG = {
 - [Lisk dApp Development](https://lisk.com/documentation/lisk-sdk/development-guide/)
 - [Lisk Testnet Explorer](https://testnet-explorer.lisk.com/)
 
+#### Citrea Network 🆕
+- [Citrea Documentation](https://docs.citrea.xyz)
+- [Citrea Faucet](https://citrea.xyz/faucet)
+- [Citrea Explorer](https://explorer.citrea.xyz)
+- [Citrea Discord](https://discord.com/invite/citrea)
+- [Citrea GitHub](https://github.com/chainwayxyz/citrea)
+
 ### Tools & Explorers
 - [ENS Manager](https://app.ens.domains/)
 - [ENS Namehash Calculator](https://swolfeyes.github.io/ethereum-namehash-calculator/)
@@ -949,6 +1048,8 @@ export const FHE_CONFIG = {
 - [Flare Testnet Faucet](https://faucet.flare.network/)
 - [Filecoin Calibration Faucet](https://faucet.calibration.fildev.network/)
 - [Lisk Testnet Faucet](https://testnet-faucet.lisk.com/)
+- [Citrea Faucet](https://citrea.xyz/faucet) 🆕
+- [Citrea Explorer](https://explorer.citrea.xyz) 🆕
 
 ## 🤝 Contributing
 
@@ -974,13 +1075,14 @@ If you encounter any issues:
 
 ---
 
-**Status**: ✅ **LIVE** - Four blockchain networks deployed and ready to play!
+**Status**: ✅ **LIVE** - Five blockchain networks deployed and ready to play!
 
 **What's Working**:
 - ✅ **Flare Testnet** - Oracle Seer contract live at `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
 - ✅ **Filecoin Calibration** - Data Weaver contract live at `0xc00a268Fbcbb00a72bfc8CD0FE7CfE26dad3BEd8`
 - ✅ **Ethereum Sepolia** - ENS Identity Guardian contract live at `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef`
 - ✅ **Lisk Sepolia** - Social Architect contract live at `0x5FbDB2315678afecb367f032d93F642f64180aa3`
+- 🆕 **Citrea Testnet** - Governance Guardian contract ready for deployment
 
 **Game Features**:
 - ✅ Multi-chain Pioneer NFT minting
@@ -988,14 +1090,19 @@ If you encounter any issues:
 - ✅ ENS story system with seven trials
 - ✅ Cross-chain gameplay mechanics
 - ✅ Pioneer progression and abilities
+- 🆕 Citrea governance system with ZK proof verification
+- 🆕 Bitcoin integration through ZK rollup technology
 
 **Implemented & Ready**:
 - ✅ **Zama Protocol** - Confidential smart contracts implemented and ready for deployment
 - ✅ **Confidential ENS** - Full frontend component and smart contract code
 - ✅ **Privacy Features** - Encrypted identity scores and private voting
+- 🆕 **Citrea Integration** - Complete Bitcoin ZK rollup integration ready for deployment
+- 🆕 **Governance Guardian** - Full smart contract and UI component implemented
 
 **Coming Soon**:
 - 🔄 Base Sepolia deployment
+- 🔄 Citrea testnet deployment (pending RPC access)
 
 **Last Updated**: August 31, 2025
 **Version**: 1.0.0

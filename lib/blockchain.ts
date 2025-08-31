@@ -453,7 +453,7 @@ export function getPioneerTypeInfo(type: PioneerType) {
       realm: 'Citrea',
       rarity: 'Legendary',
       description: 'Guardian of Bitcoin governance through ZK rollup technology',
-      image: '/citrea_governance_guardian_card_refined.png',
+      image: '/futuristic-citadel-with-governance-symbols.png',
     },
   }
   

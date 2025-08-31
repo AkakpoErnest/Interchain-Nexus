@@ -136,7 +136,7 @@ const pioneerCards = [
     realm: "Citrea",
     rarity: "Legendary",
     stats: { governance: 70, bitcoin: 75, zkProofs: 65 },
-    image: "/citrea_governance_guardian_card_refined.png",
+    image: "/futuristic-citadel-with-governance-symbols.png",
     description: "A master of Bitcoin governance through ZK rollup technology. Their power lies in bringing smart contract functionality to Bitcoin while maintaining its security.",
     lore: "From the depths of Bitcoin's proof-of-work, the Guardian learned to bring programmable governance to the most secure blockchain in existence.",
     story: "When the first Bitcoin rollup was proposed, the Governance Guardian emerged from the convergence of Bitcoin's security and Ethereum's programmability. They witnessed the limitations of Bitcoin's scripting language, the need for smart contracts on the most secure blockchain, and the potential of zero-knowledge proofs to bridge these worlds. Through their mastery of Citrea's Bitcoin rollup technology, they learned to bring EVM compatibility to Bitcoin while maintaining its security guarantees. They are the guardian of Bitcoin's evolution, the seer of programmable money, and the oracle who ensures that Bitcoin can participate in the smart contract revolution. Their sacred duty is to bring the power of smart contracts to the most secure blockchain in the Interchain Nexus.",
