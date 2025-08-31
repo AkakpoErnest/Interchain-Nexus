@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { EpicOpeningAnimation } from "@/components/epic-opening-animation"
 import GameLoader from "@/components/game-loader"
 import { BackgroundMusic } from "@/components/background-music"
+import { ArrowDown, ArrowRight, Sparkles } from "lucide-react"
 
 export default function HomePage() {
   const [showLoader, setShowLoader] = useState(true)
@@ -120,19 +121,36 @@ export default function HomePage() {
               </p>
             </div>
 
+            {/* Animated Arrow pointing to Begin Odyssey */}
+            <div className="relative mb-8">
+              <div className="flex items-center justify-center space-x-4 animate-bounce">
+                <Sparkles className="h-6 w-6 text-yellow-400 animate-pulse" />
+                <ArrowDown className="h-8 w-8 text-cyan-400 animate-bounce" />
+                <span className="text-lg text-cyan-300 font-semibold">Start Your Journey</span>
+                <ArrowDown className="h-8 w-8 text-cyan-400 animate-bounce" />
+                <Sparkles className="h-6 w-6 text-yellow-400 animate-pulse" />
+              </div>
+            </div>
+
             {/* Game Start Button */}
             <div className="relative z-20">
               <Button 
                 size="lg" 
-                className="text-xl px-12 py-8 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 border-2 border-cyan-400 shadow-2xl transform hover:scale-105 transition-all duration-300 cursor-pointer"
+                className="text-xl px-12 py-8 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 border-2 border-cyan-400 shadow-2xl transform hover:scale-105 transition-all duration-300 cursor-pointer animate-pulse"
                 onClick={handleBeginOdyssey}
                 style={{ zIndex: 1000 }}
               >
                 <span className="flex items-center space-x-3">
+                  <ArrowRight className="h-6 w-6" />
                   <span>BEGIN ODYSSEY</span>
+                  <Sparkles className="h-5 w-5 animate-spin" />
                 </span>
               </Button>
               <div className="absolute -inset-2 bg-gradient-to-r from-cyan-600/30 to-purple-600/30 blur-xl opacity-75 pointer-events-none"></div>
+              
+              {/* Pulsing ring around button */}
+              <div className="absolute -inset-4 border-2 border-cyan-400/50 rounded-lg animate-ping"></div>
+              <div className="absolute -inset-6 border border-cyan-400/30 rounded-lg animate-ping delay-1000"></div>
             </div>
           </div>
         </div>
@@ -255,9 +273,19 @@ export default function HomePage() {
               interchain starts now.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg px-8 py-6 glow-hover bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500" onClick={handleBeginOdyssey}>
-                Start Quest
-              </Button>
+              <div className="relative">
+                <Button size="lg" className="text-lg px-8 py-6 glow-hover bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 animate-pulse" onClick={handleBeginOdyssey}>
+                  <span className="flex items-center space-x-2">
+                    <ArrowRight className="h-5 w-5" />
+                    <span>Start Quest</span>
+                    <Sparkles className="h-4 w-4 animate-spin" />
+                  </span>
+                </Button>
+                {/* Arrow pointing to button */}
+                <div className="absolute -left-12 top-1/2 transform -translate-y-1/2 hidden lg:block">
+                  <ArrowRight className="h-8 w-8 text-cyan-400 animate-bounce" />
+                </div>
+              </div>
               <Button variant="outline" size="lg" className="text-lg px-8 py-6 glow-hover bg-transparent border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black">
                 View Leaderboard
               </Button>
@@ -298,6 +326,18 @@ export default function HomePage() {
       {/* Epic Opening Animation */}
       {showAnimation && (
         <EpicOpeningAnimation onComplete={handleAnimationComplete} />
+      )}
+
+      {/* Floating Arrow Guide - Only show after loader */}
+      {!showLoader && !showAnimation && (
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 pointer-events-none">
+          <div className="flex flex-col items-center space-y-2 animate-bounce">
+            <div className="text-sm text-cyan-300 font-semibold bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full border border-cyan-400/30">
+              Click to Begin Your Journey
+            </div>
+            <ArrowDown className="h-8 w-8 text-cyan-400 animate-bounce" />
+          </div>
+        </div>
       )}
 
       {/* Background Music */}
