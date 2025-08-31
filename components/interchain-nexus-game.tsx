@@ -188,13 +188,45 @@ const gameChapters: Chapter[] = [
   },
   {
     id: 5,
+    title: "The Governance Guardian's Citadel",
+    description: "Master Bitcoin governance through ZK rollup technology",
+    image: "/futuristic-citadel-with-governance-symbols.png",
+    story: "You arrive at the majestic citadel of the Governance Guardian, where Bitcoin's first ZK rollup technology enables smart contracts while maintaining Bitcoin's security. The citadel's walls are inscribed with governance proposals, and ZK proof symbols dance in the air, showing how Bitcoin can become fully programmable without compromising its core principles.",
+    puzzles: [
+      {
+        id: 9,
+        type: 'question',
+        question: "What is the primary advantage of Citrea's ZK rollup approach?",
+        options: ["Faster transactions", "Bitcoin security + EVM compatibility", "Lower fees", "More privacy"],
+        correctAnswer: "Bitcoin security + EVM compatibility",
+        image: "/futuristic-citadel-with-governance-symbols.png",
+        hint: "Citrea combines Bitcoin's security with Ethereum's programmability through ZK proofs.",
+        reward: "Governance Mastery +1",
+        energyCost: 25
+      },
+      {
+        id: 10,
+        type: 'sequence',
+        question: "Order the steps for effective blockchain governance:",
+        options: ["Create proposal", "Community discussion", "Vote", "Implementation"],
+        correctAnswer: 0, // Create proposal first
+        image: "/diplomatic-blockchain-negotiator-with-energy-patte.png",
+        hint: "Governance starts with proposal creation, followed by discussion and voting.",
+        reward: "Governance Wisdom +1",
+        energyCost: 20
+      }
+    ],
+    reward: "Governance Guardian's Crown"
+  },
+  {
+    id: 6,
     title: "The Final Convergence",
     description: "Unite all blockchains in the Interchain Nexus",
     image: "/holographic-app-interface-deployment.png",
     story: "You reach the final chamber where all blockchain networks converge. The holographic interface shows the complete interchain ecosystem, with data flowing seamlessly between networks. This is where you must prove your mastery and unite all the fragments of knowledge you've gathered.",
     puzzles: [
       {
-        id: 9,
+        id: 11,
         type: 'question',
         question: "What is the ultimate goal of the Interchain Nexus?",
         options: ["Profit maximization", "Network unification", "Technology dominance", "User control"],
@@ -205,10 +237,10 @@ const gameChapters: Chapter[] = [
         energyCost: 35
       },
       {
-        id: 10,
+        id: 12,
         type: 'sequence',
         question: "Arrange the networks in order of their importance to the Interchain Nexus:",
-        options: ["Flare", "Ethereum", "Filecoin", "Lisk"],
+        options: ["Flare", "Ethereum", "Filecoin", "Lisk", "Citrea"],
         correctAnswer: 1, // Ethereum as the foundation
         image: "/cyberpunk-archer-with-glowing-bow.png",
         hint: "Ethereum serves as the foundational layer for many interchain protocols.",

@@ -5,38 +5,55 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
-import { 
-  LeaderboardEntry, 
-  getLeaderboardData, 
-  getRealmProgress, 
-  getAchievementRarityColor,
-  getRankDisplay,
-  sortLeaderboard,
-  filterLeaderboard,
-  PioneerType
-} from "@/lib/leaderboard"
-import { getPioneerTypeInfo } from "@/lib/blockchain"
+
+// Simplified leaderboard data
+const mockLeaderboardData = [
+  {
+    rank: 1,
+    player: '0x742d35Cc6C4C7b8c8c8c8c8c8c8c8c8c8c8f3a',
+    ensName: 'nexus.master.eth',
+    realmsUnified: 4,
+    totalScore: 1250,
+    pioneerCards: [
+      { name: 'Oracle Seer', realm: 'Flare', icon: '🔮' },
+      { name: 'Identity Guardian', realm: 'ENS', icon: '🛡️' },
+      { name: 'Data Weaver', realm: 'Filecoin', icon: '🗄️' },
+      { name: 'Social Architect', realm: 'Lisk', icon: '🏗️' }
+    ],
+    achievements: ['🌟', '👑', '🏗️', '🗄️']
+  },
+  {
+    rank: 2,
+    player: '0x8b1c35Cc6C4C7b8c8c8c8c8c8c8c8c8c8c9e2d',
+    ensName: 'oracle.seer.eth',
+    realmsUnified: 3,
+    totalScore: 980,
+    pioneerCards: [
+      { name: 'Oracle Seer', realm: 'Flare', icon: '🔮' },
+      { name: 'Data Weaver', realm: 'Filecoin', icon: '🗄️' },
+      { name: 'Identity Guardian', realm: 'ENS', icon: '🛡️' }
+    ],
+    achievements: ['🌟', '🔮', '🗄️']
+  },
+  {
+    rank: 3,
+    player: '0x3f7a35Cc6C4C7b8c8c8c8c8c8c8c8c8c8c4c8b',
+    ensName: 'data.weaver.eth',
+    realmsUnified: 2,
+    totalScore: 650,
+    pioneerCards: [
+      { name: 'Data Weaver', realm: 'Filecoin', icon: '🗄️' },
+      { name: 'Social Architect', realm: 'Lisk', icon: '🏗️' }
+    ],
+    achievements: ['🌟', '🗄️']
+  }
+]
 
 export default function LeaderboardPage() {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
-  const [loading, setLoading] = useState(true)
-  const [sortBy, setSortBy] = useState<"score" | "realms" | "cards" | "recent" | "achievements">("score")
+  const [leaderboard, setLeaderboard] = useState(mockLeaderboardData)
+  const [loading, setLoading] = useState(false)
+  const [sortBy, setSortBy] = useState<"score" | "realms">("score")
   const [filterBy, setFilterBy] = useState<"all" | "nexus-masters" | "realm-guardians" | "chain-walkers">("all")
-
-  useEffect(() => {
-    const loadLeaderboard = async () => {
-      try {
-        const data = await getLeaderboardData()
-        setLeaderboard(data)
-      } catch (error) {
-        console.error('Failed to load leaderboard:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadLeaderboard()
-  }, [])
 
   // Apply filters and sorting
   const filteredAndSortedLeaderboard = (() => {
@@ -45,47 +62,30 @@ export default function LeaderboardPage() {
     // Apply filters
     switch (filterBy) {
       case "nexus-masters":
-        filtered = filterLeaderboard(leaderboard, { minRealms: 4 })
+        filtered = leaderboard.filter(p => p.realmsUnified === 4)
         break
       case "realm-guardians":
-        filtered = filterLeaderboard(leaderboard, { minRealms: 2, maxRealms: 3 })
+        filtered = leaderboard.filter(p => p.realmsUnified >= 2 && p.realmsUnified <= 3)
         break
       case "chain-walkers":
-        filtered = filterLeaderboard(leaderboard, { maxRealms: 1 })
+        filtered = leaderboard.filter(p => p.realmsUnified === 1)
         break
       default:
         filtered = leaderboard
     }
 
     // Apply sorting
-    return sortLeaderboard(filtered, sortBy)
+    return filtered.sort((a, b) => {
+      if (sortBy === "score") return b.totalScore - a.totalScore
+      return b.realmsUnified - a.realmsUnified
+    })
   })()
 
-  const getPioneerTypeIcon = (pioneerType: PioneerType) => {
-    const typeInfo = getPioneerTypeInfo(pioneerType)
-    switch (pioneerType) {
-      case PioneerType.SOCIAL_ARCHITECT:
-        return "🏗️"
-      case PioneerType.IDENTITY_GUARDIAN:
-        return "🛡️"
-      case PioneerType.DATA_WEAVER:
-        return "🗄️"
-      case PioneerType.ORACLE_SEER:
-        return "🔮"
-      default:
-        return "🌟"
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4">🌌</div>
-          <p className="text-xl text-muted-foreground">Loading leaderboard...</p>
-        </div>
-      </div>
-    )
+  const getRankDisplay = (rank: number) => {
+    if (rank === 1) return { icon: '🥇', color: 'text-yellow-400 border-yellow-400/50', title: 'Nexus Master' }
+    if (rank === 2) return { icon: '🥈', color: 'text-gray-300 border-gray-300/50', title: 'Realm Guardian' }
+    if (rank === 3) return { icon: '🥉', color: 'text-amber-600 border-amber-600/50', title: 'Chain Walker' }
+    return { icon: `#${rank}`, color: 'text-blue-400 border-blue-400/50', title: 'Pioneer' }
   }
 
   return (
@@ -167,7 +167,7 @@ export default function LeaderboardPage() {
               <Card className="glow-hover bg-card/50 backdrop-blur-sm">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-accent mb-2">
-                    {Math.round(leaderboard.reduce((acc, p) => acc + p.realmsUnified, 0) / leaderboard.length * 10) / 10}
+                    {leaderboard.length > 0 ? Math.round(leaderboard.reduce((acc, p) => acc + p.realmsUnified, 0) / leaderboard.length * 10) / 10 : 0}
                   </div>
                   <p className="text-muted-foreground">Avg Realms</p>
                   <p className="text-xs text-muted-foreground">Per Player</p>
@@ -176,7 +176,7 @@ export default function LeaderboardPage() {
               <Card className="glow-hover bg-card/50 backdrop-blur-sm">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-secondary mb-2">
-                    {Math.round(leaderboard.reduce((acc, p) => acc + p.totalScore, 0) / leaderboard.length)}
+                    {leaderboard.length > 0 ? Math.round(leaderboard.reduce((acc, p) => acc + p.totalScore, 0) / leaderboard.length) : 0}
                   </div>
                   <p className="text-muted-foreground">Avg Score</p>
                   <p className="text-xs text-muted-foreground">Total Points</p>
@@ -237,14 +237,6 @@ export default function LeaderboardPage() {
                 >
                   Realms
                 </Button>
-                <Button
-                  variant={sortBy === "achievements" ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSortBy("achievements")}
-                  className="glow-hover"
-                >
-                  Achievements
-                </Button>
               </div>
             </div>
           </div>
@@ -268,13 +260,11 @@ export default function LeaderboardPage() {
                       <th className="text-left py-4 px-2">Realms</th>
                       <th className="text-left py-4 px-2">Pioneers</th>
                       <th className="text-left py-4 px-2">Achievements</th>
-                      <th className="text-left py-4 px-2">Progress</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredAndSortedLeaderboard.map((entry, index) => {
                       const rankDisplay = getRankDisplay(entry.rank)
-                      const realmProgress = getRealmProgress(entry.realmsUnified)
                       
                       return (
                         <motion.tr
@@ -321,7 +311,7 @@ export default function LeaderboardPage() {
                                   className="flex items-center space-x-1 text-xs"
                                   title={`${card.name} - ${card.realm}`}
                                 >
-                                  <span>{getPioneerTypeIcon(card.pioneerType)}</span>
+                                  <span>{card.icon}</span>
                                   <span className="hidden sm:inline">{card.realm}</span>
                                 </div>
                               ))}
@@ -329,32 +319,14 @@ export default function LeaderboardPage() {
                           </td>
                           <td className="py-4 px-2">
                             <div className="flex flex-wrap gap-1">
-                              {entry.achievements.slice(0, 3).map((achievement, achIndex) => (
+                              {entry.achievements.map((achievement, achIndex) => (
                                 <div
                                   key={achIndex}
                                   className="text-lg"
-                                  title={`${achievement.name}: ${achievement.description}`}
+                                  title="Achievement"
                                 >
-                                  {achievement.icon}
+                                  {achievement}
                                 </div>
-                              ))}
-                              {entry.achievements.length > 3 && (
-                                <div className="text-xs text-muted-foreground">
-                                  +{entry.achievements.length - 3}
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                          <td className="py-4 px-2">
-                            <div className="flex space-x-1">
-                              {realmProgress.map((realm, realmIndex) => (
-                                <div
-                                  key={realm.name}
-                                  className={`w-3 h-3 rounded-full ${
-                                    realm.completed ? "bg-green-400" : "bg-muted-foreground/30"
-                                  }`}
-                                  title={`${realm.name} ${realm.completed ? "Completed" : "Locked"}`}
-                                />
                               ))}
                             </div>
                           </td>
@@ -366,39 +338,6 @@ export default function LeaderboardPage() {
               </div>
             </CardContent>
           </Card>
-
-          {/* Achievement Showcase */}
-          <div className="mt-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              <h2 className="text-2xl font-bold text-center mb-8">Achievement System</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {Object.values({
-                  FIRST_PIONEER: { id: 'first_pioneer', name: 'First Steps', description: 'Mint your first Pioneer NFT', icon: '🌟', rarity: 'common' as const, points: 50 },
-                  REALM_MASTER: { id: 'realm_master', name: 'Realm Master', description: 'Mint Pioneers on all 4 networks', icon: '👑', rarity: 'legendary' as const, points: 500 },
-                  SOCIAL_BUILDER: { id: 'social_builder', name: 'Community Architect', description: 'Create 5 communities', icon: '🏗️', rarity: 'epic' as const, points: 200 },
-                  DATA_GUARDIAN: { id: 'data_guardian', name: 'Data Guardian', description: 'Archive 10 data sets', icon: '🗄️', rarity: 'epic' as const, points: 200 },
-                }).map((achievement) => (
-                  <Card key={achievement.id} className="glow-hover bg-card/50 backdrop-blur-sm">
-                    <CardContent className="p-4 text-center">
-                      <div className="text-3xl mb-2">{achievement.icon}</div>
-                      <h3 className="font-bold text-sm mb-1">{achievement.name}</h3>
-                      <p className="text-xs text-muted-foreground mb-2">{achievement.description}</p>
-                      <Badge 
-                        variant="outline" 
-                        className={`text-xs ${getAchievementRarityColor(achievement.rarity)}`}
-                      >
-                        {achievement.points} pts
-                      </Badge>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </motion.div>
-          </div>
 
           {/* Call to Action */}
           <div className="text-center mt-12">
