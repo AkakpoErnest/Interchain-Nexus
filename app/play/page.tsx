@@ -8,6 +8,7 @@ import { MetaMaskConnectSimple } from '@/components/metamask-connect-simple'
 import { useHasPioneer } from '@/lib/hooks/usePioneerContract'
 import { useHasEnsPioneer } from '@/lib/hooks/useEnsPioneerContract'
 import { PioneerType } from '@/lib/blockchain'
+import { BackgroundMusic } from '@/components/background-music'
 
 export default function PlayPage() {
   const { address, isConnected } = useAccount()

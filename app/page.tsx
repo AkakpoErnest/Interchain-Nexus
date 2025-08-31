@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { EpicOpeningAnimation } from "@/components/epic-opening-animation"
 import GameLoader from "@/components/game-loader"
+import { BackgroundMusic } from "@/components/background-music"
 
 export default function HomePage() {
   const [showLoader, setShowLoader] = useState(true)
@@ -298,6 +299,9 @@ export default function HomePage() {
       {showAnimation && (
         <EpicOpeningAnimation onComplete={handleAnimationComplete} />
       )}
+
+      {/* Background Music */}
+      <BackgroundMusic enabled={!showLoader && !showAnimation} />
     </div>
   )
 }
