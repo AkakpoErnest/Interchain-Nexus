@@ -268,6 +268,8 @@ export const PIONEER_ABI = [
   },
 ] as const
 
+
+
 // Network configuration
 export const NETWORK_CONFIG = {
   8453: {
@@ -352,6 +354,17 @@ export function getContractAddress(chainId: number | undefined): string {
     throw new Error(`Unsupported chain ID: ${chainId}`)
   }
   return addresses.pioneer
+}
+
+export function getEnsContractAddress(chainId: number | undefined): string {
+  if (!chainId) {
+    throw new Error('Chain ID is required')
+  }
+  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
+  if (!addresses) {
+    throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+  return addresses.ensPioneer || addresses.pioneer
 }
 
 export function getNetworkConfig(chainId: number | undefined) {
@@ -444,17 +457,7 @@ export function getNetworkNameForPioneerType(pioneerType: PioneerType): string {
   return networkMap[pioneerType]
 }
 
-// ENS Contract helpers
-export function getEnsContractAddress(chainId: number | undefined): string {
-  if (!chainId) {
-    throw new Error('Chain ID is required')
-  }
-  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
-  if (!addresses) {
-    throw new Error(`Unsupported chain ID: ${chainId}`)
-  }
-  return (addresses as any).ensPioneer || addresses.pioneer
-}
+
 
 export function isEnsContractDeployed(chainId: number | undefined): boolean {
   if (!chainId) return false
