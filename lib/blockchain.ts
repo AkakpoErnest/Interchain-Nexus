@@ -90,6 +90,17 @@ export const ENS_PIONEER_ABI = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
+  {
+    inputs: [
+      { internalType: 'address', name: 'player', type: 'address' },
+      { internalType: 'string', name: 'name', type: 'string' },
+      { internalType: 'string', name: 'title', type: 'string' }
+    ],
+    name: 'mintIdentityGuardian',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
   // Events
   {
     anonymous: false,
@@ -99,6 +110,16 @@ export const ENS_PIONEER_ABI = [
       { indexed: false, internalType: 'uint256', name: 'pioneerType', type: 'uint256' }
     ],
     name: 'PioneerMinted',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'player', type: 'address' },
+      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { indexed: false, internalType: 'string', name: 'name', type: 'string' }
+    ],
+    name: 'IdentityGuardianMinted',
     type: 'event',
   },
 ] as const
