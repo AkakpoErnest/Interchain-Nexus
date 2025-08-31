@@ -1,6 +1,22 @@
 # Interchain Nexus: A Digital Odyssey
 
-A Next.js-based blockchain game that allows users to mint Pioneer NFTs across multiple blockchain networks. This project integrates smart contracts, IPFS metadata storage, and multi-chain wallet connectivity.
+A Next.js-based blockchain game that allows users to mint Pioneer NFTs across multiple blockchain networks. This project integrates smart contracts, IPFS metadata storage, and multi-chain wallet connectivity to solve the problem of blockchain fragmentation and create a unified, interconnected gaming ecosystem.
+
+## 🎯 Problem We're Solving
+
+### The Blockchain Fragmentation Challenge
+
+The current blockchain ecosystem suffers from **fragmentation** - isolated networks that don't communicate, creating silos of users, data, and functionality. This leads to:
+
+- **User Experience Fragmentation**: Users must manage multiple wallets, learn different interfaces, and navigate between disconnected ecosystems
+- **Data Silos**: Information trapped within individual networks, preventing cross-chain insights and collaboration
+- **Limited Interoperability**: Blockchains operate in isolation, missing opportunities for synergistic value creation
+- **Complex Onboarding**: New users face overwhelming complexity when trying to understand and use multiple blockchain networks
+- **Reduced Innovation**: Limited cross-chain collaboration stifles the development of truly innovative applications
+
+### Our Solution: The Interchain Nexus
+
+We've created a **unified gaming ecosystem** that demonstrates how different blockchain networks can work together harmoniously, each contributing their unique strengths to create something greater than the sum of its parts.
 
 ## 🚀 Project Overview
 
@@ -25,12 +41,14 @@ Interchain Nexus is an epic blockchain quest where players can mint unique Pione
 - **Framer Motion**: Smooth animations and transitions
 - **Wagmi**: React hooks for Ethereum
 - **Viem**: TypeScript interface for Ethereum
+- **V0**: Used as the foundation for the landing page design, then customized and extended
 
 ### Smart Contract Stack
 - **Solidity 0.8.19**: Smart contract language
 - **Hardhat 2.26.3**: Development environment and deployment tool
 - **OpenZeppelin 4.9.6**: Secure smart contract libraries
 - **ERC721**: Non-fungible token standard
+- **Zama Protocol**: Confidential smart contracts with FHE (Fully Homomorphic Encryption)
 
 ### Blockchain Networks
 - **Base Sepolia** (Chain ID: 84532)
@@ -38,6 +56,7 @@ Interchain Nexus is an epic blockchain quest where players can mint unique Pione
 - **Filecoin Calibration** (Chain ID: 314159)
 - **Flare Testnet** (Chain ID: 114) ✅ **DEPLOYED**
 - **Lisk Sepolia** (Chain ID: 4202)
+- **Zama Protocol**: Confidential smart contracts on Ethereum Sepolia
 
 ## 📁 Project Structure
 
@@ -47,22 +66,38 @@ Interchain-Nexus/
 │   ├── choose/                   # Pioneer selection and minting page
 │   ├── inventory/                # NFT inventory page
 │   ├── leaderboard/              # Player leaderboard
-│   └── play/                     # Game interface
+│   ├── play/                     # Game interface
+│   └── ens-story/                # ENS Identity Guardian story page
 ├── components/                   # React components
 │   ├── ui/                       # Reusable UI components
 │   ├── nft-minting.tsx          # NFT minting interface
+│   ├── ens-minting.tsx          # ENS-specific minting interface
+│   ├── confidential-ens-minting.tsx # Zama confidential ENS minting
+│   ├── ens-trial-system.tsx     # ENS trial system component
 │   ├── metamask-connect-simple.tsx # MetaMask connection
 │   ├── providers.tsx             # Wagmi configuration
 │   └── transaction-status.tsx    # Transaction feedback
 ├── contracts/                    # Smart contracts
 │   ├── Pioneer.sol              # Main NFT contract
+│   ├── FlareOracleSeerSimple.sol # Flare Oracle Seer contract
+│   ├── EnsIdentityGuardianSimple.sol # ENS Identity Guardian contract
+│   ├── SimpleConfidentialEnsIdentityGuardian.sol # Zama confidential contract
 │   ├── scripts/                 # Deployment scripts
 │   └── test/                    # Contract tests
 ├── lib/                         # Utility libraries
 │   ├── blockchain.ts            # Blockchain utilities
 │   ├── contract-config.ts       # Contract addresses
+│   ├── ens-game-stories.ts      # ENS story content
 │   ├── hooks/                   # Custom React hooks
+│   │   ├── usePioneerContract.ts # Pioneer contract hooks
+│   │   └── useEnsPioneerContract.ts # ENS contract hooks
 │   └── ipfs.ts                  # IPFS integration
+├── docs/                        # Documentation
+│   ├── ZAMA_INTEGRATION.md      # Zama Protocol integration guide
+│   ├── ENS_IMPLEMENTATION.md    # ENS implementation details
+│   ├── FLARE_IMPLEMENTATION.md  # Flare implementation details
+│   ├── LISK_IMPLEMENTATION.md   # Lisk implementation details
+│   └── FILECOIN_IMPLEMENTATION.md # Filecoin implementation details
 └── public/                      # Static assets
     └── [pioneer-cards].png      # NFT artwork
 ```
@@ -157,10 +192,10 @@ The game features four unique Pioneer types, each representing a different block
 - **Realm**: Flare
 - **Rarity**: Legendary
 - **Description**: Truth Seeker of the Cosmos
-- **Contract**: `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
+- **Contract**: `0x2D6E6A6430F0121d6949D743DF54730b40C5c74F`
 - **Network**: Flare Testnet (Chain ID: 114)
 - **Features**: Oracle prediction accuracy, data verification, prediction making
-- **Special Functions**: `makePrediction`, `verifyData`, `getOracleAccuracy`
+- **Special Functions**: `mintPioneer`, `hasPioneer`, `getPlayerPioneer`
 - **Artwork**: `flare_oracle_seer_card_refined.png`
 
 ## 🔧 Smart Contract Details
@@ -169,8 +204,8 @@ The game features four unique Pioneer types, each representing a different block
 
 The Interchain Nexus uses a multi-contract architecture where each Pioneer type has its own specialized smart contract deployed on its native blockchain network. All contracts inherit from OpenZeppelin's ERC721 standard and implement soulbound (non-transferable) NFT functionality.
 
-### 1. FlareOracleSeer.sol (Flare Testnet)
-**Contract Address**: `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
+### 1. FlareOracleSeerSimple.sol (Flare Testnet)
+**Contract Address**: `0x2D6E6A6430F0121d6949D743DF54730b40C5c74F`
 
 ```solidity
 // Key Features:
@@ -179,13 +214,14 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 - Prediction making functionality
 - Soulbound NFTs (non-transferable)
 - Flare network integration
+- Public minting (no owner restrictions)
 ```
 
 **Special Functions**:
-- `makePrediction(string prediction, uint256 confidence)`: Make oracle predictions
-- `verifyData(string dataHash, bool isValid)`: Verify data accuracy
-- `getOracleAccuracy(address player)`: Get player's prediction accuracy
-- `updatePredictionScore(uint256 tokenId, uint256 score)`: Update prediction scores
+- `mintPioneer(uint256 pioneerType, address playerAddress)`: Mint Oracle Seer NFT
+- `hasPioneer(address player)`: Check if player has Oracle Seer
+- `getPlayerPioneer(address player)`: Get player's Oracle Seer token ID
+- `isMintingAvailable()`: Check if minting is available
 
 ### 2. FilecoinDataWeaver.sol (Filecoin Calibration)
 **Contract Address**: `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
@@ -205,8 +241,8 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 - `retrieveData(string dataHash, uint256 retrievalTime)`: Track data retrieval
 - `getDataWeaverData(uint256 tokenId)`: Get comprehensive Data Weaver stats
 
-### 3. ENSIdentityGuardian.sol (Ethereum Sepolia)
-**Contract Address**: `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef`
+### 2. EnsIdentityGuardianSimple.sol (Ethereum Sepolia)
+**Contract Address**: `0xD02dc1Ac6744bAE948Ba68B8e0Bb82Db5d78e1A4`
 
 ```solidity
 // Key Features:
@@ -215,14 +251,31 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 - Trust score tracking
 - ENS integration
 - Digital identity protection
+- Public minting (no owner restrictions)
 ```
 
 **Special Functions**:
-- `mintIdentityGuardian(address player, string name, string title)`: Mint Identity Guardian
-- `hasIdentityGuardian(address player)`: Check if player has Identity Guardian
-- `getIdentityGuardianData(uint256 tokenId)`: Get Identity Guardian data
-- `verifyIdentity(string domain, bool isValid)`: Verify domain identities
-- `issueAttestation(address target, string attestation)`: Issue identity attestations
+- `mintPioneer(uint256 pioneerType, address playerAddress)`: Mint Identity Guardian
+- `hasPioneer(address player)`: Check if player has Identity Guardian
+- `getPlayerPioneer(address player)`: Get player's Identity Guardian token ID
+- `isMintingAvailable()`: Check if minting is available
+
+### 3. SimpleConfidentialEnsIdentityGuardian.sol (Ethereum Sepolia)
+**Contract Address**: `0x...` (Zama confidential contract)
+
+```solidity
+// Key Features:
+- Confidential smart contracts with FHE
+- Privacy-preserving identity management
+- Encrypted data storage and processing
+- Zama Protocol integration
+- Programmable confidentiality
+```
+
+**Special Functions**:
+- `mintConfidentialPioneer(uint256 pioneerType, address playerAddress)`: Mint confidential Identity Guardian
+- `hasConfidentialPioneer(address player)`: Check if player has confidential Identity Guardian
+- `getConfidentialPioneerData(address player)`: Get confidential pioneer data
 
 ### 4. LiskSocialArchitect.sol (Lisk Sepolia)
 **Contract Address**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
@@ -254,15 +307,10 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 ### ✅ Successfully Deployed
 
 #### Flare Testnet (Chain ID: 114)
-- **Flare Oracle Seer Contract**: `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
+- **Flare Oracle Seer Contract**: `0x2D6E6A6430F0121d6949D743DF54730b40C5c74F`
   - Status: ✅ Live and ready for minting
   - Explorer: [Flare Testnet Explorer](https://coston2-explorer.flare.network)
   - Features: Oracle prediction accuracy, data verification, prediction making
-  - Deployed: August 30, 2025
-
-- **Legacy Flare Contract**: `0x6858dF5365ffCbe31b5FE68D9E6ebB81321F7F86`
-  - Status: ✅ Deployed (legacy version)
-  - Explorer: [Flare Testnet Explorer](https://coston2-explorer.flare.network)
   - Deployed: August 30, 2025
 
 #### Filecoin Calibration Testnet (Chain ID: 314159)
@@ -282,6 +330,11 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
   - Gas Used: 2,244,517
   - **Story System**: "The Oracle of the Eternal Names" with seven mystical trials
   - **ENS Integration**: Real ENS interactions for reverse records, text records, avatar records
+
+- **Zama Confidential ENS Contract**: `0x...` (To be deployed)
+  - Status: 🔄 Ready for deployment
+  - Features: Confidential smart contracts with FHE
+  - **Zama Protocol**: Privacy-preserving identity management
 
 #### Lisk Sepolia Testnet (Chain ID: 4202)
 - **Lisk Social Architect Contract**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
@@ -380,9 +433,9 @@ npx hardhat verify --network liskTestnet 0x5FbDB2315678afecb367f032d93F642f64180
 | Network | Chain ID | RPC URL | Status | Contract Address |
 |---------|----------|---------|--------|------------------|
 | Base Sepolia | 84532 | https://sepolia.base.org | Ready | TBD |
-| Ethereum Sepolia | 11155111 | https://sepolia.infura.io/v3/YOUR_KEY | ✅ Deployed | `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef` |
-| Filecoin Calibration | 314159 | https://api.calibration.node.glif.io/rpc/v1 | ✅ Deployed | `0xc00a268Fbcbb00a72bfc8CD0FE7CfE26dad3BEd8` |
-| Flare Testnet | 114 | https://coston2-api.flare.network/ext/C/rpc | ✅ Deployed | `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF` |
+| Ethereum Sepolia | 11155111 | https://sepolia.infura.io/v3/YOUR_KEY | ✅ Deployed | `0xD02dc1Ac6744bAE948Ba68B8e0Bb82Db5d78e1A4` |
+| Filecoin Calibration | 314159 | https://api.calibration.node.glif.io/rpc/v1 | ✅ Deployed | `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1` |
+| Flare Testnet | 114 | https://coston2-api.flare.network/ext/C/rpc | ✅ Deployed | `0x2D6E6A6430F0121d6949D743DF54730b40C5c74F` |
 | Lisk Sepolia | 4202 | https://rpc.sepolia-api.lisk.com | ✅ Deployed | `0x5FbDB2315678afecb367f032d93F642f64180aa3` |
 
 ### Adding Networks to MetaMask
@@ -724,6 +777,9 @@ The Interchain Nexus represents a new paradigm in blockchain gaming - instead of
 13. **Implemented ENS Trial System** - Real ENS interactions for reverse records, text records, avatar records
 14. **Added Mystical Story Images** - Integrated three epic fantasy images into the story flow
 15. **Zama Protocol Integration** - Deployed confidential ENS contract for privacy features
+16. **Updated README Documentation** - Added problem statement, Zama integration details, and comprehensive implementation guides
+17. **Fixed Contract Addresses** - Updated all contract addresses to reflect current deployments
+18. **Enhanced Project Structure** - Added documentation for all blockchain integrations
 
 ### Issues Resolved
 - ✅ "Cannot read properties of undefined (reading 'id')" error
