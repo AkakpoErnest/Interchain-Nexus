@@ -22,7 +22,10 @@ const config = createConfig({
     [liskSepolia.id]: http(),
     [baseSepolia.id]: http(),
     [sepolia.id]: http(),
-    [filecoinCalibration.id]: http(),
+    [filecoinCalibration.id]: http('https://api.calibration.node.glif.io/rpc/v1', {
+      retryCount: 3,
+      retryDelay: 1000,
+    }),
     [flareTestnet.id]: http(),
   },
 })

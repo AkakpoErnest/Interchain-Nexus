@@ -83,7 +83,24 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
     } catch (error) {
       console.error('Minting error:', error)
       setMintStep('error')
-      setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred')
+      
+      // Provide more specific error messages
+      let errorMsg = 'Unknown error occurred'
+      if (error instanceof Error) {
+        if (error.message.includes('Internal JSON-RPC error')) {
+          errorMsg = 'Network connection error. Please check your internet connection and try again.'
+        } else if (error.message.includes('User rejected')) {
+          errorMsg = 'Transaction was cancelled by user.'
+        } else if (error.message.includes('insufficient funds')) {
+          errorMsg = 'Insufficient funds for gas fees.'
+        } else if (error.message.includes('already has')) {
+          errorMsg = 'You already have a Pioneer NFT on this network.'
+        } else {
+          errorMsg = error.message
+        }
+      }
+      
+      setErrorMessage(errorMsg)
       onError?.(error instanceof Error ? error : new Error('Unknown error'))
     }
   }
@@ -336,7 +353,14 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
         {errorMessage && (
           <Alert variant="destructive">
             <XCircle className="h-4 w-4" />
-            <AlertDescription>{errorMessage}</AlertDescription>
+            <AlertDescription>
+              {errorMessage}
+              {chainId === 314159 && (
+                <div className="mt-2 text-sm text-red-300">
+                  Note: Filecoin testnet can be unstable. If the error persists, try switching to a different network or try again later.
+                </div>
+              )}
+            </AlertDescription>
           </Alert>
         )}
 
