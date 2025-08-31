@@ -5,172 +5,76 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
-
-interface LeaderboardEntry {
-  rank: number
-  player: string
-  ensName: string
-  realmsUnified: number
-  totalCards: number
-  pioneerCard: string
-  joinDate: string
-  lastActive: string
-}
-
-// Mock leaderboard data
-const mockLeaderboard: LeaderboardEntry[] = [
-  {
-    rank: 1,
-    player: "0x742d...8f3a",
-    ensName: "nexus.master.eth",
-    realmsUnified: 5,
-    totalCards: 6,
-    pioneerCard: "The Social Architect",
-    joinDate: "2024-01-15",
-    lastActive: "2 hours ago"
-  },
-  {
-    rank: 2,
-    player: "0x8b1c...9e2d",
-    ensName: "oracle.seer.eth",
-    realmsUnified: 5,
-    totalCards: 6,
-    pioneerCard: "The Oracle Seer",
-    joinDate: "2024-01-16",
-    lastActive: "5 hours ago"
-  },
-  {
-    rank: 3,
-    player: "0x3f7a...4c8b",
-    ensName: "data.weaver.eth",
-    realmsUnified: 4,
-    totalCards: 5,
-    pioneerCard: "The Data Weaver",
-    joinDate: "2024-01-17",
-    lastActive: "1 day ago"
-  },
-  {
-    rank: 4,
-    player: "0x9e2d...7f3a",
-    ensName: "identity.guardian.eth",
-    realmsUnified: 4,
-    totalCards: 5,
-    pioneerCard: "The Identity Guardian",
-    joinDate: "2024-01-18",
-    lastActive: "2 days ago"
-  },
-  {
-    rank: 5,
-    player: "0x5c8b...2e7a",
-    ensName: "builder.architect.eth",
-    realmsUnified: 3,
-    totalCards: 4,
-    pioneerCard: "The Social Architect",
-    joinDate: "2024-01-19",
-    lastActive: "3 days ago"
-  },
-  {
-    rank: 6,
-    player: "0x2e7a...9c8b",
-    ensName: "pioneer.eth",
-    realmsUnified: 3,
-    totalCards: 4,
-    pioneerCard: "The Oracle Seer",
-    joinDate: "2024-01-20",
-    lastActive: "4 days ago"
-  },
-  {
-    rank: 7,
-    player: "0x7f3a...5c8b",
-    ensName: "explorer.eth",
-    realmsUnified: 2,
-    totalCards: 3,
-    pioneerCard: "The Data Weaver",
-    joinDate: "2024-01-21",
-    lastActive: "5 days ago"
-  },
-  {
-    rank: 8,
-    player: "0x4c8b...2e7a",
-    ensName: "adventurer.eth",
-    realmsUnified: 2,
-    totalCards: 3,
-    pioneerCard: "The Identity Guardian",
-    joinDate: "2024-01-22",
-    lastActive: "6 days ago"
-  },
-  {
-    rank: 9,
-    player: "0x8f3a...7c8b",
-    ensName: "seeker.eth",
-    realmsUnified: 1,
-    totalCards: 2,
-    pioneerCard: "The Social Architect",
-    joinDate: "2024-01-23",
-    lastActive: "1 week ago"
-  },
-  {
-    rank: 10,
-    player: "0x1c8b...9f3a",
-    ensName: "wanderer.eth",
-    realmsUnified: 1,
-    totalCards: 2,
-    pioneerCard: "The Oracle Seer",
-    joinDate: "2024-01-24",
-    lastActive: "1 week ago"
-  }
-]
+import { 
+  LeaderboardEntry, 
+  getLeaderboardData, 
+  getRealmProgress, 
+  getAchievementRarityColor,
+  getRankDisplay,
+  sortLeaderboard,
+  filterLeaderboard,
+  PioneerType
+} from "@/lib/leaderboard"
+import { getPioneerTypeInfo } from "@/lib/blockchain"
 
 export default function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [loading, setLoading] = useState(true)
-  const [sortBy, setSortBy] = useState<"realms" | "cards" | "recent">("realms")
+  const [sortBy, setSortBy] = useState<"score" | "realms" | "cards" | "recent" | "achievements">("score")
+  const [filterBy, setFilterBy] = useState<"all" | "nexus-masters" | "realm-guardians" | "chain-walkers">("all")
 
   useEffect(() => {
-    // Simulate loading
-    setTimeout(() => {
-      setLeaderboard(mockLeaderboard)
-      setLoading(false)
-    }, 1000)
+    const loadLeaderboard = async () => {
+      try {
+        const data = await getLeaderboardData()
+        setLeaderboard(data)
+      } catch (error) {
+        console.error('Failed to load leaderboard:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadLeaderboard()
   }, [])
 
-  const getRankIcon = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return "🥇"
-      case 2:
-        return "🥈"
-      case 3:
-        return "🥉"
-      default:
-        return `#${rank}`
-    }
-  }
+  // Apply filters and sorting
+  const filteredAndSortedLeaderboard = (() => {
+    let filtered = leaderboard
 
-  const getRankColor = (rank: number) => {
-    switch (rank) {
-      case 1:
-        return "text-yellow-400 border-yellow-400/50"
-      case 2:
-        return "text-gray-300 border-gray-300/50"
-      case 3:
-        return "text-amber-600 border-amber-600/50"
+    // Apply filters
+    switch (filterBy) {
+      case "nexus-masters":
+        filtered = filterLeaderboard(leaderboard, { minRealms: 4 })
+        break
+      case "realm-guardians":
+        filtered = filterLeaderboard(leaderboard, { minRealms: 2, maxRealms: 3 })
+        break
+      case "chain-walkers":
+        filtered = filterLeaderboard(leaderboard, { maxRealms: 1 })
+        break
       default:
-        return "text-muted-foreground border-muted-foreground/20"
+        filtered = leaderboard
     }
-  }
 
-  const getRealmProgress = (realmsUnified: number) => {
-    const realms = ["Archive", "Oracle", "Forge", "Identity", "Governance"]
-    return realms.map((realm, index) => (
-      <div
-        key={realm}
-        className={`w-3 h-3 rounded-full ${
-          index < realmsUnified ? "bg-green-400" : "bg-muted-foreground/30"
-        }`}
-        title={`${realm} ${index < realmsUnified ? "Completed" : "Locked"}`}
-      />
-    ))
+    // Apply sorting
+    return sortLeaderboard(filtered, sortBy)
+  })()
+
+  const getPioneerTypeIcon = (pioneerType: PioneerType) => {
+    const typeInfo = getPioneerTypeInfo(pioneerType)
+    switch (pioneerType) {
+      case PioneerType.SOCIAL_ARCHITECT:
+        return "🏗️"
+      case PioneerType.IDENTITY_GUARDIAN:
+        return "🛡️"
+      case PioneerType.DATA_WEAVER:
+        return "🗄️"
+      case PioneerType.ORACLE_SEER:
+        return "🔮"
+      default:
+        return "🌟"
+    }
   }
 
   if (loading) {
@@ -241,31 +145,107 @@ export default function LeaderboardPage() {
             </motion.p>
 
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto mb-12">
+              <Card className="glow-hover bg-card/50 backdrop-blur-sm">
+                <CardContent className="p-6 text-center">
+                  <div className="text-3xl font-bold text-yellow-400 mb-2">
+                    {leaderboard.filter(p => p.realmsUnified === 4).length}
+                  </div>
+                  <p className="text-muted-foreground">Nexus Masters</p>
+                  <p className="text-xs text-muted-foreground">All 4 Realms</p>
+                </CardContent>
+              </Card>
               <Card className="glow-hover bg-card/50 backdrop-blur-sm">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-primary mb-2">
-                    {leaderboard.filter(p => p.realmsUnified === 5).length}
+                    {leaderboard.length}
                   </div>
-                  <p className="text-muted-foreground">Nexus Masters</p>
+                  <p className="text-muted-foreground">Total Pioneers</p>
+                  <p className="text-xs text-muted-foreground">Active Players</p>
                 </CardContent>
               </Card>
               <Card className="glow-hover bg-card/50 backdrop-blur-sm">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-accent mb-2">
-                    {leaderboard.length}
+                    {Math.round(leaderboard.reduce((acc, p) => acc + p.realmsUnified, 0) / leaderboard.length * 10) / 10}
                   </div>
-                  <p className="text-muted-foreground">Total Pioneers</p>
+                  <p className="text-muted-foreground">Avg Realms</p>
+                  <p className="text-xs text-muted-foreground">Per Player</p>
                 </CardContent>
               </Card>
               <Card className="glow-hover bg-card/50 backdrop-blur-sm">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-secondary mb-2">
-                    {Math.round(leaderboard.reduce((acc, p) => acc + p.realmsUnified, 0) / leaderboard.length * 10) / 10}
+                    {Math.round(leaderboard.reduce((acc, p) => acc + p.totalScore, 0) / leaderboard.length)}
                   </div>
-                  <p className="text-muted-foreground">Avg Realms</p>
+                  <p className="text-muted-foreground">Avg Score</p>
+                  <p className="text-xs text-muted-foreground">Total Points</p>
                 </CardContent>
               </Card>
+            </div>
+
+            {/* Filter and Sort Controls */}
+            <div className="flex flex-wrap justify-center gap-4 mb-8">
+              <div className="flex gap-2">
+                <Button
+                  variant={filterBy === "all" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFilterBy("all")}
+                  className="glow-hover"
+                >
+                  All Pioneers
+                </Button>
+                <Button
+                  variant={filterBy === "nexus-masters" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFilterBy("nexus-masters")}
+                  className="glow-hover"
+                >
+                  Nexus Masters
+                </Button>
+                <Button
+                  variant={filterBy === "realm-guardians" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFilterBy("realm-guardians")}
+                  className="glow-hover"
+                >
+                  Realm Guardians
+                </Button>
+                <Button
+                  variant={filterBy === "chain-walkers" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFilterBy("chain-walkers")}
+                  className="glow-hover"
+                >
+                  Chain Walkers
+                </Button>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant={sortBy === "score" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSortBy("score")}
+                  className="glow-hover"
+                >
+                  Score
+                </Button>
+                <Button
+                  variant={sortBy === "realms" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSortBy("realms")}
+                  className="glow-hover"
+                >
+                  Realms
+                </Button>
+                <Button
+                  variant={sortBy === "achievements" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSortBy("achievements")}
+                  className="glow-hover"
+                >
+                  Achievements
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -273,6 +253,9 @@ export default function LeaderboardPage() {
           <Card className="glow-hover bg-card/50 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="text-2xl text-center">Pioneer Rankings</CardTitle>
+              <p className="text-center text-muted-foreground">
+                Showing {filteredAndSortedLeaderboard.length} of {leaderboard.length} pioneers
+              </p>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -281,63 +264,141 @@ export default function LeaderboardPage() {
                     <tr className="border-b border-border">
                       <th className="text-left py-4 px-2">Rank</th>
                       <th className="text-left py-4 px-2">Player</th>
-                      <th className="text-left py-4 px-2">Realms Unified</th>
-                      <th className="text-left py-4 px-2">Total Cards</th>
-                      <th className="text-left py-4 px-2">Pioneer Card</th>
+                      <th className="text-left py-4 px-2">Score</th>
+                      <th className="text-left py-4 px-2">Realms</th>
+                      <th className="text-left py-4 px-2">Pioneers</th>
+                      <th className="text-left py-4 px-2">Achievements</th>
                       <th className="text-left py-4 px-2">Progress</th>
-                      <th className="text-left py-4 px-2">Last Active</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {leaderboard.map((entry, index) => (
-                      <motion.tr
-                        key={entry.rank}
-                        className="border-b border-border/50 hover:bg-muted/20 transition-colors"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.05 }}
-                      >
-                        <td className="py-4 px-2">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-2xl">{getRankIcon(entry.rank)}</span>
-                            <span className="font-bold">{entry.rank}</span>
-                          </div>
-                        </td>
-                        <td className="py-4 px-2">
-                          <div>
-                            <div className="font-medium">{entry.ensName}</div>
-                            <div className="text-sm text-muted-foreground">{entry.player}</div>
-                          </div>
-                        </td>
-                        <td className="py-4 px-2">
-                          <Badge 
-                            variant="outline" 
-                            className={getRankColor(entry.rank)}
-                          >
-                            {entry.realmsUnified}/5
-                          </Badge>
-                        </td>
-                        <td className="py-4 px-2">
-                          <span className="font-medium">{entry.totalCards}</span>
-                        </td>
-                        <td className="py-4 px-2">
-                          <span className="text-sm">{entry.pioneerCard}</span>
-                        </td>
-                        <td className="py-4 px-2">
-                          <div className="flex space-x-1">
-                            {getRealmProgress(entry.realmsUnified)}
-                          </div>
-                        </td>
-                        <td className="py-4 px-2">
-                          <span className="text-sm text-muted-foreground">{entry.lastActive}</span>
-                        </td>
-                      </motion.tr>
-                    ))}
+                    {filteredAndSortedLeaderboard.map((entry, index) => {
+                      const rankDisplay = getRankDisplay(entry.rank)
+                      const realmProgress = getRealmProgress(entry.realmsUnified)
+                      
+                      return (
+                        <motion.tr
+                          key={entry.rank}
+                          className="border-b border-border/50 hover:bg-muted/20 transition-colors"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.5, delay: index * 0.05 }}
+                        >
+                          <td className="py-4 px-2">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-2xl">{rankDisplay.icon}</span>
+                              <div>
+                                <div className="font-bold">{entry.rank}</div>
+                                <div className="text-xs text-muted-foreground">{rankDisplay.title}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-2">
+                            <div>
+                              <div className="font-medium">{entry.ensName || 'Anonymous'}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {entry.player.slice(0, 6)}...{entry.player.slice(-4)}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-4 px-2">
+                            <div className="font-bold text-primary">{entry.totalScore.toLocaleString()}</div>
+                            <div className="text-xs text-muted-foreground">Total Points</div>
+                          </td>
+                          <td className="py-4 px-2">
+                            <Badge 
+                              variant="outline" 
+                              className={rankDisplay.color}
+                            >
+                              {entry.realmsUnified}/4
+                            </Badge>
+                          </td>
+                          <td className="py-4 px-2">
+                            <div className="flex flex-wrap gap-1">
+                              {entry.pioneerCards.map((card, cardIndex) => (
+                                <div
+                                  key={cardIndex}
+                                  className="flex items-center space-x-1 text-xs"
+                                  title={`${card.name} - ${card.realm}`}
+                                >
+                                  <span>{getPioneerTypeIcon(card.pioneerType)}</span>
+                                  <span className="hidden sm:inline">{card.realm}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="py-4 px-2">
+                            <div className="flex flex-wrap gap-1">
+                              {entry.achievements.slice(0, 3).map((achievement, achIndex) => (
+                                <div
+                                  key={achIndex}
+                                  className="text-lg"
+                                  title={`${achievement.name}: ${achievement.description}`}
+                                >
+                                  {achievement.icon}
+                                </div>
+                              ))}
+                              {entry.achievements.length > 3 && (
+                                <div className="text-xs text-muted-foreground">
+                                  +{entry.achievements.length - 3}
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-4 px-2">
+                            <div className="flex space-x-1">
+                              {realmProgress.map((realm, realmIndex) => (
+                                <div
+                                  key={realm.name}
+                                  className={`w-3 h-3 rounded-full ${
+                                    realm.completed ? "bg-green-400" : "bg-muted-foreground/30"
+                                  }`}
+                                  title={`${realm.name} ${realm.completed ? "Completed" : "Locked"}`}
+                                />
+                              ))}
+                            </div>
+                          </td>
+                        </motion.tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
             </CardContent>
           </Card>
+
+          {/* Achievement Showcase */}
+          <div className="mt-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <h2 className="text-2xl font-bold text-center mb-8">Achievement System</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {Object.values({
+                  FIRST_PIONEER: { id: 'first_pioneer', name: 'First Steps', description: 'Mint your first Pioneer NFT', icon: '🌟', rarity: 'common' as const, points: 50 },
+                  REALM_MASTER: { id: 'realm_master', name: 'Realm Master', description: 'Mint Pioneers on all 4 networks', icon: '👑', rarity: 'legendary' as const, points: 500 },
+                  SOCIAL_BUILDER: { id: 'social_builder', name: 'Community Architect', description: 'Create 5 communities', icon: '🏗️', rarity: 'epic' as const, points: 200 },
+                  DATA_GUARDIAN: { id: 'data_guardian', name: 'Data Guardian', description: 'Archive 10 data sets', icon: '🗄️', rarity: 'epic' as const, points: 200 },
+                }).map((achievement) => (
+                  <Card key={achievement.id} className="glow-hover bg-card/50 backdrop-blur-sm">
+                    <CardContent className="p-4 text-center">
+                      <div className="text-3xl mb-2">{achievement.icon}</div>
+                      <h3 className="font-bold text-sm mb-1">{achievement.name}</h3>
+                      <p className="text-xs text-muted-foreground mb-2">{achievement.description}</p>
+                      <Badge 
+                        variant="outline" 
+                        className={`text-xs ${getAchievementRarityColor(achievement.rarity)}`}
+                      >
+                        {achievement.points} pts
+                      </Badge>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </motion.div>
+          </div>
 
           {/* Call to Action */}
           <div className="text-center mt-12">
@@ -348,11 +409,14 @@ export default function LeaderboardPage() {
             >
               <h2 className="text-2xl font-bold mb-4">Ready to Climb the Rankings?</h2>
               <p className="text-muted-foreground mb-6">
-                Join the pioneers and start your journey across the interchain realms.
+                Join the pioneers and start your journey across the interchain realms. Mint NFTs, earn achievements, and build your legacy in the Nexus.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" className="text-lg px-8 py-6 glow-hover">
                   <a href="/choose">Begin Your Quest</a>
+                </Button>
+                <Button variant="outline" size="lg" className="text-lg px-8 py-6 glow-hover bg-transparent">
+                  <a href="/inventory">View Inventory</a>
                 </Button>
                 <Button variant="outline" size="lg" className="text-lg px-8 py-6 glow-hover bg-transparent">
                   <a href="/play">Continue Playing</a>
