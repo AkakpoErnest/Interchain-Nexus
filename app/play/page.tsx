@@ -112,14 +112,34 @@ export default function PlayPage() {
 
   // Determine which game to show based on available pioneers
   if (hasOraclePioneer && !hasEnsPioneer) {
-    return <OracleSeerGame />
+    return (
+      <>
+        <OracleSeerGame />
+        <BackgroundMusic enabled={true} />
+      </>
+    )
   } else if (hasEnsPioneer && !hasOraclePioneer) {
-    return <EnsIdentityGame />
+    return (
+      <>
+        <EnsIdentityGame />
+        <BackgroundMusic enabled={true} />
+      </>
+    )
   } else if (hasOraclePioneer && hasEnsPioneer) {
     // If user has both, default to Oracle Seer for now
     // In the future, we could add a game selection interface
-    return <OracleSeerGame />
+    return (
+      <>
+        <OracleSeerGame />
+        <BackgroundMusic enabled={true} />
+      </>
+    )
   } else {
-    return <OracleSeerGame />
+    return (
+      <>
+        <OracleSeerGame />
+        <BackgroundMusic enabled={true} />
+      </>
+    )
   }
 }

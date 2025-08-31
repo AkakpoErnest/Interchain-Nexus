@@ -14,7 +14,7 @@ import CitreaGovernanceGuardian from "@/components/citrea-governance-guardian"
 import { MetaMaskConnectSimple } from "@/components/metamask-connect-simple"
 
 import { NetworkSpeedIndicator } from "@/components/network-speed-indicator"
-
+import { BackgroundMusic } from "@/components/background-music"
 
 import { BookOpen, CheckCircle, Play, Package, Shield } from "lucide-react"
 import { PioneerType, getPioneerTypeFromRealm, getChainIdForPioneerType, getNetworkNameForPioneerType, getPioneerTypeInfo } from "@/lib/blockchain"
@@ -722,7 +722,7 @@ export default function ChoosePage() {
                     )
                   ) : selectedPioneerType === PioneerType.GOVERNANCE_GUARDIAN ? (
                     <CitreaGovernanceGuardian
-                      onMintSuccess={handleNFTMintComplete}
+                      onMintSuccess={() => handleNFTMintComplete({})}
                     />
                   ) : (
                     <NFTMinting
@@ -765,6 +765,9 @@ export default function ChoosePage() {
           onClose={handleCloseStory}
         />
       )}
+
+      {/* Background Music */}
+      <BackgroundMusic enabled={true} />
     </div>
   )
 }

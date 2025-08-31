@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { CosmicAmbientSound } from "./background-music"
 
 interface OpeningAnimationProps {
   onComplete: () => void
@@ -76,6 +77,9 @@ export function OpeningAnimation({ onComplete }: OpeningAnimationProps) {
 
   return (
     <div className="fixed inset-0 z-[100] bg-black">
+      {/* Cosmic Ambient Sound */}
+      <CosmicAmbientSound intensity={0.3} duration={30000} />
+      
       <AnimatePresence mode="wait">
         {currentScene < storyScenes.length && (
           <motion.div

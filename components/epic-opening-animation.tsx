@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { CosmicAmbientSound } from "./background-music"
 
 interface EpicOpeningAnimationProps {
   onComplete: () => void
@@ -115,6 +116,9 @@ export function EpicOpeningAnimation({ onComplete }: EpicOpeningAnimationProps) 
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
+      {/* Cosmic Ambient Sound */}
+      <CosmicAmbientSound intensity={0.4} duration={45000} />
+      
       <AnimatePresence mode="wait">
         <motion.div
           key={currentScene}
