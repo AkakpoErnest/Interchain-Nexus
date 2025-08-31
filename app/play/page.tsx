@@ -3,16 +3,23 @@
 import { useState, useEffect } from 'react'
 import { useAccount, useChainId } from 'wagmi'
 import { OracleSeerGame } from '@/components/oracle-seer-game'
+import { EnsIdentityGame } from '@/components/ens-identity-game'
 import { MetaMaskConnectSimple } from '@/components/metamask-connect-simple'
 import { useHasPioneer } from '@/lib/hooks/usePioneerContract'
+import { useHasEnsPioneer } from '@/lib/hooks/useEnsPioneerContract'
+import { PioneerType } from '@/lib/blockchain'
 
 export default function PlayPage() {
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
   const [gameStarted, setGameStarted] = useState(false)
   
-  // Check if user has a pioneer
-  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, chainId)
+  // Check if user has any pioneer
+  const { data: hasOraclePioneer, isLoading: hasOraclePioneerLoading } = useHasPioneer(address, 114) // Flare Testnet
+  const { data: hasEnsPioneer, isLoading: hasEnsPioneerLoading } = useHasEnsPioneer(address, 114) // Flare Testnet
+  
+  const hasPioneer = hasOraclePioneer || hasEnsPioneer
+  const hasPioneerLoading = hasOraclePioneerLoading || hasEnsPioneerLoading
 
   if (!isConnected) {
     return (
@@ -65,8 +72,12 @@ export default function PlayPage() {
             Welcome to the Interchain Nexus
           </h1>
           <p className="text-gray-300 mb-8 text-lg leading-relaxed">
-            As an Oracle Seer, you have the power to see beyond the veil of reality and seek truth across all blockchain networks. 
-            Your journey begins now in the cosmic realm where data flows like starlight.
+            {hasOraclePioneer && hasEnsPioneer ? 
+              "You have both an Oracle Seer and an Identity Guardian! Choose your adventure:" :
+              hasOraclePioneer ? 
+                "As an Oracle Seer, you have the power to see beyond the veil of reality and seek truth across all blockchain networks. Your journey begins now in the cosmic realm where data flows like starlight." :
+                "As an Identity Guardian, you are the keeper of names and protector of digital identities. Your journey begins in the ancient realm of code and ether, where names carry true power."
+            }
           </p>
           <button
             onClick={() => setGameStarted(true)}

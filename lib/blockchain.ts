@@ -20,6 +20,89 @@ export interface PioneerData {
   isActive: boolean
 }
 
+// Contract ABI for ENS Pioneer contract
+export const ENS_PIONEER_ABI = [
+  // Read functions
+  {
+    inputs: [],
+    name: 'name',
+    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'symbol',
+    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'totalSupply',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'player', type: 'address' }],
+    name: 'hasPioneer',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'player', type: 'address' }],
+    name: 'getPlayerPioneer',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'isMintingAvailable',
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ENS_REGISTRY',
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'ENS_PIONEER_TYPE',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  // Write functions
+  {
+    inputs: [
+      { internalType: 'uint256', name: 'pioneerType', type: 'uint256' },
+      { internalType: 'address', name: 'playerAddress', type: 'address' }
+    ],
+    name: 'mintPioneer',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  // Events
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: 'address', name: 'player', type: 'address' },
+      { indexed: false, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      { indexed: false, internalType: 'uint256', name: 'pioneerType', type: 'uint256' }
+    ],
+    name: 'PioneerMinted',
+    type: 'event',
+  },
+] as const
+
 // Contract ABI for Pioneer contract
 export const PIONEER_ABI = [
   // Read functions
@@ -359,4 +442,22 @@ export function getNetworkNameForPioneerType(pioneerType: PioneerType): string {
   }
   
   return networkMap[pioneerType]
+}
+
+// ENS Contract helpers
+export function getEnsContractAddress(chainId: number | undefined): string {
+  if (!chainId) {
+    throw new Error('Chain ID is required')
+  }
+  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
+  if (!addresses) {
+    throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+  return (addresses as any).ensPioneer || addresses.pioneer
+}
+
+export function isEnsContractDeployed(chainId: number | undefined): boolean {
+  if (!chainId) return false
+  const address = getEnsContractAddress(chainId)
+  return address !== '0x0000000000000000000000000000000000000000'
 }

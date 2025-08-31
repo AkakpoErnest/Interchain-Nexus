@@ -673,43 +673,19 @@ export function OracleSeerGame() {
                 <p>Chapter {gameState.currentChapter} - Quest {gameState.currentQuest + 1}</p>
                 <p>Score: {gameState.score} | Energy: {gameState.energy}</p>
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex gap-3">
                 <Button
                   onClick={pauseGame}
-                  className="bg-gradient-to-r from-green-500 to-blue-500"
+                  className="flex-1 bg-gradient-to-r from-green-500 to-blue-500"
                 >
                   Resume Game
                 </Button>
                 <Button
                   onClick={restartGame}
                   variant="outline"
-                  className="border-red-500/50 text-red-300 hover:bg-red-500/20"
+                  className="flex-1 border-red-500/50 text-red-300 hover:bg-red-500/20"
                 >
                   Restart
-                </Button>
-                <Button
-                  onClick={() => window.location.href = '/inventory'}
-                  variant="outline"
-                  className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
-                >
-                  <Shield className="h-4 w-4 mr-2" />
-                  Inventory
-                </Button>
-                <Button
-                  onClick={() => window.location.href = '/'}
-                  variant="outline"
-                  className="border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/20"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Home
-                </Button>
-                <Button
-                  onClick={() => window.location.href = '/choose'}
-                  variant="outline"
-                  className="border-yellow-500/50 text-yellow-300 hover:bg-yellow-500/20"
-                >
-                  <Star className="h-4 w-4 mr-2" />
-                  Choose
                 </Button>
               </div>
             </CardContent>
@@ -766,15 +742,6 @@ export function OracleSeerGame() {
             >
               {gamePaused ? 'Resume' : 'Pause'}
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.location.href = '/inventory'}
-              className="border-green-500/50 text-green-300 hover:bg-green-500/20"
-            >
-              <Shield className="h-4 w-4 mr-1" />
-              Inventory
-            </Button>
           </div>
         </div>
 
@@ -808,37 +775,8 @@ export function OracleSeerGame() {
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="text-sm text-gray-400">
-                      Progress: {gameState.currentChapter}/{gameChapters.length} chapters
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.location.href = '/inventory'}
-                      className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
-                    >
-                      <Shield className="h-4 w-4 mr-1" />
-                      Inventory
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.location.href = '/'}
-                      className="border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/20"
-                    >
-                      <ArrowLeft className="h-4 w-4 mr-1" />
-                      Home
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.location.href = '/choose'}
-                      className="border-yellow-500/50 text-yellow-300 hover:bg-yellow-500/20"
-                    >
-                      <Star className="h-4 w-4 mr-1" />
-                      Choose
-                    </Button>
+                  <div className="text-sm text-gray-400">
+                    Progress: {gameState.currentChapter}/{gameChapters.length} chapters
                   </div>
                 </div>
               </CardContent>

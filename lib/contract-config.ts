@@ -14,7 +14,7 @@ export const CONTRACT_ADDRESSES = {
   1: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_ETHEREUM || '0x0000000000000000000000000000000000000000',
   },
-  // Sepolia Testnet
+  // Sepolia Testnet (ENS Identity Guardian)
   11155111: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000',
   },
@@ -22,9 +22,9 @@ export const CONTRACT_ADDRESSES = {
   314: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FILECOIN || '0x0000000000000000000000000000000000000000',
   },
-  // Filecoin Testnet
+  // Filecoin Testnet - Data Weaver Contract
   314159: {
-    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FILECOIN_TESTNET || '0x0000000000000000000000000000000000000000',
+    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FILECOIN_TESTNET || '0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1',
   },
   // Flare Mainnet
   14: {
@@ -33,6 +33,7 @@ export const CONTRACT_ADDRESSES = {
   // Flare Testnet - Oracle Seer Contract (Unlimited Supply + Public Minting)
   114: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FLARE_TESTNET || '0x2D6E6A6430F0121d6949D743DF54730b40C5c74F',
+    ensPioneer: process.env.NEXT_PUBLIC_ENS_CONTRACT_FLARE_TESTNET || '0xbaee9B65349929Bd78f9878555bF78027Df7f101',
   },
   // Lisk Mainnet
   1135: {

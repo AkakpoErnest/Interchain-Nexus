@@ -128,20 +128,38 @@ The main smart contract implements an ERC721 NFT with the following features:
 ## 🚀 Deployment Status
 
 ### ✅ Successfully Deployed
+
+#### Flare Testnet (Chain ID: 114)
 - **Flare Oracle Seer Contract**: `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
-  - Network: Flare Testnet (Chain ID: 114)
-  - Status: Live and ready for minting
+  - Status: ✅ Live and ready for minting
   - Explorer: [Flare Testnet Explorer](https://coston2-explorer.flare.network)
   - Features: Oracle prediction accuracy, data verification, prediction making
+  - Deployed: August 30, 2025
+
+- **Legacy Flare Contract**: `0x6858dF5365ffCbe31b5FE68D9E6ebB81321F7F86`
+  - Status: ✅ Deployed (legacy version)
+  - Explorer: [Flare Testnet Explorer](https://coston2-explorer.flare.network)
+  - Deployed: August 30, 2025
+
+#### Filecoin Calibration Testnet (Chain ID: 314159)
+- **Filecoin Data Weaver Contract**: `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
+  - Status: ✅ Live and ready for minting
+  - Explorer: [Filecoin Calibration Explorer](https://calibration.filscan.io)
+  - Features: Data archiving, storage contracts, retrieval tracking, storage efficiency scoring
+  - Deployed: August 31, 2025
+  - Tested: ✅ Minting functionality verified
+
+#### Lisk Sepolia Testnet (Chain ID: 4202)
+- **Lisk Social Architect Contract**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
+  - Status: ✅ Deployed
+  - Features: Community building, social connections, dApp integration
+  - Network: Lisk Sepolia Testnet
 
 ### 🔄 Ready for Deployment
 - **Base Social Architect Contract** (Base Sepolia)
   - Features: Community building, social connections, dApp integration
-- **Filecoin Data Weaver Contract** (Filecoin Calibration)
-  - Features: Data archiving, storage contracts, retrieval tracking
 - **ENS Identity Guardian Contract** (Ethereum Sepolia)
   - Features: Domain management, identity verification, attestations
-- **Lisk Sepolia** (General Pioneer contract)
 
 ## 🛠️ Development Setup
 
@@ -211,17 +229,29 @@ npm run deploy:lisk-testnet
 npm run deploy:all-testnets
 ```
 
+5. **Verify deployed contracts**
+```bash
+# Verify Flare Oracle Seer
+npx hardhat verify --network flareTestnet 0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF
+
+# Verify Filecoin Data Weaver
+npx hardhat verify --network filecoinTestnet 0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1
+
+# Verify Lisk Social Architect
+npx hardhat verify --network liskTestnet 0x5FbDB2315678afecb367f032d93F642f64180aa3
+```
+
 ## 🔗 Network Configuration
 
 ### Supported Networks
 
-| Network | Chain ID | RPC URL | Status |
-|---------|----------|---------|--------|
-| Base Sepolia | 84532 | https://sepolia.base.org | Ready |
-| Ethereum Sepolia | 11155111 | https://sepolia.infura.io/v3/YOUR_KEY | Ready |
-| Filecoin Calibration | 314159 | https://api.calibration.node.glif.io/rpc/v1 | Ready |
-| Flare Testnet | 114 | https://coston2-api.flare.network/ext/C/rpc | ✅ Deployed |
-| Lisk Sepolia | 4202 | https://rpc.api.testnet.lisk.com | Ready |
+| Network | Chain ID | RPC URL | Status | Contract Address |
+|---------|----------|---------|--------|------------------|
+| Base Sepolia | 84532 | https://sepolia.base.org | Ready | TBD |
+| Ethereum Sepolia | 11155111 | https://sepolia.infura.io/v3/YOUR_KEY | Ready | TBD |
+| Filecoin Calibration | 314159 | https://api.calibration.node.glif.io/rpc/v1 | ✅ Deployed | `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1` |
+| Flare Testnet | 114 | https://coston2-api.flare.network/ext/C/rpc | ✅ Deployed | `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF` |
+| Lisk Sepolia | 4202 | https://rpc.sepolia-api.lisk.com | ✅ Deployed | `0x5FbDB2315678afecb367f032d93F642f64180aa3` |
 
 ### Adding Networks to MetaMask
 
@@ -238,6 +268,18 @@ The app automatically detects supported networks. To manually add networks to Me
    - RPC URL: https://coston2-api.flare.network/ext/C/rpc
    - Chain ID: 114
    - Currency Symbol: C2FLR
+
+3. **Filecoin Calibration Testnet**
+   - Network Name: Filecoin Calibration
+   - RPC URL: https://api.calibration.node.glif.io/rpc/v1
+   - Chain ID: 314159
+   - Currency Symbol: tFIL
+
+4. **Lisk Sepolia Testnet**
+   - Network Name: Lisk Sepolia
+   - RPC URL: https://rpc.sepolia-api.lisk.com
+   - Chain ID: 4202
+   - Currency Symbol: LSK
 
 ## 🎯 How to Use
 
@@ -388,12 +430,14 @@ const getChainName = (chainId: number | undefined) => {
 
 1. **Removed RainbowKit** - Simplified to MetaMask-only connection
 2. **Fixed Chain ID Handling** - Added comprehensive null checks
-3. **Deployed to Flare Testnet** - Contract live at `0x6858dF5365ffCbe31b5FE68D9E6ebB81321F7F86`
+3. **Deployed to Flare Testnet** - Contract live at `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
 4. **Updated Contract Configuration** - Added deployed contract addresses
 5. **Fixed Hardhat Compatibility** - Downgraded to v2.26.3 for Node.js compatibility
 6. **Removed Pioneer Status Checking** - Eliminated pioneer status verification from choose page
 7. **Removed Journey Interface** - Deleted Identity Guardian's Journey component
 8. **Removed Supply Tracker** - Eliminated supply tracking component that was showing errors
+9. **Deployed Filecoin Data Weaver** - Contract live at `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
+10. **Tested Filecoin Minting** - Verified minting functionality on Filecoin Calibration testnet
 
 ### Issues Resolved
 - ✅ "Cannot read properties of undefined (reading 'id')" error

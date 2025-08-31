@@ -11,15 +11,14 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { 
-  useHasPioneer, 
-  usePlayerPioneer, 
-  usePioneerData, 
-  useMintPioneer, 
-  useMintTransactionReceipt,
-  useTotalSupply,
-  useIsMintingAvailable,
-  useContractInfo
-} from '@/lib/hooks/usePioneerContract'
+  useHasEnsPioneer, 
+  usePlayerEnsPioneer, 
+  useMintEnsPioneer, 
+  useWaitForEnsMinting,
+  useEnsTotalSupply,
+  useEnsIsMintingAvailable,
+  useEnsContractInfo
+} from '@/lib/hooks/useEnsPioneerContract'
 import { 
   PioneerType, 
   getPioneerTypeInfo, 
@@ -44,20 +43,19 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
   const [guardianName, setGuardianName] = useState<string>('')
   const [guardianTitle, setGuardianTitle] = useState<string>('')
 
-  // ENS-specific chain ID (Ethereum Sepolia)
-  const ensChainId = 11155111
+  // ENS-specific chain ID (Flare Testnet - where we deployed the ENS contract)
+  const ensChainId = 114
 
   // Contract hooks
-  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, ensChainId)
-  const { data: playerPioneerTokenId } = usePlayerPioneer(address, ensChainId)
-  const { data: pioneerData, isLoading: pioneerDataLoading } = usePioneerData(playerPioneerTokenId, ensChainId)
-  const { data: totalSupply } = useTotalSupply(ensChainId)
-  const { data: isMintingAvailable } = useIsMintingAvailable(ensChainId)
-  const { name: contractName, symbol: contractSymbol } = useContractInfo(ensChainId)
+  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasEnsPioneer(address, ensChainId)
+  const { data: playerPioneerTokenId } = usePlayerEnsPioneer(address, ensChainId)
+  const { data: totalSupply } = useEnsTotalSupply(ensChainId)
+  const { data: isMintingAvailable } = useEnsIsMintingAvailable(ensChainId)
+  const { name: contractName, symbol: contractSymbol } = useEnsContractInfo(ensChainId)
   
   // Minting hooks
-  const { mintPioneer, hash, error: mintError, isPending } = useMintPioneer()
-  const { data: receipt, isLoading: isConfirming, error: receiptError } = useMintTransactionReceipt(hash)
+  const { mintPioneer, hash, error: mintError, isPending } = useMintEnsPioneer(ensChainId)
+  const { data: receipt, isLoading: isConfirming, error: receiptError } = useWaitForEnsMinting(hash)
 
   // Check if chain is supported
   const isChainSupported = isSupportedChain(ensChainId)
@@ -74,7 +72,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
       setMintStep('minting')
       setErrorMessage('')
       
-      await mintPioneer(PioneerType.IDENTITY_GUARDIAN, address, ensChainId)
+      await mintPioneer(1, address) // ENS Pioneer Type is 1
     } catch (error) {
       console.error('ENS Minting error:', error)
       setMintStep('error')
@@ -157,7 +155,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
   }
 
   // Already has pioneer
-  if (hasPioneer && pioneerData) {
+  if (hasPioneer) {
     return (
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
@@ -173,19 +171,19 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
           <div className="flex items-center space-x-3">
             <img 
               src={pioneerInfo?.image || '/ens_identity_guardian_card_refined.png'} 
-              alt={pioneerData.name}
+              alt={pioneerInfo?.name}
               className="w-16 h-16 rounded-lg object-cover"
             />
             <div>
-              <h3 className="font-semibold">{pioneerData.name}</h3>
-              <p className="text-sm text-muted-foreground">{pioneerData.title}</p>
-              <Badge variant="secondary">{pioneerData.realm}</Badge>
+              <h3 className="font-semibold">{pioneerInfo?.name}</h3>
+              <p className="text-sm text-muted-foreground">{pioneerInfo?.title}</p>
+              <Badge variant="secondary">{pioneerInfo?.realm}</Badge>
             </div>
           </div>
           
           <div className="text-sm text-muted-foreground">
             <p>Token ID: {playerPioneerTokenId?.toString()}</p>
-            <p>Minted: {new Date(Number(pioneerData.mintedAt) * 1000).toLocaleDateString()}</p>
+            <p>Minted: Recently</p>
           </div>
 
           <Button 
