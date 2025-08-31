@@ -385,7 +385,7 @@ export function getEnsContractAddress(chainId: number | undefined): string {
   if (!addresses) {
     throw new Error(`Unsupported chain ID: ${chainId}`)
   }
-  return addresses.ensPioneer || addresses.pioneer
+  return (addresses as any).ensPioneer || addresses.pioneer
 }
 
 export function getNetworkConfig(chainId: number | undefined) {

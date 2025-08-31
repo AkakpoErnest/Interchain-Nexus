@@ -8,8 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+
 import { 
   useHasEnsPioneer, 
   usePlayerEnsPioneer, 
@@ -40,11 +39,10 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
   const chainId = useChainId()
   const [mintStep, setMintStep] = useState<'idle' | 'minting' | 'confirming' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const [guardianName, setGuardianName] = useState<string>('')
-  const [guardianTitle, setGuardianTitle] = useState<string>('')
 
-  // ENS-specific chain ID (Flare Testnet - where we deployed the ENS contract)
-  const ensChainId = 114
+
+  // ENS-specific chain ID (Ethereum Sepolia - where we deployed the ENS contract)
+  const ensChainId = 11155111
 
   // Contract hooks
   const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasEnsPioneer(address, ensChainId)
@@ -66,7 +64,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
 
   // Handle minting process
   const handleMint = async () => {
-    if (!address || !isChainSupported || !guardianName.trim() || !guardianTitle.trim()) return
+    if (!address || !isChainSupported) return
 
     try {
       setMintStep('minting')
@@ -91,8 +89,8 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
       // Store the minted pioneer data for story flow
       const mintedPioneerData = {
         id: PioneerType.IDENTITY_GUARDIAN,
-        name: guardianName || pioneerInfo?.name || 'Identity Guardian',
-        title: guardianTitle || pioneerInfo?.title || 'Keeper of Names',
+        name: pioneerInfo?.name || 'Identity Guardian',
+        title: pioneerInfo?.title || 'Keeper of Names',
         realm: pioneerInfo?.realm || 'ENS',
         rarity: pioneerInfo?.rarity || 'Epic',
         stats: { 
@@ -124,7 +122,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
       setMintStep('error')
       setErrorMessage('Transaction was reverted')
     }
-  }, [receipt, playerPioneerTokenId, totalSupply, pioneerInfo, guardianName, guardianTitle, onMintComplete])
+  }, [receipt, playerPioneerTokenId, totalSupply, pioneerInfo, onMintComplete])
 
   // Handle errors
   useEffect(() => {
@@ -140,19 +138,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
     }
   }, [mintError, receiptError, onError])
 
-  // Loading state
-  if (hasPioneerLoading) {
-    return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center space-x-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Checking Identity Guardian status...</span>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
+  // Skip loading state - go directly to mint or already minted
 
   // Already has pioneer
   if (hasPioneer) {
@@ -240,29 +226,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
           }}
         />
 
-        {/* Guardian Customization */}
-        <div className="space-y-3">
-          <div>
-            <Label htmlFor="guardianName">Guardian Name</Label>
-            <Input
-              id="guardianName"
-              placeholder="Enter your guardian's name"
-              value={guardianName}
-              onChange={(e) => setGuardianName(e.target.value)}
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="guardianTitle">Guardian Title</Label>
-            <Input
-              id="guardianTitle"
-              placeholder="Enter your guardian's title"
-              value={guardianTitle}
-              onChange={(e) => setGuardianTitle(e.target.value)}
-              className="mt-1"
-            />
-          </div>
-        </div>
+
 
         {/* Pioneer Preview */}
         <div className="flex items-center space-x-3 p-4 border rounded-lg">
@@ -272,8 +236,8 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
             className="w-16 h-16 rounded-lg object-cover"
           />
           <div>
-            <h3 className="font-semibold">{guardianName || pioneerInfo?.name}</h3>
-            <p className="text-sm text-muted-foreground">{guardianTitle || pioneerInfo?.title}</p>
+            <h3 className="font-semibold">{pioneerInfo?.name}</h3>
+            <p className="text-sm text-muted-foreground">{pioneerInfo?.title}</p>
             <div className="flex space-x-2 mt-1">
               <Badge variant="secondary">{pioneerInfo?.realm}</Badge>
               <Badge variant="outline">{pioneerInfo?.rarity}</Badge>
@@ -312,10 +276,10 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
           <div className="flex items-center space-x-2">
             <span>Status:</span>
             <Badge 
-              variant={isMintingAvailable ? "default" : "destructive"}
-              className={isMintingAvailable ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}
+              variant="default"
+              className="bg-green-500/20 text-green-300"
             >
-              {isMintingAvailable ? "Available" : "Sold Out"}
+              Available
             </Badge>
           </div>
         </div>
@@ -386,7 +350,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
         {/* Mint Button */}
         <Button 
           onClick={handleMint}
-          disabled={isPending || isConfirming || mintStep === 'success' || !isMintingAvailable || !guardianName.trim() || !guardianTitle.trim()}
+          disabled={isPending || isConfirming || mintStep === 'success' || !isMintingAvailable}
           className="w-full"
         >
           {isPending || isConfirming ? (

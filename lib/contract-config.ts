@@ -17,6 +17,7 @@ export const CONTRACT_ADDRESSES = {
   // Sepolia Testnet (ENS Identity Guardian)
   11155111: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000',
+    ensPioneer: process.env.NEXT_PUBLIC_ENS_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000',
   },
   // Filecoin Mainnet
   314: {
@@ -24,7 +25,7 @@ export const CONTRACT_ADDRESSES = {
   },
   // Filecoin Testnet - Data Weaver Contract
   314159: {
-    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FILECOIN_TESTNET || '0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1',
+    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_FILECOIN_TESTNET || '0xc00a268Fbcbb00a72bfc8CD0FE7CfE26dad3BEd8',
   },
   // Flare Mainnet
   14: {

@@ -92,6 +92,40 @@ contract FilecoinDataWeaver is ERC721, Ownable, ReentrancyGuard {
     }
     
     /**
+     * @dev Public minting function for users to mint their own Data Weaver
+     * @param pioneerType The type of pioneer (for compatibility with frontend)
+     * @param playerAddress The address of the player minting the NFT
+     */
+    function mintPioneer(uint256 pioneerType, address playerAddress) external nonReentrant {
+        require(!_hasDataWeaver[playerAddress], "Player already has Data Weaver");
+        require(playerAddress != address(0), "Invalid player address");
+        require(pioneerType == 2, "Invalid pioneer type for Data Weaver"); // PioneerType.DATA_WEAVER = 2
+        
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current();
+        
+        _dataWeaverData[newTokenId] = DataWeaverData({
+            name: "The Data Weaver",
+            title: "Archivist of the Nexus",
+            realm: "Filecoin",
+            rarity: "Epic",
+            mintedAt: block.timestamp,
+            isActive: true,
+            dataArchived: 0,
+            storageContracts: 0,
+            retrievalRequests: 0,
+            storageScore: 100 // Starting storage score
+        });
+        
+        _playerDataWeaver[playerAddress] = newTokenId;
+        _hasDataWeaver[playerAddress] = true;
+        
+        _safeMint(playerAddress, newTokenId);
+        
+        emit DataWeaverMinted(playerAddress, newTokenId, "The Data Weaver");
+    }
+    
+    /**
      * @dev Archive data and update Data Weaver stats
      * @param dataHash The hash of the data being archived
      * @param dataSize The size of the data in bytes
@@ -170,6 +204,33 @@ contract FilecoinDataWeaver is ERC721, Ownable, ReentrancyGuard {
     }
     
     /**
+     * @dev Get Pioneer data for a token ID (compatibility function)
+     * Returns data in the standard Pioneer format
+     */
+    function getPioneerData(uint256 tokenId) external view returns (
+        uint8 pioneerType,
+        string memory name,
+        string memory title,
+        string memory realm,
+        string memory rarity,
+        uint256 mintedAt,
+        bool isActive
+    ) {
+        require(_exists(tokenId), "Token does not exist");
+        DataWeaverData memory data = _dataWeaverData[tokenId];
+        
+        return (
+            2, // PioneerType.DATA_WEAVER
+            data.name,
+            data.title,
+            data.realm,
+            data.rarity,
+            data.mintedAt,
+            data.isActive
+        );
+    }
+    
+    /**
      * @dev Get player's Data Weaver token ID
      */
     function getPlayerDataWeaver(address player) external view returns (uint256) {
@@ -182,6 +243,21 @@ contract FilecoinDataWeaver is ERC721, Ownable, ReentrancyGuard {
      */
     function hasDataWeaver(address player) external view returns (bool) {
         return _hasDataWeaver[player];
+    }
+    
+    /**
+     * @dev Check if player has Pioneer (alias for hasDataWeaver for compatibility)
+     */
+    function hasPioneer(address player) external view returns (bool) {
+        return _hasDataWeaver[player];
+    }
+    
+    /**
+     * @dev Get player's Pioneer token ID (alias for getPlayerDataWeaver for compatibility)
+     */
+    function getPlayerPioneer(address player) external view returns (uint256) {
+        require(_hasDataWeaver[player], "Player does not have Data Weaver");
+        return _playerDataWeaver[player];
     }
     
     /**

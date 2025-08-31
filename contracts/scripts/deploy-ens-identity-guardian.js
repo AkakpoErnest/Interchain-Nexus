@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
 
 async function main() {
-  console.log("🚀 Starting ENS Identity Guardian deployment...");
+  console.log("🚀 Starting ENS Identity Guardian deployment to Ethereum Sepolia...");
 
   // Get the contract factory
   const ENSIdentityGuardian = await ethers.getContractFactory("ENSIdentityGuardian");
@@ -49,7 +49,7 @@ async function main() {
   // Instructions for next steps
   console.log("\n📋 Next Steps:");
   console.log("1. Update your .env file with the contract address:");
-  console.log(`   NEXT_PUBLIC_PIONEER_CONTRACT_SEPOLIA=${contractAddress}`);
+  console.log(`   NEXT_PUBLIC_ENS_CONTRACT_SEPOLIA=${contractAddress}`);
   console.log("2. Verify the contract on Etherscan (if on mainnet/testnet)");
   console.log("3. Test the minting functionality");
   console.log("4. Update your frontend configuration");

@@ -1,10 +1,10 @@
 {
   "contractName": "FilecoinDataWeaver",
-  "contractAddress": "0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1",
+  "contractAddress": "0xc00a268Fbcbb00a72bfc8CD0FE7CfE26dad3BEd8",
   "network": "filecoinTestnet",
   "chainId": "314159",
   "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-  "deploymentTime": "2025-08-31T00:05:02.681Z",
+  "deploymentTime": "2025-08-31T01:02:02.369Z",
   "baseURI": "https://ipfs.io/ipfs/",
   "totalSupply": "0",
   "features": [

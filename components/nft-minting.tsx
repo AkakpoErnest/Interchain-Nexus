@@ -27,9 +27,11 @@ import {
   getNetworkConfig 
 } from '@/lib/blockchain'
 import { getContractAddress } from '@/lib/contract-config'
-import { Loader2, CheckCircle, XCircle, ExternalLink, Zap } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, ExternalLink, Zap, Sparkles, Trophy } from 'lucide-react'
 import { TransactionStatusEnhanced } from './transaction-status-enhanced'
 import { NetworkSwitcher } from './network-switcher'
+import { Confetti } from './confetti'
+import { SoundEffects } from './sound-effects'
 
 interface NFTMintingProps {
   selectedPioneerType?: PioneerType
@@ -42,6 +44,8 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
   const chainId = useChainId()
   const [mintStep, setMintStep] = useState<'idle' | 'minting' | 'confirming' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [showConfetti, setShowConfetti] = useState(false)
+  const [playSuccessSound, setPlaySuccessSound] = useState(false)
 
   // Contract hooks
   const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, chainId)
@@ -88,6 +92,9 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
   useEffect(() => {
     if (receipt && receipt.status === 'success') {
       setMintStep('success')
+      setShowConfetti(true)
+      setPlaySuccessSound(true)
+      
       // Extract token ID from logs or use the latest token ID
       const tokenId = playerPioneerTokenId || BigInt(totalSupply || 0)
       
@@ -138,19 +145,6 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
     }
   }, [mintError, receiptError, onError])
 
-  // Loading state
-  if (hasPioneerLoading) {
-    return (
-      <Card className="w-full max-w-md mx-auto">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center space-x-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>Checking pioneer status...</span>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
 
   // Already has pioneer
   if (hasPioneer && pioneerData) {
@@ -348,12 +342,32 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
 
         {/* Success Message */}
         {mintStep === 'success' && (
-          <Alert>
-            <CheckCircle className="h-4 w-4" />
-            <AlertDescription>
-              Pioneer NFT minted successfully! Your NFT is now in your wallet.
-            </AlertDescription>
-          </Alert>
+          <div className="space-y-4">
+            <Alert className="border-green-500/50 bg-green-500/10">
+              <Trophy className="h-4 w-4 text-green-400" />
+              <AlertDescription className="text-green-300">
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <Sparkles className="h-4 w-4 text-yellow-400" />
+                    <span className="font-semibold">Mint Successful!</span>
+                  </div>
+                  <p>Your {pioneerInfo?.name} NFT has been successfully minted and is now in your wallet!</p>
+                  <p className="text-sm text-green-200">
+                    Token ID: {playerPioneerTokenId?.toString() || 'Loading...'}
+                  </p>
+                </div>
+              </AlertDescription>
+            </Alert>
+            
+            <div className="text-center space-y-2">
+              <p className="text-sm text-muted-foreground">
+                🎉 Congratulations! You are now a Pioneer of the Interchain Nexus!
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Redirecting to your story in a moment...
+              </p>
+            </div>
+          </div>
         )}
 
         {/* Transaction Status */}
@@ -386,8 +400,8 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
             </>
           ) : mintStep === 'success' ? (
             <>
-              <CheckCircle className="h-4 w-4 mr-2" />
-              Minted Successfully
+              <Trophy className="h-4 w-4 mr-2 text-yellow-400" />
+              <span className="text-green-400">Minted Successfully!</span>
             </>
           ) : (
             <>
@@ -397,6 +411,15 @@ export function NFTMinting({ selectedPioneerType, onMintComplete, onError }: NFT
           )}
         </Button>
       </CardContent>
+      
+      {/* Confetti Animation */}
+      <Confetti 
+        trigger={showConfetti} 
+        onComplete={() => setShowConfetti(false)}
+      />
+      
+      {/* Sound Effects */}
+      <SoundEffects playSuccess={playSuccessSound} />
     </Card>
   )
 }

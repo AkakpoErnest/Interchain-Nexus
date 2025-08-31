@@ -17,6 +17,8 @@ import { NetworkSpeedIndicator } from "@/components/network-speed-indicator"
 import { BookOpen, CheckCircle, Play, Package } from "lucide-react"
 import { PioneerType, getPioneerTypeFromRealm, getChainIdForPioneerType, getNetworkNameForPioneerType, getPioneerTypeInfo } from "@/lib/blockchain"
 import { useAccount, useChainId } from 'wagmi'
+import { useHasPioneer, usePlayerPioneer, usePioneerData } from '@/lib/hooks/usePioneerContract'
+import { useHasEnsPioneer, usePlayerEnsPioneer } from '@/lib/hooks/useEnsPioneerContract'
 
 
 // Pioneer Card data based on the provided images
@@ -159,6 +161,16 @@ export default function ChoosePage() {
   
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
+  
+  // Check if user has a pioneer on any supported chain
+  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, chainId)
+  const { data: playerPioneerTokenId } = usePlayerPioneer(address, chainId)
+  const { data: pioneerData } = usePioneerData(playerPioneerTokenId, chainId)
+  
+  // Check ENS pioneer specifically (Ethereum Sepolia)
+  const ensChainId = 11155111 // Ethereum Sepolia
+  const { data: hasEnsPioneer, isLoading: hasEnsPioneerLoading } = useHasEnsPioneer(address, ensChainId)
+  const { data: playerEnsPioneerTokenId } = usePlayerEnsPioneer(address, ensChainId)
 
   const handleCardSelect = (cardId: number) => {
     setSelectedCard(cardId)
@@ -215,6 +227,22 @@ export default function ChoosePage() {
   // Get the selected pioneer type for NFT minting
   const selectedPioneerData = selectedCard ? pioneerCards.find(card => card.id === selectedCard) : null
   const selectedPioneerType = selectedPioneerData ? getPioneerTypeFromRealm(selectedPioneerData.realm) : undefined
+
+  // Check if user has any pioneer (either regular or ENS)
+  const hasAnyPioneer = hasPioneer || hasEnsPioneer
+  const isLoadingPioneerStatus = hasPioneerLoading || hasEnsPioneerLoading
+
+//   // Show loading state while checking pioneer status
+//   if (isLoadingPioneerStatus) {
+//     return (
+//       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+//         <div className="text-center">
+//           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+//           <p className="text-gray-300">Loading...</p>
+//         </div>
+//       </div>
+//     )
+//   }
 
 
 

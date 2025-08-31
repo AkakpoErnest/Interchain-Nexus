@@ -1,6 +1,6 @@
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { Address } from 'viem'
-import { ENS_PIONEER_ABI, getEnsContractAddress, getGasConfigForChain } from '@/lib/blockchain'
+import { PIONEER_ABI, getEnsContractAddress } from '@/lib/blockchain'
 
 // Hook to check if player has ENS Pioneer
 export function useHasEnsPioneer(playerAddress: Address | undefined, chainId: number | undefined) {
@@ -8,7 +8,7 @@ export function useHasEnsPioneer(playerAddress: Address | undefined, chainId: nu
   
   return useReadContract({
     address: contractAddress as Address,
-    abi: ENS_PIONEER_ABI,
+    abi: PIONEER_ABI,
     functionName: 'hasPioneer',
     args: playerAddress ? [playerAddress] : undefined,
     query: {
@@ -23,7 +23,7 @@ export function usePlayerEnsPioneer(playerAddress: Address | undefined, chainId:
   
   return useReadContract({
     address: contractAddress as Address,
-    abi: ENS_PIONEER_ABI,
+    abi: PIONEER_ABI,
     functionName: 'getPlayerPioneer',
     args: playerAddress ? [playerAddress] : undefined,
     query: {
@@ -38,7 +38,7 @@ export function useEnsTotalSupply(chainId: number | undefined) {
   
   return useReadContract({
     address: contractAddress as Address,
-    abi: ENS_PIONEER_ABI,
+    abi: PIONEER_ABI,
     functionName: 'totalSupply',
     query: {
       enabled: !!chainId && !!contractAddress,
@@ -52,7 +52,7 @@ export function useEnsIsMintingAvailable(chainId: number | undefined) {
   
   return useReadContract({
     address: contractAddress as Address,
-    abi: ENS_PIONEER_ABI,
+    abi: PIONEER_ABI,
     functionName: 'isMintingAvailable',
     query: {
       enabled: !!chainId && !!contractAddress,
@@ -66,7 +66,7 @@ export function useEnsContractInfo(chainId: number | undefined) {
   
   const { data: name } = useReadContract({
     address: contractAddress as Address,
-    abi: ENS_PIONEER_ABI,
+    abi: PIONEER_ABI,
     functionName: 'name',
     query: {
       enabled: !!chainId && !!contractAddress,
@@ -75,7 +75,7 @@ export function useEnsContractInfo(chainId: number | undefined) {
   
   const { data: symbol } = useReadContract({
     address: contractAddress as Address,
-    abi: ENS_PIONEER_ABI,
+    abi: PIONEER_ABI,
     functionName: 'symbol',
     query: {
       enabled: !!chainId && !!contractAddress,
@@ -99,14 +99,11 @@ export function useMintEnsPioneer(chainId: number | undefined) {
       throw new Error('Contract address not found')
     }
     
-    const gasConfig = getGasConfigForChain(chainId)
-    
     return writeContract({
       address: contractAddress as Address,
-      abi: ENS_PIONEER_ABI,
+      abi: PIONEER_ABI,
       functionName: 'mintPioneer',
       args: [BigInt(pioneerType), playerAddress],
-      ...gasConfig,
     })
   }
   

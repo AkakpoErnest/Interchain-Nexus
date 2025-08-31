@@ -33,16 +33,7 @@ export default function PlayPage() {
     )
   }
 
-  if (hasPioneerLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-          <p className="text-gray-300">Checking your Pioneer status...</p>
-        </div>
-      </div>
-    )
-  }
+  // Skip loading state - go directly to game or no pioneer message
 
   if (!hasPioneer) {
     return (
@@ -79,16 +70,44 @@ export default function PlayPage() {
                 "As an Identity Guardian, you are the keeper of names and protector of digital identities. Your journey begins in the ancient realm of code and ether, where names carry true power."
             }
           </p>
-          <button
-            onClick={() => setGameStarted(true)}
-            className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105"
-          >
-            Begin Your Journey
-          </button>
+          {hasOraclePioneer && hasEnsPioneer ? (
+            <div className="space-y-4">
+              <button
+                onClick={() => setGameStarted(true)}
+                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 mr-4"
+              >
+                Play as Oracle Seer
+              </button>
+              <button
+                onClick={() => setGameStarted(true)}
+                className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+              >
+                Play as Identity Guardian
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setGameStarted(true)}
+              className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+            >
+              Begin Your Journey
+            </button>
+          )}
         </div>
       </div>
     )
   }
 
-  return <OracleSeerGame />
+  // Determine which game to show based on available pioneers
+  if (hasOraclePioneer && !hasEnsPioneer) {
+    return <OracleSeerGame />
+  } else if (hasEnsPioneer && !hasOraclePioneer) {
+    return <EnsIdentityGame />
+  } else if (hasOraclePioneer && hasEnsPioneer) {
+    // If user has both, default to Oracle Seer for now
+    // In the future, we could add a game selection interface
+    return <OracleSeerGame />
+  } else {
+    return <OracleSeerGame />
+  }
 }

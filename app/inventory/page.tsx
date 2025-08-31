@@ -14,6 +14,12 @@ import {
   useTotalSupply,
   useContractInfo
 } from "@/lib/hooks/usePioneerContract"
+import { 
+  useHasEnsPioneer, 
+  usePlayerEnsPioneer, 
+  useEnsTotalSupply,
+  useEnsContractInfo
+} from "@/lib/hooks/useEnsPioneerContract"
 import { PioneerType, getPioneerTypeInfo, getNetworkConfig } from "@/lib/blockchain"
 import { ExternalLink, Eye, Zap, Shield, Brain, Search, Star, Play, Trophy, Gift } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -23,21 +29,47 @@ export default function InventoryPage() {
   const chainId = useChainId()
   const [activeTab, setActiveTab] = useState("pioneers")
 
-  // Contract hooks
-  const { data: hasPioneer, isLoading: hasPioneerLoading } = useHasPioneer(address, chainId)
-  const { data: playerPioneerTokenId } = usePlayerPioneer(address, chainId)
-  const { data: totalSupply } = useTotalSupply(chainId)
-  const { name: contractName, symbol: contractSymbol } = useContractInfo(chainId)
+  // Contract hooks for Oracle Seer (Flare Testnet)
+  const { data: hasOraclePioneer, isLoading: hasOraclePioneerLoading } = useHasPioneer(address, 114)
+  const { data: playerOraclePioneerTokenId } = usePlayerPioneer(address, 114)
+  const { data: oracleTotalSupply } = useTotalSupply(114)
+  const { name: oracleContractName, symbol: oracleContractSymbol } = useContractInfo(114)
   
-  // Create pioneer data manually since our simple contract doesn't have getPioneerData
-  const pioneerData = hasPioneer && playerPioneerTokenId ? {
+  // Contract hooks for ENS Guardian (Flare Testnet)
+  const { data: hasEnsPioneer, isLoading: hasEnsPioneerLoading } = useHasEnsPioneer(address, 114)
+  const { data: playerEnsPioneerTokenId } = usePlayerEnsPioneer(address, 114)
+  const { data: ensTotalSupply } = useEnsTotalSupply(114)
+  const { name: ensContractName, symbol: ensContractSymbol } = useEnsContractInfo(114)
+  
+  const hasPioneer = hasOraclePioneer || hasEnsPioneer
+  const hasPioneerLoading = hasOraclePioneerLoading || hasEnsPioneerLoading
+  
+  // Create pioneer data for Oracle Seer
+  const oraclePioneerData = hasOraclePioneer && playerOraclePioneerTokenId ? {
     pioneerType: PioneerType.ORACLE_SEER,
     name: "The Oracle Seer",
     title: "Truth Seeker of the Cosmos",
     realm: "Flare",
     rarity: "Epic",
-    mintedAt: BigInt(Math.floor(Date.now() / 1000)), // Current timestamp
-    isActive: true
+    mintedAt: BigInt(Math.floor(Date.now() / 1000)),
+    isActive: true,
+    tokenId: playerOraclePioneerTokenId,
+    contractName: oracleContractName,
+    contractSymbol: oracleContractSymbol
+  } : null
+  
+  // Create pioneer data for ENS Guardian
+  const ensPioneerData = hasEnsPioneer && playerEnsPioneerTokenId ? {
+    pioneerType: PioneerType.IDENTITY_GUARDIAN,
+    name: "The Identity Guardian",
+    title: "Keeper of Names",
+    realm: "ENS",
+    rarity: "Epic",
+    mintedAt: BigInt(Math.floor(Date.now() / 1000)),
+    isActive: true,
+    tokenId: playerEnsPioneerTokenId,
+    contractName: ensContractName,
+    contractSymbol: ensContractSymbol
   } : null
 
   // Mock game items and achievements (these would come from your game system)
@@ -269,98 +301,164 @@ export default function InventoryPage() {
             {/* Pioneers Tab */}
             <TabsContent value="pioneers" className="mt-8">
               <div className="space-y-6">
-                {hasPioneerLoading ? (
-                  <Card className="bg-card/50 backdrop-blur-sm border-cyan-400/30">
-                    <CardContent className="p-8 text-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-                      <p className="text-gray-300">Loading your Pioneer NFTs...</p>
-                    </CardContent>
-                  </Card>
-                ) : hasPioneer && pioneerData ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <Card className="bg-card/50 backdrop-blur-sm border-cyan-400/30">
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <CardTitle className="text-2xl flex items-center space-x-2">
-                              <Shield className="h-6 w-6 text-cyan-400" />
-                              <span>Your Pioneer NFT</span>
-                            </CardTitle>
-                            <p className="text-gray-400">Token ID: {playerPioneerTokenId?.toString()}</p>
-                          </div>
-                          <Badge variant="outline" className="bg-green-500/20 text-green-300 border-green-500/30">
-                            Owned
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="grid md:grid-cols-2 gap-6">
-                          <div className="space-y-4">
-                            <img 
-                              src={getPioneerTypeInfo(pioneerData.pioneerType)?.image || '/placeholder.jpg'} 
-                              alt={pioneerData.name}
-                              className="w-full h-64 object-cover rounded-lg"
-                            />
-                            <div className="flex space-x-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => window.open(`/play`, '_blank')}
-                              >
-                                <Play className="h-4 w-4 mr-2" />
-                                Play Story
-                              </Button>
-                              {networkConfig && (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  onClick={() => window.open(`${networkConfig.blockExplorers.default.url}/token/${playerPioneerTokenId}`, '_blank')}
-                                >
-                                  <ExternalLink className="h-4 w-4 mr-2" />
-                                  View on Explorer
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                          <div className="space-y-4">
-                            <div>
-                              <h3 className="text-xl font-semibold text-white">{pioneerData.name}</h3>
-                              <p className="text-cyan-400 font-medium">{pioneerData.title}</p>
-                              <Badge variant="secondary" className="mt-2 bg-purple-600/20 text-purple-300">
-                                {pioneerData.realm}
+                {hasPioneer ? (
+                  <div className="space-y-6">
+                    {/* Oracle Seer Pioneer */}
+                    {oraclePioneerData && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <Card className="bg-card/50 backdrop-blur-sm border-cyan-400/30">
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <CardTitle className="text-2xl flex items-center space-x-2">
+                                  <Shield className="h-6 w-6 text-cyan-400" />
+                                  <span>Oracle Seer NFT</span>
+                                </CardTitle>
+                                <p className="text-gray-400">Token ID: {oraclePioneerData.tokenId?.toString()}</p>
+                              </div>
+                              <Badge variant="outline" className="bg-green-500/20 text-green-300 border-green-500/30">
+                                Owned
                               </Badge>
                             </div>
-                            <div className="space-y-2">
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Rarity:</span>
-                                <span className="text-yellow-400">{pioneerData.rarity}</span>
+                          </CardHeader>
+                          <CardContent className="space-y-6">
+                            <div className="grid md:grid-cols-2 gap-6">
+                              <div className="space-y-4">
+                                <img 
+                                  src={getPioneerTypeInfo(oraclePioneerData.pioneerType)?.image || '/placeholder.jpg'} 
+                                  alt={oraclePioneerData.name}
+                                  className="w-full h-64 object-cover rounded-lg"
+                                />
+                                <div className="flex space-x-2">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => window.open(`/play`, '_blank')}
+                                  >
+                                    <Play className="h-4 w-4 mr-2" />
+                                    Play Story
+                                  </Button>
+                                </div>
                               </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Minted:</span>
-                                <span className="text-gray-300">
-                                  {new Date(Number(pioneerData.mintedAt) * 1000).toLocaleDateString()}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Status:</span>
-                                <span className={pioneerData.isActive ? "text-green-400" : "text-red-400"}>
-                                  {pioneerData.isActive ? "Active" : "Inactive"}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-gray-400">Contract:</span>
-                                <span className="text-gray-300">{contractName} ({contractSymbol})</span>
+                              <div className="space-y-4">
+                                <div>
+                                  <h3 className="text-xl font-semibold text-white">{oraclePioneerData.name}</h3>
+                                  <p className="text-cyan-400 font-medium">{oraclePioneerData.title}</p>
+                                  <Badge variant="secondary" className="mt-2 bg-purple-600/20 text-purple-300">
+                                    {oraclePioneerData.realm}
+                                  </Badge>
+                                </div>
+                                <div className="space-y-2">
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Rarity:</span>
+                                    <span className="text-yellow-400">{oraclePioneerData.rarity}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Minted:</span>
+                                    <span className="text-gray-300">
+                                      {new Date(Number(oraclePioneerData.mintedAt) * 1000).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Status:</span>
+                                    <span className={oraclePioneerData.isActive ? "text-green-400" : "text-red-400"}>
+                                      {oraclePioneerData.isActive ? "Active" : "Inactive"}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Contract:</span>
+                                    <span className="text-gray-300">{oraclePioneerData.contractName} ({oraclePioneerData.contractSymbol})</span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    )}
+
+                    {/* ENS Guardian Pioneer */}
+                    {ensPioneerData && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                      >
+                        <Card className="bg-card/50 backdrop-blur-sm border-blue-400/30">
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <CardTitle className="text-2xl flex items-center space-x-2">
+                                  <Shield className="h-6 w-6 text-blue-400" />
+                                  <span>Identity Guardian NFT</span>
+                                </CardTitle>
+                                <p className="text-gray-400">Token ID: {ensPioneerData.tokenId?.toString()}</p>
+                              </div>
+                              <Badge variant="outline" className="bg-green-500/20 text-green-300 border-green-500/30">
+                                Owned
+                              </Badge>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="space-y-6">
+                            <div className="grid md:grid-cols-2 gap-6">
+                              <div className="space-y-4">
+                                <img 
+                                  src={getPioneerTypeInfo(ensPioneerData.pioneerType)?.image || '/placeholder.jpg'} 
+                                  alt={ensPioneerData.name}
+                                  className="w-full h-64 object-cover rounded-lg"
+                                />
+                                <div className="flex space-x-2">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => window.open(`/play`, '_blank')}
+                                  >
+                                    <Play className="h-4 w-4 mr-2" />
+                                    Play Story
+                                  </Button>
+                                </div>
+                              </div>
+                              <div className="space-y-4">
+                                <div>
+                                  <h3 className="text-xl font-semibold text-white">{ensPioneerData.name}</h3>
+                                  <p className="text-blue-400 font-medium">{ensPioneerData.title}</p>
+                                  <Badge variant="secondary" className="mt-2 bg-blue-600/20 text-blue-300">
+                                    {ensPioneerData.realm}
+                                  </Badge>
+                                </div>
+                                <div className="space-y-2">
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Rarity:</span>
+                                    <span className="text-yellow-400">{ensPioneerData.rarity}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Minted:</span>
+                                    <span className="text-gray-300">
+                                      {new Date(Number(ensPioneerData.mintedAt) * 1000).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Status:</span>
+                                    <span className={ensPioneerData.isActive ? "text-green-400" : "text-red-400"}>
+                                      {ensPioneerData.isActive ? "Active" : "Inactive"}
+                                    </span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400">Contract:</span>
+                                    <span className="text-gray-300">{ensPioneerData.contractName} ({ensPioneerData.contractSymbol})</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    )}
+                  </div>
                 ) : (
                   <Card className="bg-card/50 backdrop-blur-sm border-cyan-400/30">
                     <CardContent className="p-8 text-center">
