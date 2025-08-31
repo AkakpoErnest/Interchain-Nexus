@@ -15,89 +15,50 @@ export function BackgroundMusic({
   volume = 0.3,
   onVolumeChange 
 }: BackgroundMusicProps) {
-  const audioContextRef = useRef<AudioContext | null>(null)
-  const oscillatorsRef = useRef<OscillatorNode[]>([])
-  const gainNodesRef = useRef<GainNode[]>([])
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [currentVolume, setCurrentVolume] = useState(volume)
 
   useEffect(() => {
-    // Initialize audio context
-    if (typeof window !== 'undefined' && !audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
+    // Initialize audio element
+    if (typeof window !== 'undefined' && !audioRef.current) {
+      audioRef.current = new Audio('/Adam Dib - Veils of Ruin.mp3')
+      audioRef.current.loop = true
+      audioRef.current.preload = 'auto'
     }
   }, [])
 
   useEffect(() => {
-    if (enabled && !isMuted && audioContextRef.current) {
-      startAmbientMusic()
+    if (enabled && !isMuted && audioRef.current) {
+      startMusic()
     } else {
-      stopAmbientMusic()
+      stopMusic()
     }
 
     return () => {
-      stopAmbientMusic()
+      stopMusic()
     }
   }, [enabled, isMuted, currentVolume])
 
-  const startAmbientMusic = () => {
-    if (!audioContextRef.current || isPlaying) return
+  const startMusic = async () => {
+    if (!audioRef.current || isPlaying) return
 
-    const audioContext = audioContextRef.current
-    const oscillators: OscillatorNode[] = []
-    const gainNodes: GainNode[] = []
-
-    // Create multiple layers of ambient sound
-    const layers = [
-      { freq: 60, type: 'sine' as OscillatorType, volume: 0.02 }, // Deep bass
-      { freq: 120, type: 'sine' as OscillatorType, volume: 0.015 }, // Low mid
-      { freq: 240, type: 'triangle' as OscillatorType, volume: 0.01 }, // Mid
-      { freq: 480, type: 'sine' as OscillatorType, volume: 0.008 }, // High mid
-    ]
-
-    layers.forEach((layer, index) => {
-      const oscillator = audioContext.createOscillator()
-      const gainNode = audioContext.createGain()
-      
-      oscillator.connect(gainNode)
-      gainNode.connect(audioContext.destination)
-      
-      oscillator.type = layer.type
-      oscillator.frequency.setValueAtTime(layer.freq, audioContext.currentTime)
-      
-      // Add subtle frequency modulation for movement
-      const lfo = audioContext.createOscillator()
-      const lfoGain = audioContext.createGain()
-      lfo.connect(lfoGain)
-      lfoGain.connect(oscillator.frequency)
-      lfo.frequency.setValueAtTime(0.1 + index * 0.05, audioContext.currentTime)
-      lfoGain.gain.setValueAtTime(layer.freq * 0.1, audioContext.currentTime)
-      
-      gainNode.gain.setValueAtTime(layer.volume * currentVolume, audioContext.currentTime)
-      
-      oscillator.start(audioContext.currentTime)
-      lfo.start(audioContext.currentTime)
-      
-      oscillators.push(oscillator)
-      gainNodes.push(gainNode)
-    })
-
-    oscillatorsRef.current = oscillators
-    gainNodesRef.current = gainNodes
-    setIsPlaying(true)
+    try {
+      audioRef.current.volume = currentVolume
+      await audioRef.current.play()
+      setIsPlaying(true)
+    } catch (error) {
+      console.log('Audio playback failed:', error)
+      // User interaction might be required for autoplay
+    }
   }
 
-  const stopAmbientMusic = () => {
-    oscillatorsRef.current.forEach(oscillator => {
-      try {
-        oscillator.stop()
-      } catch (e) {
-        // Oscillator might already be stopped
-      }
-    })
-    oscillatorsRef.current = []
-    gainNodesRef.current = []
+  const stopMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
     setIsPlaying(false)
   }
 
@@ -109,16 +70,10 @@ export function BackgroundMusic({
     setCurrentVolume(newVolume)
     onVolumeChange?.(newVolume)
     
-    // Update gain nodes if music is playing
-    gainNodesRef.current.forEach((gainNode, index) => {
-      const layers = [
-        { volume: 0.02 },
-        { volume: 0.015 },
-        { volume: 0.01 },
-        { volume: 0.008 },
-      ]
-      gainNode.gain.setValueAtTime(layers[index].volume * newVolume, audioContextRef.current?.currentTime || 0)
-    })
+    // Update audio volume if music is playing
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume
+    }
   }
 
   return (
@@ -159,15 +114,16 @@ export function CosmicAmbientSound({
   intensity?: number
   duration?: number 
 }) {
-  const audioContextRef = useRef<AudioContext | null>(null)
-  const oscillatorsRef = useRef<OscillatorNode[]>([])
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && !audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
+    if (typeof window !== 'undefined' && !audioRef.current) {
+      audioRef.current = new Audio('/Adam Dib - Veils of Ruin.mp3')
+      audioRef.current.volume = intensity * 0.3
+      audioRef.current.loop = false
     }
 
-    if (audioContextRef.current) {
+    if (audioRef.current) {
       playCosmicAmbient()
     }
 
@@ -176,72 +132,27 @@ export function CosmicAmbientSound({
     }
   }, [intensity, duration])
 
-  const playCosmicAmbient = () => {
-    if (!audioContextRef.current) return
+  const playCosmicAmbient = async () => {
+    if (!audioRef.current) return
 
-    const audioContext = audioContextRef.current
-    const oscillators: OscillatorNode[] = []
-
-    // Create a more complex cosmic soundscape
-    const cosmicLayers = [
-      { freq: 40, type: 'sine' as OscillatorType, volume: 0.03 * intensity },
-      { freq: 80, type: 'triangle' as OscillatorType, volume: 0.02 * intensity },
-      { freq: 160, type: 'sine' as OscillatorType, volume: 0.015 * intensity },
-      { freq: 320, type: 'sawtooth' as OscillatorType, volume: 0.01 * intensity },
-    ]
-
-    cosmicLayers.forEach((layer, index) => {
-      const oscillator = audioContext.createOscillator()
-      const gainNode = audioContext.createGain()
+    try {
+      audioRef.current.volume = intensity * 0.3
+      await audioRef.current.play()
       
-      oscillator.connect(gainNode)
-      gainNode.connect(audioContext.destination)
-      
-      oscillator.type = layer.type
-      oscillator.frequency.setValueAtTime(layer.freq, audioContext.currentTime)
-      
-      // Add complex modulation
-      const lfo1 = audioContext.createOscillator()
-      const lfo1Gain = audioContext.createGain()
-      lfo1.connect(lfo1Gain)
-      lfo1Gain.connect(oscillator.frequency)
-      lfo1.frequency.setValueAtTime(0.05 + index * 0.02, audioContext.currentTime)
-      lfo1Gain.gain.setValueAtTime(layer.freq * 0.2, audioContext.currentTime)
-      
-      // Add volume modulation
-      const lfo2 = audioContext.createOscillator()
-      const lfo2Gain = audioContext.createGain()
-      lfo2.connect(lfo2Gain)
-      lfo2Gain.connect(gainNode.gain)
-      lfo2.frequency.setValueAtTime(0.1 + index * 0.03, audioContext.currentTime)
-      lfo2Gain.gain.setValueAtTime(layer.volume * 0.3, audioContext.currentTime)
-      
-      gainNode.gain.setValueAtTime(layer.volume, audioContext.currentTime)
-      
-      oscillator.start(audioContext.currentTime)
-      lfo1.start(audioContext.currentTime)
-      lfo2.start(audioContext.currentTime)
-      
-      oscillators.push(oscillator)
-    })
-
-    oscillatorsRef.current = oscillators
-
-    // Auto-stop after duration
-    setTimeout(() => {
-      stopCosmicAmbient()
-    }, duration)
+      // Auto-stop after duration
+      setTimeout(() => {
+        stopCosmicAmbient()
+      }, duration)
+    } catch (error) {
+      console.log('Cosmic ambient playback failed:', error)
+    }
   }
 
   const stopCosmicAmbient = () => {
-    oscillatorsRef.current.forEach(oscillator => {
-      try {
-        oscillator.stop()
-      } catch (e) {
-        // Oscillator might already be stopped
-      }
-    })
-    oscillatorsRef.current = []
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
   }
 
   return null
