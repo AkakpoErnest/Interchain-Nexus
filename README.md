@@ -130,7 +130,7 @@ The game features four unique Pioneer types, each representing a different block
 - **Realm**: ENS
 - **Rarity**: Rare
 - **Description**: Keeper of Names
-- **Contract**: Ready for deployment
+- **Contract**: `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef`
 - **Network**: Ethereum Sepolia (Chain ID: 11155111)
 - **Features**: Domain management, identity verification, attestations
 - **Special Functions**: `mintIdentityGuardian`, `hasIdentityGuardian`, `getIdentityGuardianData`
@@ -199,7 +199,7 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 - `getDataWeaverData(uint256 tokenId)`: Get comprehensive Data Weaver stats
 
 ### 3. ENSIdentityGuardian.sol (Ethereum Sepolia)
-**Contract Address**: Ready for deployment
+**Contract Address**: `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef`
 
 ```solidity
 // Key Features:
@@ -259,12 +259,20 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
   - Deployed: August 30, 2025
 
 #### Filecoin Calibration Testnet (Chain ID: 314159)
-- **Filecoin Data Weaver Contract**: `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
+- **Filecoin Data Weaver Contract**: `0xc00a268Fbcbb00a72bfc8CD0FE7CfE26dad3BEd8`
   - Status: ✅ Live and ready for minting
   - Explorer: [Filecoin Calibration Explorer](https://calibration.filscan.io)
   - Features: Data archiving, storage contracts, retrieval tracking, storage efficiency scoring
   - Deployed: August 31, 2025
   - Tested: ✅ Minting functionality verified
+
+#### Ethereum Sepolia Testnet (Chain ID: 11155111)
+- **ENS Identity Guardian Contract**: `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef`
+  - Status: ✅ Live and ready for minting
+  - Explorer: [Ethereum Sepolia Explorer](https://sepolia.etherscan.io)
+  - Features: Domain management, identity verification, attestations
+  - Deployed: August 31, 2025
+  - Gas Used: 2,244,517
 
 #### Lisk Sepolia Testnet (Chain ID: 4202)
 - **Lisk Social Architect Contract**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
@@ -275,8 +283,6 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 ### 🔄 Ready for Deployment
 - **Base Social Architect Contract** (Base Sepolia)
   - Features: Community building, social connections, dApp integration
-- **ENS Identity Guardian Contract** (Ethereum Sepolia)
-  - Features: Domain management, identity verification, attestations
 
 ## 🛠️ Development Setup
 
@@ -365,8 +371,8 @@ npx hardhat verify --network liskTestnet 0x5FbDB2315678afecb367f032d93F642f64180
 | Network | Chain ID | RPC URL | Status | Contract Address |
 |---------|----------|---------|--------|------------------|
 | Base Sepolia | 84532 | https://sepolia.base.org | Ready | TBD |
-| Ethereum Sepolia | 11155111 | https://sepolia.infura.io/v3/YOUR_KEY | Ready | TBD |
-| Filecoin Calibration | 314159 | https://api.calibration.node.glif.io/rpc/v1 | ✅ Deployed | `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1` |
+| Ethereum Sepolia | 11155111 | https://sepolia.infura.io/v3/YOUR_KEY | ✅ Deployed | `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef` |
+| Filecoin Calibration | 314159 | https://api.calibration.node.glif.io/rpc/v1 | ✅ Deployed | `0xc00a268Fbcbb00a72bfc8CD0FE7CfE26dad3BEd8` |
 | Flare Testnet | 114 | https://coston2-api.flare.network/ext/C/rpc | ✅ Deployed | `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF` |
 | Lisk Sepolia | 4202 | https://rpc.sepolia-api.lisk.com | ✅ Deployed | `0x5FbDB2315678afecb367f032d93F642f64180aa3` |
 
@@ -704,6 +710,7 @@ The Interchain Nexus represents a new paradigm in blockchain gaming - instead of
 8. **Removed Supply Tracker** - Eliminated supply tracking component that was showing errors
 9. **Deployed Filecoin Data Weaver** - Contract live at `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
 10. **Tested Filecoin Minting** - Verified minting functionality on Filecoin Calibration testnet
+11. **Deployed ENS Identity Guardian** - Contract live at `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef` on Ethereum Sepolia
 
 ### Issues Resolved
 - ✅ "Cannot read properties of undefined (reading 'id')" error

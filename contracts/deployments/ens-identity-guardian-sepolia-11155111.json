@@ -1,0 +1,18 @@
+{
+  "contractName": "ENSIdentityGuardian",
+  "contractAddress": "0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef",
+  "network": "sepolia",
+  "chainId": "11155111",
+  "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "deploymentTime": "2025-08-31T03:38:13.614Z",
+  "baseURI": "https://ipfs.io/ipfs/",
+  "totalSupply": "0",
+  "features": [
+    "Domain management and verification",
+    "Identity attestation system",
+    "Trust score tracking",
+    "ENS integration",
+    "Digital identity protection",
+    "Soulbound NFTs (non-transferable)"
+  ]
+}
