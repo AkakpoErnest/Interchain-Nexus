@@ -350,8 +350,9 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
 - **Confidential ENS Contract**: `SimpleConfidentialEnsIdentityGuardian.sol`
   - Status: ✅ **IMPLEMENTED** - Smart contract ready for deployment
   - Features: Confidential identity management, encrypted voting, FHE simulation
-  - Network: Ethereum Sepolia (Chain ID: 11155111)
+  - Network: Ethereum Sepolia (Chain ID: 11155111) - Ready to deploy
   - **Frontend Component**: `confidential-ens-minting.tsx` with full UI
+  - **Deployment Script**: `deploy-simple-confidential-ens.js` ready to run
   - **Confidential Features**: 
     - End-to-end encrypted identity scores
     - Private governance voting
@@ -989,8 +990,8 @@ If you encounter any issues:
 - ✅ Pioneer progression and abilities
 
 **Implemented & Ready**:
-- ✅ **Zama Protocol** - Confidential smart contracts with FHE simulation
-- ✅ **Confidential ENS** - Full frontend component and smart contract
+- ✅ **Zama Protocol** - Confidential smart contracts implemented and ready for deployment
+- ✅ **Confidential ENS** - Full frontend component and smart contract code
 - ✅ **Privacy Features** - Encrypted identity scores and private voting
 
 **Coming Soon**:
