@@ -4,7 +4,7 @@ A Next.js-based blockchain game that allows users to mint Pioneer NFTs across mu
 
 ## 🚀 Project Overview
 
-Interchain Nexus is an epic blockchain quest where players can mint unique Pioneer NFTs representing different blockchain ecosystems. Each Pioneer represents a specific blockchain network and has unique characteristics, artwork, and metadata.
+Interchain Nexus is an epic blockchain quest where players can mint unique Pioneer NFTs representing different blockchain ecosystems. Each Pioneer represents a specific blockchain network and has unique characteristics, artwork, and metadata. The game features specialized smart contracts deployed across multiple blockchain networks, each with unique functionality and game mechanics.
 
 ### 🎯 Key Features
 
@@ -67,63 +67,156 @@ Interchain-Nexus/
     └── [pioneer-cards].png      # NFT artwork
 ```
 
+## 🎮 How the Game Works
+
+### Game Flow
+1. **Connect Wallet**: Players connect their MetaMask wallet to the application
+2. **Select Pioneer**: Choose from four unique Pioneer types, each representing a different blockchain ecosystem
+3. **Mint NFT**: Mint the selected Pioneer NFT on the corresponding blockchain network
+4. **Explore Features**: Each Pioneer has unique abilities and can interact with specialized game mechanics
+5. **Cross-Chain Journey**: Players can mint Pioneers on different networks to experience the full Interchain Nexus
+
+### Smart Contract Integration
+- **Automatic Network Detection**: The app automatically detects which blockchain network you're connected to
+- **Contract Selection**: Each Pioneer type is associated with a specific smart contract on its native blockchain
+- **Soulbound NFTs**: All Pioneer NFTs are non-transferable, making them truly unique to each player
+- **Progressive Features**: Each contract includes specialized functions for that Pioneer type's unique abilities
+
+### Multi-Chain Architecture
+The game uses a distributed architecture where each blockchain network hosts its own specialized Pioneer contract:
+- **Flare Testnet**: Oracle Seer contract with prediction and data verification features
+- **Filecoin Calibration**: Data Weaver contract with storage and archiving capabilities  
+- **Lisk Sepolia**: Social Architect contract with community building features
+- **Ethereum Sepolia**: ENS Identity Guardian contract with domain management features
+
 ## 🎮 Pioneer Types
 
 The game features four unique Pioneer types, each representing a different blockchain ecosystem:
 
-### 1. The Social Architect (Base)
-- **Realm**: Base
+### 1. The Social Architect (Lisk Sepolia)
+- **Realm**: Lisk
 - **Rarity**: Common
 - **Description**: Builder of Worlds
+- **Contract**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
+- **Network**: Lisk Sepolia (Chain ID: 4202)
+- **Features**: Community building, social connections, dApp integration
 - **Artwork**: `base_social_architect_card_refined.png`
 
-### 2. The Identity Guardian (ENS)
+### 2. The Identity Guardian (Ethereum Sepolia)
 - **Realm**: ENS
 - **Rarity**: Rare
 - **Description**: Keeper of Names
+- **Contract**: Ready for deployment
+- **Network**: Ethereum Sepolia (Chain ID: 11155111)
+- **Features**: Domain management, identity verification, attestations
+- **Special Functions**: `mintIdentityGuardian`, `hasIdentityGuardian`, `getIdentityGuardianData`
 - **Artwork**: `ens_identity_guardian_card_refined.png`
 
-### 3. The Data Weaver (Filecoin)
+### 3. The Data Weaver (Filecoin Calibration)
 - **Realm**: Filecoin
 - **Rarity**: Epic
 - **Description**: Archivist of the Nexus
+- **Contract**: `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
+- **Network**: Filecoin Calibration (Chain ID: 314159)
+- **Features**: Data archiving, storage contracts, retrieval tracking, storage efficiency scoring
+- **Special Functions**: `archiveData`, `createStorageContract`, `retrieveData`, `getDataWeaverData`
 - **Artwork**: `filecoin_data_weaver_card_refined.png`
 
-### 4. The Oracle Seer (Flare)
+### 4. The Oracle Seer (Flare Testnet)
 - **Realm**: Flare
 - **Rarity**: Legendary
 - **Description**: Truth Seeker of the Cosmos
+- **Contract**: `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
+- **Network**: Flare Testnet (Chain ID: 114)
+- **Features**: Oracle prediction accuracy, data verification, prediction making
+- **Special Functions**: `makePrediction`, `verifyData`, `getOracleAccuracy`
 - **Artwork**: `flare_oracle_seer_card_refined.png`
 
 ## 🔧 Smart Contract Details
 
-### Pioneer.sol Contract
+### Contract Architecture
 
-The main smart contract implements an ERC721 NFT with the following features:
+The Interchain Nexus uses a multi-contract architecture where each Pioneer type has its own specialized smart contract deployed on its native blockchain network. All contracts inherit from OpenZeppelin's ERC721 standard and implement soulbound (non-transferable) NFT functionality.
+
+### 1. FlareOracleSeer.sol (Flare Testnet)
+**Contract Address**: `0x9015957A2210BB8B10e27d8BBEEF8d9498f123eF`
 
 ```solidity
 // Key Features:
-- ERC721 compliance with OpenZeppelin
-- Soulbound-like (non-transferable) NFTs
-- Pioneer type enumeration
-- Metadata storage
-- Owner-only functions
-- Reentrancy protection
+- Oracle prediction accuracy tracking
+- Data verification system
+- Prediction making functionality
+- Soulbound NFTs (non-transferable)
+- Flare network integration
 ```
 
-#### Contract Functions:
-- `mintPioneer(PioneerType, address)`: Mint a new Pioneer NFT
-- `getPioneerData(tokenId)`: Retrieve Pioneer metadata
-- `getPlayerPioneer(address)`: Get player's Pioneer token ID
-- `hasPioneer(address)`: Check if player has a Pioneer
-- `totalSupply()`: Get total number of minted Pioneers
-- `setBaseURI(string)`: Set metadata base URI (owner only)
+**Special Functions**:
+- `makePrediction(string prediction, uint256 confidence)`: Make oracle predictions
+- `verifyData(string dataHash, bool isValid)`: Verify data accuracy
+- `getOracleAccuracy(address player)`: Get player's prediction accuracy
+- `updatePredictionScore(uint256 tokenId, uint256 score)`: Update prediction scores
 
-#### Security Features:
+### 2. FilecoinDataWeaver.sol (Filecoin Calibration)
+**Contract Address**: `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
+
+```solidity
+// Key Features:
+- Data archiving and storage tracking
+- Storage contract creation and management
+- Data retrieval optimization
+- Storage efficiency scoring system
+- Filecoin network integration
+```
+
+**Special Functions**:
+- `archiveData(string dataHash, uint256 dataSize)`: Archive data and update stats
+- `createStorageContract(string contractName, uint256 storageCapacity)`: Create storage contracts
+- `retrieveData(string dataHash, uint256 retrievalTime)`: Track data retrieval
+- `getDataWeaverData(uint256 tokenId)`: Get comprehensive Data Weaver stats
+
+### 3. ENSIdentityGuardian.sol (Ethereum Sepolia)
+**Contract Address**: Ready for deployment
+
+```solidity
+// Key Features:
+- Domain management and verification
+- Identity attestation system
+- Trust score tracking
+- ENS integration
+- Digital identity protection
+```
+
+**Special Functions**:
+- `mintIdentityGuardian(address player, string name, string title)`: Mint Identity Guardian
+- `hasIdentityGuardian(address player)`: Check if player has Identity Guardian
+- `getIdentityGuardianData(uint256 tokenId)`: Get Identity Guardian data
+- `verifyIdentity(string domain, bool isValid)`: Verify domain identities
+- `issueAttestation(address target, string attestation)`: Issue identity attestations
+
+### 4. LiskSocialArchitect.sol (Lisk Sepolia)
+**Contract Address**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
+
+```solidity
+// Key Features:
+- Community building and management
+- Social connection tracking
+- dApp integration capabilities
+- Social graph management
+- Lisk ecosystem integration
+```
+
+**Special Functions**:
+- `mintSocialArchitect(address player, string name, string title)`: Mint Social Architect
+- `createCommunity(string communityName, string description)`: Create communities
+- `joinCommunity(uint256 communityId)`: Join existing communities
+- `getSocialConnections(address player)`: Get player's social connections
+
+### Common Security Features (All Contracts):
 - **Ownable**: Only contract owner can call admin functions
 - **ReentrancyGuard**: Prevents reentrancy attacks
 - **Non-transferable**: NFTs are soulbound (cannot be transferred)
 - **Input validation**: All inputs are validated
+- **Event logging**: Comprehensive event logging for transparency
 
 ## 🚀 Deployment Status
 
@@ -307,9 +400,35 @@ The app automatically detects supported networks. To manually add networks to Me
 
 ## 🔧 Technical Implementation
 
+### Multi-Chain Integration Architecture
+
+The Interchain Nexus implements a sophisticated multi-chain architecture that automatically detects the connected network and routes transactions to the appropriate smart contract:
+
+```typescript
+// lib/blockchain.ts - Multi-chain contract routing
+export function getContractAddress(chainId: number): string {
+  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
+  if (!addresses) {
+    throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+  return addresses.pioneer
+}
+
+// Automatic Pioneer type detection based on network
+export function getPioneerTypeFromRealm(realm: string): PioneerType {
+  switch (realm) {
+    case 'Flare': return PioneerType.ORACLE_SEER
+    case 'Filecoin': return PioneerType.DATA_WEAVER
+    case 'ENS': return PioneerType.IDENTITY_GUARDIAN
+    case 'Lisk': return PioneerType.SOCIAL_ARCHITECT
+    default: throw new Error(`Unknown realm: ${realm}`)
+  }
+}
+```
+
 ### Wallet Integration
 
-The app uses a simplified MetaMask-only approach:
+The app uses a simplified MetaMask-only approach with automatic network switching:
 
 ```typescript
 // providers.tsx - Wagmi configuration
@@ -324,6 +443,29 @@ const config = createConfig({
     [flareTestnet.id]: http(),
   },
 })
+```
+
+### Smart Contract Interaction
+
+Each Pioneer type has specialized hooks for interacting with its unique contract functions:
+
+```typescript
+// lib/hooks/usePioneerContract.ts - Contract interaction hooks
+export function useMintPioneer() {
+  const { writeContract, data: hash, error, isPending } = useWriteContract()
+  
+  const mintPioneer = async (pioneerType: PioneerType, playerAddress: Address, chainId: number) => {
+    const { contractAddress, abi } = usePioneerContract(chainId)
+    return writeContract({
+      address: contractAddress,
+      abi,
+      functionName: 'mintPioneer',
+      args: [pioneerType, playerAddress],
+    })
+  }
+  
+  return { mintPioneer, hash, error, isPending }
+}
 ```
 
 ### Contract Integration
@@ -407,22 +549,74 @@ const getChainName = (chainId: number | undefined) => {
    - Input validation included
    - Owner-only functions protected
 
+## 🎯 Game Mechanics & Features
+
+### Pioneer Abilities & Progression
+
+Each Pioneer type has unique abilities that players can develop through interaction with the smart contracts:
+
+#### Oracle Seer (Flare Network)
+- **Prediction Accuracy**: Make predictions and track accuracy over time
+- **Data Verification**: Verify external data sources and build reputation
+- **Oracle Network**: Participate in Flare's oracle ecosystem
+- **Progression**: Higher accuracy leads to better prediction rewards
+
+#### Data Weaver (Filecoin Network)
+- **Data Archiving**: Archive data and track storage efficiency
+- **Storage Contracts**: Create and manage storage contracts
+- **Retrieval Optimization**: Optimize data retrieval speeds
+- **Progression**: Storage score increases with efficient data management
+
+#### Identity Guardian (ENS Network)
+- **Domain Management**: Manage and verify ENS domains
+- **Identity Verification**: Verify digital identities
+- **Attestation System**: Issue and manage identity attestations
+- **Progression**: Trust score increases with successful verifications
+
+#### Social Architect (Lisk Network)
+- **Community Building**: Create and manage communities
+- **Social Connections**: Build networks of connections
+- **dApp Integration**: Integrate with Lisk dApps
+- **Progression**: Social influence grows with community engagement
+
+### Cross-Chain Gameplay
+
+The Interchain Nexus encourages players to explore multiple blockchain networks:
+- **Multi-Network Pioneers**: Players can mint Pioneers on different networks
+- **Cross-Chain Benefits**: Each Pioneer provides unique advantages
+- **Network Specialization**: Different networks excel at different game mechanics
+- **Unified Experience**: Seamless switching between networks
+
+### Soulbound NFT System
+
+All Pioneer NFTs are soulbound (non-transferable), ensuring:
+- **Unique Identity**: Each Pioneer is permanently tied to its owner
+- **Progression Tracking**: Long-term progression and reputation building
+- **Anti-Speculation**: Focus on gameplay rather than trading
+- **Authentic Experience**: True ownership of digital identity
+
 ## 🚀 Future Enhancements
 
 ### Planned Features
+- [x] Multi-chain smart contract deployment
+- [x] Specialized Pioneer contracts with unique abilities
+- [x] Soulbound NFT system
 - [ ] IPFS metadata integration
-- [ ] Additional blockchain networks
-- [ ] Game mechanics and quests
+- [ ] Cross-chain quest system
+- [ ] Pioneer evolution and upgrades
 - [ ] Leaderboard functionality
-- [ ] Pioneer evolution system
-- [ ] Marketplace integration
+- [ ] Community governance features
+- [ ] Advanced game mechanics
 
 ### Technical Improvements
-- [ ] Contract verification on block explorers
-- [ ] Gas optimization
+- [x] Contract verification on block explorers
+- [x] Gas optimization for different networks
+- [x] Multi-chain wallet integration
 - [ ] Batch minting functionality
-- [ ] Metadata caching
+- [ ] Metadata caching system
 - [ ] Error recovery mechanisms
+- [ ] Performance monitoring
+- [ ] Analytics dashboard
 
 ## 📝 Development Log
 
