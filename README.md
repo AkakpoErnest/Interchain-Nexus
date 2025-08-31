@@ -73,8 +73,13 @@ Interchain-Nexus/
 1. **Connect Wallet**: Players connect their MetaMask wallet to the application
 2. **Select Pioneer**: Choose from four unique Pioneer types, each representing a different blockchain ecosystem
 3. **Mint NFT**: Mint the selected Pioneer NFT on the corresponding blockchain network
-4. **Explore Features**: Each Pioneer has unique abilities and can interact with specialized game mechanics
-5. **Cross-Chain Journey**: Players can mint Pioneers on different networks to experience the full Interchain Nexus
+4. **Story Journey**: Experience immersive storylines with each Pioneer type
+   - **Oracle Seer**: Flare Network oracle quests and predictions
+   - **Identity Guardian**: "The Oracle of the Eternal Names" - Seven trials of ENS mastery
+   - **Data Weaver**: Filecoin storage and archiving adventures
+   - **Social Architect**: Lisk community building and social connections
+5. **Explore Features**: Each Pioneer has unique abilities and can interact with specialized game mechanics
+6. **Cross-Chain Journey**: Players can mint Pioneers on different networks to experience the full Interchain Nexus
 
 ### Smart Contract Integration
 - **Automatic Network Detection**: The app automatically detects which blockchain network you're connected to
@@ -130,11 +135,13 @@ The game features four unique Pioneer types, each representing a different block
 - **Realm**: ENS
 - **Rarity**: Rare
 - **Description**: Keeper of Names
-- **Contract**: `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef`
+- **Contract**: `0xD02dc1Ac6744bAE948Ba68B8e0Bb82Db5d78e1A4`
 - **Network**: Ethereum Sepolia (Chain ID: 11155111)
 - **Features**: Domain management, identity verification, attestations
 - **Special Functions**: `mintIdentityGuardian`, `hasIdentityGuardian`, `getIdentityGuardianData`
 - **Artwork**: `ens_identity_guardian_card_refined.png`
+- **Story**: "The Oracle of the Eternal Names" - A mystical journey through seven trials of naming
+- **Game Features**: ENS integration, reverse records, text records, avatar records, guild subnames
 
 ### 3. The Data Weaver (Filecoin Calibration)
 - **Realm**: Filecoin
@@ -267,12 +274,14 @@ The Interchain Nexus uses a multi-contract architecture where each Pioneer type 
   - Tested: ✅ Minting functionality verified
 
 #### Ethereum Sepolia Testnet (Chain ID: 11155111)
-- **ENS Identity Guardian Contract**: `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef`
+- **ENS Identity Guardian Contract**: `0xD02dc1Ac6744bAE948Ba68B8e0Bb82Db5d78e1A4`
   - Status: ✅ Live and ready for minting
   - Explorer: [Ethereum Sepolia Explorer](https://sepolia.etherscan.io)
   - Features: Domain management, identity verification, attestations
   - Deployed: August 31, 2025
   - Gas Used: 2,244,517
+  - **Story System**: "The Oracle of the Eternal Names" with seven mystical trials
+  - **ENS Integration**: Real ENS interactions for reverse records, text records, avatar records
 
 #### Lisk Sepolia Testnet (Chain ID: 4202)
 - **Lisk Social Architect Contract**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
@@ -711,6 +720,10 @@ The Interchain Nexus represents a new paradigm in blockchain gaming - instead of
 9. **Deployed Filecoin Data Weaver** - Contract live at `0x3179588E9774bC6ee1B4AF8Db55Fb8e1500649C1`
 10. **Tested Filecoin Minting** - Verified minting functionality on Filecoin Calibration testnet
 11. **Deployed ENS Identity Guardian** - Contract live at `0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef` on Ethereum Sepolia
+12. **Created ENS Story System** - "The Oracle of the Eternal Names" with seven mystical trials
+13. **Implemented ENS Trial System** - Real ENS interactions for reverse records, text records, avatar records
+14. **Added Mystical Story Images** - Integrated three epic fantasy images into the story flow
+15. **Zama Protocol Integration** - Deployed confidential ENS contract for privacy features
 
 ### Issues Resolved
 - ✅ "Cannot read properties of undefined (reading 'id')" error

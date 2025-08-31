@@ -1,6 +1,14 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
+// FHE configuration for Zama Protocol
+const fhevmConfig = {
+  fhevm: {
+    network: "ethereum", // Use Ethereum for ENS integration
+    chainId: 1,
+  },
+};
+
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {

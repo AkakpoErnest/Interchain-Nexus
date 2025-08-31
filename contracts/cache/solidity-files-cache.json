@@ -869,6 +869,46 @@
       "artifacts": [
         "ENSIdentityGuardian"
       ]
+    },
+    "/Users/pablo/Downloads/Interchain-Nexus/contracts/contracts/SimpleConfidentialEnsIdentityGuardian.sol": {
+      "lastModificationDate": 1756614028872,
+      "contentHash": "9d31dcd3203e828c824ac1607d055757",
+      "sourceName": "contracts/SimpleConfidentialEnsIdentityGuardian.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol",
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+        "@openzeppelin/contracts/utils/Counters.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.19"
+      ],
+      "artifacts": [
+        "SimpleConfidentialEnsIdentityGuardian"
+      ]
     }
   }
 }

@@ -18,6 +18,9 @@ export const CONTRACT_ADDRESSES = {
   11155111: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000',
     ensPioneer: process.env.NEXT_PUBLIC_ENS_CONTRACT_SEPOLIA || '0xf8ACAa1035f3573Bd2F7730D0aC0789D71EBF1ef',
+    confidentialEns: process.env.NEXT_PUBLIC_CONFIDENTIAL_ENS_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000',
+    confidentialDistribution: process.env.NEXT_PUBLIC_CONFIDENTIAL_DISTRIBUTION_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000',
+    confidentialGovernance: process.env.NEXT_PUBLIC_CONFIDENTIAL_GOVERNANCE_CONTRACT_SEPOLIA || '0x0000000000000000000000000000000000000000',
   },
   // Filecoin Mainnet
   314: {
@@ -79,4 +82,46 @@ export function getContractAddress(chainId: number): string {
 export function isContractDeployed(chainId: number): boolean {
   const address = getContractAddress(chainId)
   return address !== '0x0000000000000000000000000000000000000000'
+}
+
+// Helper function to get confidential ENS contract address
+export function getConfidentialEnsAddress(chainId: number): string {
+  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
+  if (!addresses || !('confidentialEns' in addresses)) {
+    throw new Error(`Confidential ENS contract not deployed on chain ID: ${chainId}`)
+  }
+  return (addresses as any).confidentialEns
+}
+
+// Helper function to get confidential distribution contract address
+export function getConfidentialDistributionAddress(chainId: number): string {
+  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
+  if (!addresses || !('confidentialDistribution' in addresses)) {
+    throw new Error(`Confidential distribution contract not deployed on chain ID: ${chainId}`)
+  }
+  return (addresses as any).confidentialDistribution
+}
+
+// Helper function to get confidential governance contract address
+export function getConfidentialGovernanceAddress(chainId: number): string {
+  const addresses = CONTRACT_ADDRESSES[chainId as keyof typeof CONTRACT_ADDRESSES]
+  if (!addresses || !('confidentialGovernance' in addresses)) {
+    throw new Error(`Confidential governance contract not deployed on chain ID: ${chainId}`)
+  }
+  return (addresses as any).confidentialGovernance
+}
+
+// Helper function to check if confidential contracts are deployed
+export function isConfidentialContractsDeployed(chainId: number): boolean {
+  try {
+    const ensAddress = getConfidentialEnsAddress(chainId)
+    const distributionAddress = getConfidentialDistributionAddress(chainId)
+    const governanceAddress = getConfidentialGovernanceAddress(chainId)
+    
+    return ensAddress !== '0x0000000000000000000000000000000000000000' &&
+           distributionAddress !== '0x0000000000000000000000000000000000000000' &&
+           governanceAddress !== '0x0000000000000000000000000000000000000000'
+  } catch {
+    return false
+  }
 }

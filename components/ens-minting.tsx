@@ -25,6 +25,7 @@ import {
   getNetworkConfig 
 } from '@/lib/blockchain'
 import { getContractAddress } from '@/lib/contract-config'
+import { getEnsContractAddress } from '@/lib/blockchain'
 import { Loader2, CheckCircle, XCircle, ExternalLink, Shield, User, Globe, Star } from 'lucide-react'
 import { TransactionStatusEnhanced } from './transaction-status-enhanced'
 import { NetworkSwitcher } from './network-switcher'
@@ -70,6 +71,12 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
       setMintStep('minting')
       setErrorMessage('')
       
+      // Debug: Log the contract address being used
+      const ensContractAddress = getEnsContractAddress(ensChainId)
+      console.log('Minting ENS Pioneer with contract address:', ensContractAddress)
+      console.log('Chain ID:', ensChainId)
+      console.log('Player address:', address)
+      
       await mintPioneer(1, address) // ENS Pioneer Type is 1
     } catch (error) {
       console.error('ENS Minting error:', error)
@@ -112,9 +119,9 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
       localStorage.setItem('mintedPioneerData', JSON.stringify(mintedPioneerData))
       localStorage.setItem('showStoryFlow', 'true')
       
-      // Redirect to story page after a short delay
+      // Redirect to ENS story page after a short delay
       setTimeout(() => {
-        window.location.href = '/story'
+        window.location.href = '/ens-story'
       }, 2000)
       
       onMintComplete?.(tokenId, mintedPioneerData)
@@ -282,6 +289,18 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
               Available
             </Badge>
           </div>
+          
+          {/* Debug Info */}
+          <div className="bg-black/20 p-2 rounded text-xs mt-2">
+            <p>Debug: Chain Supported: {isChainSupported ? 'Yes' : 'No'}</p>
+            <p>Debug: Address: {address ? 'Connected' : 'Not connected'}</p>
+            <p>Debug: Chain ID: {ensChainId}</p>
+            <p>Debug: Minting Available: {isMintingAvailable ? 'Yes' : 'No'}</p>
+            <p>Debug: Contract Address: {getContractAddress(ensChainId)}</p>
+            <p>Debug: ENS Contract Address: {getEnsContractAddress(ensChainId)}</p>
+            <p>Debug: Has Pioneer: {hasPioneer ? 'Yes' : 'No'}</p>
+            <p>Debug: Button Disabled: {isPending || isConfirming || mintStep === 'success' ? 'Yes' : 'No'}</p>
+          </div>
         </div>
 
         {/* Mint Progress */}
@@ -350,7 +369,7 @@ export function ENSMinting({ onMintComplete, onError }: ENSMintingProps) {
         {/* Mint Button */}
         <Button 
           onClick={handleMint}
-          disabled={isPending || isConfirming || mintStep === 'success' || !isMintingAvailable}
+          disabled={isPending || isConfirming || mintStep === 'success'}
           className="w-full"
         >
           {isPending || isConfirming ? (

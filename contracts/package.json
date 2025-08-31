@@ -19,6 +19,9 @@
     "deploy:base-social-architect": "hardhat run scripts/deploy-base-social-architect.js --network baseSepolia",
     "deploy:filecoin-data-weaver": "hardhat run scripts/deploy-filecoin-data-weaver.js --network filecoinTestnet",
     "deploy:ens-identity-guardian": "hardhat run scripts/deploy-ens-identity-guardian.js --network sepolia",
+    "deploy:confidential-ens": "hardhat run scripts/deploy-confidential-ens.js --network sepolia",
+    "deploy:simple-confidential-ens": "hardhat run scripts/deploy-simple-confidential-ens.js --network sepolia",
+    "deploy:all-confidential": "hardhat run scripts/deploy-all-confidential.js --network sepolia",
     "verify:base": "hardhat verify --network base",
     "verify:base-sepolia": "hardhat verify --network baseSepolia",
     "deploy:all-testnets": "hardhat run scripts/deploy-all-testnets.js",
@@ -33,5 +36,8 @@
     "@openzeppelin/contracts": "^4.9.6",
     "dotenv": "^17.2.1",
     "hardhat": "^2.26.3"
+  },
+  "dependencies": {
+    "@fhevm/solidity": "^0.7.0"
   }
 }

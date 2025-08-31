@@ -9,12 +9,13 @@ import { motion, AnimatePresence } from "framer-motion"
 import { PioneerStoryModal } from "@/components/pioneer-story-modal"
 import { NFTMinting } from "@/components/nft-minting"
 import { ENSMinting } from "@/components/ens-minting"
+import { ConfidentialENSMinting } from "@/components/confidential-ens-minting"
 import { MetaMaskConnectSimple } from "@/components/metamask-connect-simple"
 
 import { NetworkSpeedIndicator } from "@/components/network-speed-indicator"
 
 
-import { BookOpen, CheckCircle, Play, Package } from "lucide-react"
+import { BookOpen, CheckCircle, Play, Package, Shield } from "lucide-react"
 import { PioneerType, getPioneerTypeFromRealm, getChainIdForPioneerType, getNetworkNameForPioneerType, getPioneerTypeInfo } from "@/lib/blockchain"
 import { useAccount, useChainId } from 'wagmi'
 import { useHasPioneer, usePlayerPioneer, usePioneerData } from '@/lib/hooks/usePioneerContract'
@@ -158,6 +159,7 @@ export default function ChoosePage() {
   const [mintComplete, setMintComplete] = useState(false)
   const [storyModalOpen, setStoryModalOpen] = useState(false)
   const [selectedPioneerForStory, setSelectedPioneerForStory] = useState<any>(null)
+  const [showConfidentialENS, setShowConfidentialENS] = useState(false)
   
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
@@ -577,6 +579,39 @@ export default function ChoosePage() {
                   </motion.div>
                 )}
 
+                {selectedPioneerType === PioneerType.IDENTITY_GUARDIAN && (
+                  <motion.div
+                    className="mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                  >
+                    <div className="flex items-center justify-center space-x-4">
+                      <Button
+                        onClick={() => setShowConfidentialENS(false)}
+                        variant={!showConfidentialENS ? "default" : "outline"}
+                        className={!showConfidentialENS ? "bg-cyan-600 hover:bg-cyan-700" : "border-cyan-400/30 text-cyan-300"}
+                      >
+                        Standard ENS
+                      </Button>
+                      <Button
+                        onClick={() => setShowConfidentialENS(true)}
+                        variant={showConfidentialENS ? "default" : "outline"}
+                        className={showConfidentialENS ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" : "border-purple-400/30 text-purple-300"}
+                      >
+                        <Shield className="h-4 w-4 mr-2" />
+                        Confidential ENS
+                      </Button>
+                    </div>
+                    <p className="text-center text-sm text-gray-400 mt-2">
+                      {showConfidentialENS 
+                        ? "Powered by Zama Protocol - End-to-end encryption with FHE" 
+                        : "Standard ENS Identity Guardian with public features"
+                      }
+                    </p>
+                  </motion.div>
+                )}
+
                 <motion.div
                   className="relative"
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -584,10 +619,17 @@ export default function ChoosePage() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   {selectedPioneerType === PioneerType.IDENTITY_GUARDIAN ? (
-                    <ENSMinting
-                      onMintComplete={handleNFTMintComplete}
-                      onError={handleNFTMintError}
-                    />
+                    showConfidentialENS ? (
+                      <ConfidentialENSMinting
+                        onMintComplete={handleNFTMintComplete}
+                        onError={handleNFTMintError}
+                      />
+                    ) : (
+                      <ENSMinting
+                        onMintComplete={handleNFTMintComplete}
+                        onError={handleNFTMintError}
+                      />
+                    )
                   ) : (
                     <NFTMinting
                       selectedPioneerType={selectedPioneerType || undefined}

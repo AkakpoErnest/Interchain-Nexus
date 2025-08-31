@@ -16,7 +16,7 @@ export default function PlayPage() {
   
   // Check if user has any pioneer
   const { data: hasOraclePioneer, isLoading: hasOraclePioneerLoading } = useHasPioneer(address, 114) // Flare Testnet
-  const { data: hasEnsPioneer, isLoading: hasEnsPioneerLoading } = useHasEnsPioneer(address, 114) // Flare Testnet
+  const { data: hasEnsPioneer, isLoading: hasEnsPioneerLoading } = useHasEnsPioneer(address, 11155111) // Ethereum Sepolia
   
   const hasPioneer = hasOraclePioneer || hasEnsPioneer
   const hasPioneerLoading = hasOraclePioneerLoading || hasEnsPioneerLoading
@@ -44,6 +44,17 @@ export default function PlayPage() {
             You need to mint a Pioneer NFT before you can start playing the Interchain Nexus game. 
             Visit the Choose page to mint your first Pioneer and begin your adventure.
           </p>
+          
+          {/* Debug Info */}
+          <div className="bg-black/20 p-4 rounded-lg mb-6 text-left">
+            <h3 className="text-white font-semibold mb-2">Debug Info:</h3>
+            <p className="text-gray-300 text-sm">Address: {address || 'Not connected'}</p>
+            <p className="text-gray-300 text-sm">Chain ID: {chainId || 'Unknown'}</p>
+            <p className="text-gray-300 text-sm">Oracle Pioneer (Flare): {hasOraclePioneer ? 'Yes' : 'No'}</p>
+            <p className="text-gray-300 text-sm">ENS Pioneer (Sepolia): {hasEnsPioneer ? 'Yes' : 'No'}</p>
+            <p className="text-gray-300 text-sm">Loading: {hasPioneerLoading ? 'Yes' : 'No'}</p>
+          </div>
+          
           <a 
             href="/choose"
             className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 transform hover:scale-105 inline-block"
