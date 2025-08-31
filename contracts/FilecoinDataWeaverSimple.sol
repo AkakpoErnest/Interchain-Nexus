@@ -130,3 +130,4 @@ contract FilecoinDataWeaverSimple is ERC721, Ownable, ReentrancyGuard {
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
     }
 }
+

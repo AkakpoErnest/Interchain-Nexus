@@ -20,24 +20,31 @@ import { PioneerType, getPioneerTypeFromRealm, getChainIdForPioneerType, getNetw
 import { useAccount, useChainId } from 'wagmi'
 import { useHasPioneer, usePlayerPioneer, usePioneerData } from '@/lib/hooks/usePioneerContract'
 import { useHasEnsPioneer, usePlayerEnsPioneer } from '@/lib/hooks/useEnsPioneerContract'
+import { 
+  getAllRealmUnlockRequirements, 
+  isRealmUnlocked, 
+  getRealmUnlockProgress,
+  getCompletionStats,
+  markRealmCompleted
+} from '@/lib/realm-completion'
 
 
 // Pioneer Card data based on the provided images
 const pioneerCards = [
   {
     id: 1,
-    name: "The Social Architect",
-    title: "Builder of Worlds",
-    realm: "Lisk",
+    name: "The Oracle Seer",
+    title: "Truth Seeker of the Cosmos",
+    realm: "Flare",
     rarity: "Epic",
-    stats: { creativity: 58, leadership: 52, innovation: 60 },
-    image: "/base_social_architect_card_refined.png",
-    description: "A visionary who designs and builds community protocols and social applications on Lisk.",
-    lore: "From the digital dust, the Architect weaves threads of connection, forging communities that thrive on the Lisk network. Their creations are the bedrock of the new interchain society.",
-    story: "In the early days of the Interchain Nexus, when chaos reigned and protocols clashed, the Social Architect emerged from the Lisk ecosystem. Born from the collective will of developers seeking a better way to build, they discovered the power of community-driven protocols. Their first creation, the 'Harmony Protocol,' allowed different blockchain communities to communicate and share resources seamlessly. Now, they stand as the guardian of social infrastructure, ensuring that every voice in the interchain has a platform to be heard.",
-    abilities: ["Community Building", "Protocol Design", "Social Engineering"],
-    mission: "Build bridges between all blockchain communities and create the social infrastructure for the Interchain Nexus.",
-    passiveBuff: "Lisk puzzles get +25% success rate"
+    stats: { foresight: 62, intuition: 40, prophecy: 58 },
+    image: "/flare_oracle_seer_card_refined.png",
+    description: "A seer who reads the patterns of randomness and fate. Harnesses Flare's oracle network for divination.",
+    lore: "Through the mists of uncertainty, the Seer peers into the future. Their connection to Flare's oracles grants them glimpses of destiny itself.",
+    story: "When the first oracle spoke truth to the interchain, the Oracle Seer was born from the convergence of data streams and cosmic consciousness. They witnessed the chaos of false information, manipulated prices, and corrupted data feeds that threatened to destroy trust across all chains. Through their deep connection to Flare's oracle network, they learned to see through the veil of uncertainty, to read the true patterns of randomness, and to divine the authentic data that flows through the interchain. They are the guardian of truth, the seeker of authentic information, and the prophet who ensures that every oracle speaks with the voice of reality. Their sacred duty is to maintain the integrity of all data feeds in the Interchain Nexus.",
+    abilities: ["Truth Divination", "Data Verification", "Oracle Communication"],
+    mission: "Ensure all oracle data is authentic and true, maintaining the integrity of information across the interchain.",
+    passiveBuff: "Flare puzzles get +25% success rate"
   },
   {
     id: 2,
@@ -71,18 +78,20 @@ const pioneerCards = [
   },
   {
     id: 4,
-    name: "The Oracle Seer",
-    title: "Truth Seeker of the Cosmos",
-    realm: "Flare",
+    name: "The Social Architect",
+    title: "Builder of Worlds",
+    realm: "Lisk",
     rarity: "Epic",
-    stats: { foresight: 62, intuition: 40, prophecy: 58 },
-    image: "/flare_oracle_seer_card_refined.png",
-    description: "A seer who reads the patterns of randomness and fate. Harnesses Flare's oracle network for divination.",
-    lore: "Through the mists of uncertainty, the Seer peers into the future. Their connection to Flare's oracles grants them glimpses of destiny itself.",
-    story: "When the first oracle spoke truth to the interchain, the Oracle Seer was born from the convergence of data streams and cosmic consciousness. They witnessed the chaos of false information, manipulated prices, and corrupted data feeds that threatened to destroy trust across all chains. Through their deep connection to Flare's oracle network, they learned to see through the veil of uncertainty, to read the true patterns of randomness, and to divine the authentic data that flows through the interchain. They are the guardian of truth, the seeker of authentic information, and the prophet who ensures that every oracle speaks with the voice of reality. Their sacred duty is to maintain the integrity of all data feeds in the Interchain Nexus.",
-    abilities: ["Truth Divination", "Data Verification", "Oracle Communication"],
-    mission: "Ensure all oracle data is authentic and true, maintaining the integrity of information across the interchain.",
-    passiveBuff: "Flare puzzles get +25% success rate"
+    stats: { creativity: 58, leadership: 52, innovation: 60 },
+    image: "/base_social_architect_card_refined.png",
+    description: "A visionary who designs and builds community protocols and social applications on Lisk.",
+    lore: "From the digital dust, the Architect weaves threads of connection, forging communities that thrive on the Lisk network. Their creations are the bedrock of the new interchain society.",
+    story: "In the early days of the Interchain Nexus, when chaos reigned and protocols clashed, the Social Architect emerged from the Lisk ecosystem. Born from the collective will of developers seeking a better way to build, they discovered the power of community-driven protocols. Their first creation, the 'Harmony Protocol,' allowed different blockchain communities to communicate and share resources seamlessly. Now, they stand as the guardian of social infrastructure, ensuring that every voice in the interchain has a platform to be heard.",
+    abilities: ["Community Building", "Protocol Design", "Social Engineering"],
+    mission: "Build bridges between all blockchain communities and create the social infrastructure for the Interchain Nexus.",
+    passiveBuff: "Lisk puzzles get +25% success rate",
+    isLocked: true,
+    unlockRequirement: "Complete 2 other realms to unlock"
   },
   {
     id: 5,
@@ -97,7 +106,9 @@ const pioneerCards = [
     story: "When the Great Fork threatened to split the interchain into warring factions, the Consensus Weaver emerged from the collective will of all blockchain communities seeking harmony. They witnessed the devastation of failed governance, the chaos of competing proposals, and the tragedy of communities torn apart by disagreement. Through their mastery of consensus mechanisms and governance protocols, they learned to weave together the disparate voices of the interchain, creating harmony from discord and unity from division. They are the guardian of collective wisdom, the weaver of consensus, and the harmonizer who ensures that every voice contributes to the greater good. Their sacred duty is to maintain the balance of governance across all realms in the Interchain Nexus.",
     abilities: ["Consensus Building", "Governance Orchestration", "Harmony Weaving"],
     mission: "Foster unity and consensus across all blockchain ecosystems, ensuring collective wisdom guides the Interchain Nexus.",
-    passiveBuff: "ALL puzzles get +15% success rate (universal bonus)"
+    passiveBuff: "ALL puzzles get +15% success rate (universal bonus)",
+    isLocked: true,
+    unlockRequirement: "Complete 2 other realms to unlock"
   },
   // Advanced Blockchain Protocol Cards
   {
@@ -160,6 +171,8 @@ export default function ChoosePage() {
   const [storyModalOpen, setStoryModalOpen] = useState(false)
   const [selectedPioneerForStory, setSelectedPioneerForStory] = useState<any>(null)
   const [showConfidentialENS, setShowConfidentialENS] = useState(false)
+  const [realmUnlockRequirements, setRealmUnlockRequirements] = useState(getAllRealmUnlockRequirements())
+  const [completionStats, setCompletionStats] = useState(getCompletionStats())
   
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
@@ -211,9 +224,18 @@ export default function ChoosePage() {
     }, 2000)
   }
 
-  const handleNFTMintComplete = (tokenId: bigint, pioneerData: any) => {
-    console.log('NFT minted successfully:', { tokenId, pioneerData })
+  const handleNFTMintComplete = (data: any) => {
+    console.log('NFT minted successfully:', data)
     setMintComplete(true)
+    
+    // Mark the realm as completed when NFT is minted
+    if (selectedPioneerData) {
+      const pioneerType = getPioneerTypeFromRealm(selectedPioneerData.realm)
+      if (pioneerType) {
+        markRealmCompleted(selectedPioneerData.realm, pioneerType, 100)
+        updateRealmCompletion()
+      }
+    }
     
     // Redirect to play page after a delay
     setTimeout(() => {
@@ -225,6 +247,26 @@ export default function ChoosePage() {
     console.error('NFT minting error:', error)
     setIsMinting(false)
   }
+
+  // Update realm completion status
+  const updateRealmCompletion = () => {
+    setRealmUnlockRequirements(getAllRealmUnlockRequirements())
+    setCompletionStats(getCompletionStats())
+  }
+
+  // Check if a card is actually locked based on current completion status
+  const isCardLocked = (card: any) => {
+    if (!card.isLocked) return false
+    return !isRealmUnlocked(card.realm)
+  }
+
+  // Get unlock progress for a card
+  const getCardUnlockProgress = (card: any) => {
+    if (!card.isLocked) return null
+    return getRealmUnlockProgress(card.realm)
+  }
+
+
 
   // Get the selected pioneer type for NFT minting
   const selectedPioneerData = selectedCard ? pioneerCards.find(card => card.id === selectedCard) : null
@@ -338,7 +380,7 @@ export default function ChoosePage() {
               <p className="text-xl text-gray-300 mb-4">
                 <span className="text-cyan-400 font-semibold">The cosmos lies fractured.</span> Five realms await your mastery:
               </p>
-              <div className="flex flex-wrap justify-center gap-4 text-lg">
+              <div className="flex flex-wrap justify-center gap-4 text-lg mb-6">
                 <span className="px-4 py-2 bg-purple-600/20 border border-purple-400/30 rounded-lg text-purple-300">Memory</span>
                 <span className="px-4 py-2 bg-pink-600/20 border border-pink-400/30 rounded-lg text-pink-300">Truth</span>
                 <span className="px-4 py-2 bg-yellow-600/20 border border-yellow-400/30 rounded-lg text-yellow-300">Creation</span>
@@ -374,20 +416,20 @@ export default function ChoosePage() {
               >
                 <Card
                   className={`relative overflow-hidden transition-all duration-300 ${
-                    card.isLocked 
+                    isCardLocked(card)
                       ? "cursor-not-allowed opacity-60" 
                       : "cursor-pointer"
                   } ${
-                    selectedCard === card.id && !card.isLocked
+                    selectedCard === card.id && !isCardLocked(card)
                       ? "ring-4 ring-cyan-400 scale-110 shadow-2xl shadow-cyan-400/50" 
-                      : !card.isLocked
+                      : !isCardLocked(card)
                       ? "hover:scale-105 hover:shadow-xl hover:shadow-purple-400/30"
                       : ""
                   } bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-sm border-2 ${
-                    selectedCard === card.id && !card.isLocked ? "border-cyan-400" : 
-                    card.isLocked ? "border-gray-600" : "border-slate-600"
+                    selectedCard === card.id && !isCardLocked(card) ? "border-cyan-400" : 
+                    isCardLocked(card) ? "border-gray-600" : "border-slate-600"
                   }`}
-                  onClick={() => !card.isLocked && handleCardSelect(card.id)}
+                  onClick={() => !isCardLocked(card) && handleCardSelect(card.id)}
                 >
                   <CardHeader className="pb-2">
                     <div className="aspect-[3/4] rounded-lg overflow-hidden mb-4 relative">
@@ -395,10 +437,10 @@ export default function ChoosePage() {
                         src={card.image} 
                         alt={card.name} 
                         className={`w-full h-full object-cover transition-transform duration-300 ${
-                          !card.isLocked ? "hover:scale-110" : ""
+                          !isCardLocked(card) ? "hover:scale-110" : ""
                         }`} 
                       />
-                      {card.isLocked && (
+                      {isCardLocked(card) && (
                         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
                           <div className="text-center">
                             <div className="w-12 h-12 mx-auto mb-2 bg-gray-600 rounded-full flex items-center justify-center">
@@ -410,7 +452,7 @@ export default function ChoosePage() {
                           </div>
                         </div>
                       )}
-                      {selectedCard === card.id && !card.isLocked && (
+                      {selectedCard === card.id && !isCardLocked(card) && (
                         <motion.div
                           className="absolute inset-0 bg-gradient-to-t from-cyan-400/30 to-transparent border-2 border-cyan-400 rounded-lg"
                           initial={{ opacity: 0 }}
@@ -435,7 +477,7 @@ export default function ChoosePage() {
                   </CardHeader>
                   
                   <CardContent className="space-y-4">
-                    {card.isLocked ? (
+                    {isCardLocked(card) ? (
                       // Locked Card Content
                       <>
                         <div className="text-center space-y-3">
@@ -447,6 +489,32 @@ export default function ChoosePage() {
                               🔒 {card.unlockRequirement}
                             </p>
                           </div>
+                          
+                          {/* Unlock Progress */}
+                          {(() => {
+                            const progress = getCardUnlockProgress(card)
+                            if (progress) {
+                              return (
+                                <div className="p-3 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-lg border border-blue-400/30">
+                                  <div className="text-xs text-blue-300 font-medium text-center mb-2">
+                                    Progress: {progress.completedCount}/{progress.requiredCount} realms completed
+                                  </div>
+                                  <div className="w-full bg-gray-700 rounded-full h-2 mb-2">
+                                    <div 
+                                      className="bg-gradient-to-r from-blue-400 to-purple-400 h-2 rounded-full transition-all duration-500"
+                                      style={{ width: `${(progress.completedCount / progress.requiredCount) * 100}%` }}
+                                    ></div>
+                                  </div>
+                                  {progress.remainingRealms.length > 0 && (
+                                    <div className="text-xs text-gray-400">
+                                      Complete: {progress.remainingRealms.join(', ')}
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            }
+                            return null
+                          })()}
                           
                           {/* Locked Stats Preview */}
                           <div className="space-y-2 opacity-50">

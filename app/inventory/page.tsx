@@ -35,11 +35,11 @@ export default function InventoryPage() {
   const { data: oracleTotalSupply } = useTotalSupply(114)
   const { name: oracleContractName, symbol: oracleContractSymbol } = useContractInfo(114)
   
-  // Contract hooks for ENS Guardian (Flare Testnet)
-  const { data: hasEnsPioneer, isLoading: hasEnsPioneerLoading } = useHasEnsPioneer(address, 114)
-  const { data: playerEnsPioneerTokenId } = usePlayerEnsPioneer(address, 114)
-  const { data: ensTotalSupply } = useEnsTotalSupply(114)
-  const { name: ensContractName, symbol: ensContractSymbol } = useEnsContractInfo(114)
+  // Contract hooks for ENS Guardian (Ethereum Sepolia)
+  const { data: hasEnsPioneer, isLoading: hasEnsPioneerLoading } = useHasEnsPioneer(address, 11155111)
+  const { data: playerEnsPioneerTokenId } = usePlayerEnsPioneer(address, 11155111)
+  const { data: ensTotalSupply } = useEnsTotalSupply(11155111)
+  const { name: ensContractName, symbol: ensContractSymbol } = useEnsContractInfo(11155111)
   
   const hasPioneer = hasOraclePioneer || hasEnsPioneer
   const hasPioneerLoading = hasOraclePioneerLoading || hasEnsPioneerLoading
