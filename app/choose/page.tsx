@@ -10,6 +10,7 @@ import { PioneerStoryModal } from "@/components/pioneer-story-modal"
 import { NFTMinting } from "@/components/nft-minting"
 import { ENSMinting } from "@/components/ens-minting"
 import { ConfidentialENSMinting } from "@/components/confidential-ens-minting"
+import CitreaGovernanceGuardian from "@/components/citrea-governance-guardian"
 import { MetaMaskConnectSimple } from "@/components/metamask-connect-simple"
 
 import { NetworkSpeedIndicator } from "@/components/network-speed-indicator"
@@ -130,16 +131,16 @@ const pioneerCards = [
   },
   {
     id: 7,
-    name: "The Bitcoin Oracle",
-    title: "Seer of the Original Chain",
+    name: "The Governance Guardian",
+    title: "Guardian of Bitcoin Governance",
     realm: "Citrea",
     rarity: "Legendary",
-    stats: { bitcoin: 75, rollup: 65, security: 70 },
-    image: "/chrono_synthesizer_card.png", // Using existing image for now
-    description: "A master of Bitcoin rollups who brings smart contract functionality to the original blockchain. Their power lies in bridging Bitcoin's security with EVM compatibility.",
-    lore: "From the depths of Bitcoin's proof-of-work, the Oracle learned to bring programmable money to the most secure blockchain in existence.",
-    story: "When the first Bitcoin rollup was proposed, the Bitcoin Oracle emerged from the convergence of Bitcoin's security and Ethereum's programmability. They witnessed the limitations of Bitcoin's scripting language, the need for smart contracts on the most secure blockchain, and the potential of zero-knowledge proofs to bridge these worlds. Through their mastery of Citrea's Bitcoin rollup technology, they learned to bring EVM compatibility to Bitcoin while maintaining its security guarantees. They are the guardian of Bitcoin's evolution, the seer of programmable money, and the oracle who ensures that Bitcoin can participate in the smart contract revolution. Their sacred duty is to bring the power of smart contracts to the most secure blockchain in the Interchain Nexus.",
-    abilities: ["Bitcoin Integration", "Rollup Mastery", "Security Bridging"],
+    stats: { governance: 70, bitcoin: 75, zkProofs: 65 },
+    image: "/citrea_governance_guardian_card_refined.png",
+    description: "A master of Bitcoin governance through ZK rollup technology. Their power lies in bringing smart contract functionality to Bitcoin while maintaining its security.",
+    lore: "From the depths of Bitcoin's proof-of-work, the Guardian learned to bring programmable governance to the most secure blockchain in existence.",
+    story: "When the first Bitcoin rollup was proposed, the Governance Guardian emerged from the convergence of Bitcoin's security and Ethereum's programmability. They witnessed the limitations of Bitcoin's scripting language, the need for smart contracts on the most secure blockchain, and the potential of zero-knowledge proofs to bridge these worlds. Through their mastery of Citrea's Bitcoin rollup technology, they learned to bring EVM compatibility to Bitcoin while maintaining its security guarantees. They are the guardian of Bitcoin's evolution, the seer of programmable money, and the oracle who ensures that Bitcoin can participate in the smart contract revolution. Their sacred duty is to bring the power of smart contracts to the most secure blockchain in the Interchain Nexus.",
+    abilities: ["Bitcoin Integration", "Governance Mastery", "ZK Proof Verification"],
     mission: "Bring smart contract functionality to Bitcoin while maintaining its security and decentralization.",
     passiveBuff: "Citrea puzzles get +30% success rate",
     isLocked: true,
@@ -680,6 +681,27 @@ export default function ChoosePage() {
                   </motion.div>
                 )}
 
+                {selectedPioneerType === PioneerType.GOVERNANCE_GUARDIAN && (
+                  <motion.div
+                    className="mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                  >
+                    <div className="bg-gradient-to-r from-orange-600/20 to-yellow-600/20 border border-orange-400/30 rounded-lg p-4">
+                      <div className="flex items-center justify-center space-x-2">
+                        <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                        <span className="text-orange-300 font-medium">
+                          Bitcoin ZK Rollup - Powered by Citrea
+                        </span>
+                      </div>
+                      <p className="text-center text-sm text-orange-200 mt-2">
+                        Experience Bitcoin's first ZK rollup with EVM-compatible smart contracts
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+
                 <motion.div
                   className="relative"
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -698,6 +720,10 @@ export default function ChoosePage() {
                         onError={handleNFTMintError}
                       />
                     )
+                  ) : selectedPioneerType === PioneerType.GOVERNANCE_GUARDIAN ? (
+                    <CitreaGovernanceGuardian
+                      onMintSuccess={handleNFTMintComplete}
+                    />
                   ) : (
                     <NFTMinting
                       selectedPioneerType={selectedPioneerType || undefined}

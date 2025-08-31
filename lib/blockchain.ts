@@ -6,7 +6,8 @@ export enum PioneerType {
   SOCIAL_ARCHITECT = 0,    // Lisk - Builder of Worlds
   IDENTITY_GUARDIAN = 1,   // ENS - Keeper of Names  
   DATA_WEAVER = 2,         // Filecoin - Archivist of the Nexus
-  ORACLE_SEER = 3          // Flare - Truth Seeker of the Cosmos
+  ORACLE_SEER = 3,         // Flare - Truth Seeker of the Cosmos
+  GOVERNANCE_GUARDIAN = 4  // Citrea - Guardian of Bitcoin Governance
 }
 
 // Pioneer data structure
@@ -363,6 +364,14 @@ export const NETWORK_CONFIG = {
     rpcUrls: { default: { http: ['https://rpc.api.testnet.lisk.com'] } },
     blockExplorers: { default: { name: 'LiskScan Testnet', url: 'https://testnet.liskscan.com' } },
   },
+  // Citrea Testnet - Bitcoin ZK Rollup
+  1001: {
+    name: 'Citrea Testnet',
+    chainId: 1001,
+    nativeCurrency: { name: 'Citrea Bitcoin', symbol: 'cBTC', decimals: 18 },
+    rpcUrls: { default: { http: ['https://rpc.citrea.xyz'] } },
+    blockExplorers: { default: { name: 'Citrea Explorer', url: 'https://explorer.citrea.xyz' } },
+  },
 } as const
 
 // Helper functions
@@ -438,6 +447,14 @@ export function getPioneerTypeInfo(type: PioneerType) {
       description: 'Seeker of truth through oracle data and randomness',
       image: '/flare_oracle_seer_card_refined.png',
     },
+    [PioneerType.GOVERNANCE_GUARDIAN]: {
+      name: 'The Governance Guardian',
+      title: 'Guardian of Bitcoin Governance',
+      realm: 'Citrea',
+      rarity: 'Legendary',
+      description: 'Guardian of Bitcoin governance through ZK rollup technology',
+      image: '/citrea_governance_guardian_card_refined.png',
+    },
   }
   
   return typeInfo[type]
@@ -449,6 +466,7 @@ export function getPioneerTypeFromRealm(realm: string): PioneerType | null {
     'ENS': PioneerType.IDENTITY_GUARDIAN,
     'Filecoin': PioneerType.DATA_WEAVER,
     'Flare': PioneerType.ORACLE_SEER,
+    'Citrea': PioneerType.GOVERNANCE_GUARDIAN,
   }
   
   return realmMap[realm as keyof typeof realmMap] || null
@@ -461,6 +479,7 @@ export function getChainIdForPioneerType(pioneerType: PioneerType): number {
     [PioneerType.IDENTITY_GUARDIAN]: 11155111, // Ethereum Sepolia (ENS)
     [PioneerType.DATA_WEAVER]: 314159, // Filecoin Calibration
     [PioneerType.ORACLE_SEER]: 114, // Flare Testnet
+    [PioneerType.GOVERNANCE_GUARDIAN]: 1001, // Citrea Testnet
   }
   
   return chainMap[pioneerType]
@@ -473,6 +492,7 @@ export function getNetworkNameForPioneerType(pioneerType: PioneerType): string {
     [PioneerType.IDENTITY_GUARDIAN]: 'Ethereum Sepolia',
     [PioneerType.DATA_WEAVER]: 'Filecoin Calibration',
     [PioneerType.ORACLE_SEER]: 'Flare Testnet',
+    [PioneerType.GOVERNANCE_GUARDIAN]: 'Citrea Testnet',
   }
   
   return networkMap[pioneerType]

@@ -74,6 +74,7 @@ export default function InventoryPage() {
 
   // Mock game items and achievements (these would come from your game system)
   const [gameItems] = useState([
+    // Flare Oracle Seer Items
     {
       id: 1,
       name: "Crystalline Shard",
@@ -81,27 +82,210 @@ export default function InventoryPage() {
       rarity: "legendary",
       description: "A shard of pure cosmic energy that enhances Oracle powers",
       image: "/crystalline-shard-with-cosmic-energy.png",
-      obtained: true
+      obtained: true,
+      realm: "Flare"
     },
     {
       id: 2,
-      name: "Memory Tablet",
-      type: "artifact",
-      rarity: "epic",
-      description: "An ancient tablet that preserves knowledge for eternity",
-      image: "/glowing-scroll-with-encrypted-symbols.png",
-      obtained: false
-    },
-    {
-      id: 3,
       name: "Oracle Eye",
       type: "ability",
       rarity: "legendary",
       description: "The mystical eye that sees into the future",
       image: "/mystical-oracle-eye-with-data-streams.png",
-      obtained: true
+      obtained: true,
+      realm: "Flare"
+    },
+    {
+      id: 3,
+      name: "Flare Predictor",
+      type: "tool",
+      rarity: "epic",
+      description: "A device that predicts market movements using Flare's oracle data",
+      image: "/futuristic-citadel-with-governance-symbols.png",
+      obtained: false,
+      realm: "Flare",
+      unlockType: "task",
+      unlockRequirement: "Complete 5 oracle predictions",
+      unlockProgress: 3,
+      unlockTarget: 5
+    },
+    {
+      id: 4,
+      name: "Truth Seeker's Staff",
+      type: "weapon",
+      rarity: "epic",
+      description: "A staff that channels the power of Flare's oracles",
+      image: "/cyberpunk-archer-with-glowing-bow.png",
+      obtained: false,
+      realm: "Flare",
+      unlockType: "purchase",
+      price: 100,
+      currency: "FLR"
+    },
+    
+    // ENS Identity Guardian Items
+    {
+      id: 5,
+      name: "Name Registry Key",
+      type: "artifact",
+      rarity: "epic",
+      description: "A mystical key that unlocks the secrets of the ENS registry",
+      image: "/glowing-scroll-with-encrypted-symbols.png",
+      obtained: false,
+      realm: "ENS",
+      unlockType: "task",
+      unlockRequirement: "Verify 10 ENS domains",
+      unlockProgress: 7,
+      unlockTarget: 10
+    },
+    {
+      id: 6,
+      name: "Identity Shield",
+      type: "armor",
+      rarity: "legendary",
+      description: "A protective shield that guards against identity theft",
+      image: "/ens_identity_guardian_card_refined.png",
+      obtained: false,
+      realm: "ENS",
+      unlockType: "purchase",
+      price: 250,
+      currency: "ETH"
+    },
+    {
+      id: 7,
+      name: "Domain Verifier",
+      type: "tool",
+      rarity: "rare",
+      description: "A tool that verifies the authenticity of ENS domains",
+      image: "/futuristic-data-archivist-with-holographic-display.png",
+      obtained: false,
+      realm: "ENS",
+      unlockType: "task",
+      unlockRequirement: "Complete ENS Guardian story",
+      unlockProgress: 0,
+      unlockTarget: 1
+    },
+    
+    // Filecoin Data Weaver Items
+    {
+      id: 8,
+      name: "Memory Tablet",
+      type: "artifact",
+      rarity: "epic",
+      description: "An ancient tablet that preserves knowledge for eternity",
+      image: "/glowing-scroll-with-encrypted-symbols.png",
+      obtained: false,
+      realm: "Filecoin",
+      unlockType: "task",
+      unlockRequirement: "Store 1TB of data",
+      unlockProgress: 0.6,
+      unlockTarget: 1
+    },
+    {
+      id: 9,
+      name: "Storage Crystal",
+      type: "artifact",
+      rarity: "legendary",
+      description: "A crystal that can store infinite amounts of data",
+      image: "/towering-data-storage-facility-with-glowing-cores.png",
+      obtained: false,
+      realm: "Filecoin",
+      unlockType: "purchase",
+      price: 500,
+      currency: "FIL"
+    },
+    {
+      id: 10,
+      name: "Data Retrieval Orb",
+      type: "tool",
+      rarity: "epic",
+      description: "An orb that can instantly retrieve any stored data",
+      image: "/futuristic-data-archivist-with-holographic-display.png",
+      obtained: false,
+      realm: "Filecoin",
+      unlockType: "task",
+      unlockRequirement: "Retrieve 100 files successfully",
+      unlockProgress: 45,
+      unlockTarget: 100
+    },
+    
+    // Lisk Social Architect Items (Locked)
+    {
+      id: 11,
+      name: "Community Builder's Hammer",
+      type: "weapon",
+      rarity: "legendary",
+      description: "A hammer that forges strong social connections",
+      image: "/base_social_architect_card_refined.png",
+      obtained: false,
+      realm: "Lisk",
+      locked: true
+    },
+    {
+      id: 12,
+      name: "Social Graph Compass",
+      type: "tool",
+      rarity: "epic",
+      description: "A compass that navigates the complex web of social connections",
+      image: "/diplomatic-blockchain-negotiator-with-energy-patte.png",
+      obtained: false,
+      realm: "Lisk",
+      locked: true
+    },
+    
+    // Governance Consensus Weaver Items (Locked)
+    {
+      id: 13,
+      name: "Consensus Crown",
+      type: "artifact",
+      rarity: "legendary",
+      description: "A crown that brings harmony to all blockchain communities",
+      image: "/lisk_consensus_weaver_card_refined.png",
+      obtained: false,
+      realm: "Governance",
+      locked: true
+    },
+    {
+      id: 14,
+      name: "Voting Scepter",
+      type: "weapon",
+      rarity: "epic",
+      description: "A scepter that ensures fair and transparent governance",
+      image: "/futuristic-citadel-with-governance-symbols.png",
+      obtained: false,
+      realm: "Governance",
+      locked: true
     }
   ])
+
+  // Mock player token balances
+  const [playerBalances] = useState({
+    FLR: 150,
+    ETH: 0.5,
+    FIL: 25,
+    LSK: 0,
+    GOV: 0
+  })
+
+  // Functions for item interaction
+  const handlePurchaseItem = (item: any) => {
+    if (playerBalances[item.currency as keyof typeof playerBalances] >= item.price) {
+      // In a real app, this would trigger a blockchain transaction
+      console.log(`Purchasing ${item.name} for ${item.price} ${item.currency}`)
+      // Update item status to obtained
+      // This would be handled by your state management system
+    } else {
+      alert(`Insufficient ${item.currency} balance!`)
+    }
+  }
+
+  const handleUnlockItem = (item: any) => {
+    if (item.unlockProgress >= item.unlockTarget) {
+      console.log(`Unlocking ${item.name} by completing task`)
+      // Update item status to obtained
+      // This would be handled by your state management system
+    }
+  }
 
   const [achievements] = useState([
     {
@@ -165,7 +349,7 @@ export default function InventoryPage() {
                     <a href="/play">Play</a>
                   </Button>
                   <Button variant="ghost" className="glow-hover text-gray-300 hover:text-cyan-400">
-                    Leaderboard
+                    <a href="/leaderboard">Leaderboard</a>
                   </Button>
                 </div>
               </div>
@@ -238,7 +422,7 @@ export default function InventoryPage() {
                   <a href="/play">Play</a>
                 </Button>
                 <Button variant="ghost" className="glow-hover text-gray-300 hover:text-cyan-400">
-                  Leaderboard
+                  <a href="/leaderboard">Leaderboard</a>
                 </Button>
               </div>
             </div>
@@ -252,6 +436,21 @@ export default function InventoryPage() {
       {/* Main Content */}
       <main className="pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          
+          {/* Token Balances */}
+          <div className="mb-8">
+            <div className="bg-card/30 backdrop-blur-sm border border-cyan-400/20 rounded-lg p-4">
+              <h3 className="text-lg font-semibold text-white mb-3">Token Balances</h3>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {Object.entries(playerBalances).map(([currency, balance]) => (
+                  <div key={currency} className="bg-card/50 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-cyan-400">{balance}</div>
+                    <div className="text-sm text-gray-300">{currency}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
           
           {/* Header */}
           <div className="text-center mb-12">
@@ -480,58 +679,167 @@ export default function InventoryPage() {
 
             {/* Items Tab */}
             <TabsContent value="items" className="mt-8">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {gameItems.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <Card className={`bg-card/50 backdrop-blur-sm transition-all duration-300 ${
-                      item.obtained 
-                        ? 'border-green-400/30 hover:border-green-400/50' 
-                        : 'border-gray-600/30 opacity-60'
-                    }`}>
-                      <CardHeader>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden">
-                            <img 
-                              src={item.image} 
-                              alt={item.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <Badge 
-                            variant="outline" 
-                            className={
-                              item.rarity === 'legendary' 
-                                ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
-                                : 'bg-purple-500/20 text-purple-300 border-purple-500/30'
-                            }
+              <div className="space-y-8">
+                {['Flare', 'ENS', 'Filecoin', 'Lisk', 'Governance'].map((realm, realmIndex) => {
+                  const realmItems = gameItems.filter(item => item.realm === realm)
+                  if (realmItems.length === 0) return null
+                  
+                  return (
+                    <motion.div
+                      key={realm}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: realmIndex * 0.1 }}
+                    >
+                      <div className="mb-4">
+                        <h3 className="text-xl font-bold text-white mb-2">{realm} Realm Items</h3>
+                        <div className="h-px bg-gradient-to-r from-cyan-400/50 to-purple-400/50"></div>
+                      </div>
+                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {realmItems.map((item, index) => (
+                          <motion.div
+                            key={item.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: (realmIndex * 0.1) + (index * 0.05) }}
                           >
-                            {item.rarity}
-                          </Badge>
-                        </div>
-                        <CardTitle className="text-lg">{item.name}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <p className="text-muted-foreground text-sm">{item.description}</p>
-                        <div className="flex items-center justify-between">
-                          <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
-                            {item.type}
-                          </Badge>
-                          <Badge 
-                            variant={item.obtained ? "default" : "outline"}
-                            className={item.obtained ? "bg-green-500/20 text-green-300" : ""}
-                          >
-                            {item.obtained ? "Obtained" : "Not Obtained"}
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+                            <Card className={`bg-card/50 backdrop-blur-sm transition-all duration-300 relative ${
+                              item.locked
+                                ? 'border-gray-600/30 opacity-40'
+                                : item.obtained 
+                                  ? 'border-green-400/30 hover:border-green-400/50' 
+                                  : 'border-gray-600/30 opacity-60'
+                            }`}>
+                              {item.locked && (
+                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-10 rounded-lg">
+                                  <div className="text-center">
+                                    <div className="w-8 h-8 mx-auto mb-2 bg-gray-600 rounded-full flex items-center justify-center">
+                                      <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                      </svg>
+                                    </div>
+                                    <p className="text-xs text-gray-300 font-medium">LOCKED</p>
+                                  </div>
+                                </div>
+                              )}
+                              <CardHeader>
+                                <div className="flex items-center justify-between mb-4">
+                                  <div className="w-12 h-12 rounded-lg overflow-hidden">
+                                    <img 
+                                      src={item.image} 
+                                      alt={item.name}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                  <Badge 
+                                    variant="outline" 
+                                    className={
+                                      item.rarity === 'legendary' 
+                                        ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30'
+                                        : item.rarity === 'epic'
+                                        ? 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                                        : 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+                                    }
+                                  >
+                                    {item.rarity}
+                                  </Badge>
+                                </div>
+                                <CardTitle className="text-lg">{item.name}</CardTitle>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                <p className="text-muted-foreground text-sm">{item.description}</p>
+                                
+                                {/* Unlock Requirements */}
+                                {!item.obtained && !item.locked && item.unlockType && (
+                                  <div className="space-y-2">
+                                    {item.unlockType === 'task' && (
+                                      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                                        <div className="flex items-center justify-between mb-2">
+                                          <span className="text-xs text-blue-300 font-medium">Task Progress</span>
+                                          <span className="text-xs text-blue-300">
+                                            {item.unlockProgress}/{item.unlockTarget}
+                                          </span>
+                                        </div>
+                                        <div className="w-full bg-gray-700 rounded-full h-2">
+                                          <div 
+                                            className="bg-blue-400 h-2 rounded-full transition-all duration-300"
+                                            style={{ 
+                                              width: `${Math.min((item.unlockProgress / item.unlockTarget) * 100, 100)}%` 
+                                            }}
+                                          ></div>
+                                        </div>
+                                        <p className="text-xs text-blue-200 mt-1">{item.unlockRequirement}</p>
+                                        {item.unlockProgress >= item.unlockTarget && (
+                                          <Button 
+                                            size="sm" 
+                                            className="w-full mt-2 bg-green-600 hover:bg-green-700"
+                                            onClick={() => handleUnlockItem(item)}
+                                          >
+                                            Unlock Item
+                                          </Button>
+                                        )}
+                                      </div>
+                                    )}
+                                    
+                                    {item.unlockType === 'purchase' && (
+                                      <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3">
+                                        <div className="flex items-center justify-between mb-2">
+                                          <span className="text-xs text-purple-300 font-medium">Price</span>
+                                          <span className="text-xs text-purple-300">
+                                            {item.price} {item.currency}
+                                          </span>
+                                        </div>
+                                        <div className="flex items-center justify-between mb-2">
+                                          <span className="text-xs text-gray-400">Your Balance</span>
+                                          <span className="text-xs text-gray-300">
+                                            {playerBalances[item.currency as keyof typeof playerBalances]} {item.currency}
+                                          </span>
+                                        </div>
+                                        <Button 
+                                          size="sm" 
+                                          className={`w-full ${
+                                            playerBalances[item.currency as keyof typeof playerBalances] >= item.price
+                                              ? 'bg-purple-600 hover:bg-purple-700'
+                                              : 'bg-gray-600 cursor-not-allowed'
+                                          }`}
+                                          onClick={() => handlePurchaseItem(item)}
+                                          disabled={playerBalances[item.currency as keyof typeof playerBalances] < item.price}
+                                        >
+                                          {playerBalances[item.currency as keyof typeof playerBalances] >= item.price 
+                                            ? 'Purchase' 
+                                            : 'Insufficient Funds'
+                                          }
+                                        </Button>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                                
+                                <div className="flex items-center justify-between">
+                                  <Badge variant="secondary" className="bg-blue-500/20 text-blue-300">
+                                    {item.type}
+                                  </Badge>
+                                  <Badge 
+                                    variant={item.locked ? "outline" : item.obtained ? "default" : "outline"}
+                                    className={
+                                      item.locked 
+                                        ? "bg-gray-500/20 text-gray-300"
+                                        : item.obtained 
+                                          ? "bg-green-500/20 text-green-300" 
+                                          : ""
+                                    }
+                                  >
+                                    {item.locked ? "Locked" : item.obtained ? "Obtained" : "Not Obtained"}
+                                  </Badge>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )
+                })}
               </div>
             </TabsContent>
 

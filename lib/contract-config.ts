@@ -47,6 +47,10 @@ export const CONTRACT_ADDRESSES = {
   4202: {
     pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_LISK_SEPOLIA || '0x5FbDB2315678afecb367f032d93F642f64180aa3',
   },
+  // Citrea Testnet - Governance Guardian Contract
+  1001: {
+    pioneer: process.env.NEXT_PUBLIC_PIONEER_CONTRACT_CITREA_TESTNET || '0x0000000000000000000000000000000000000000',
+  },
 } as const
 
 // IPFS Configuration
@@ -67,6 +71,7 @@ export const RPC_CONFIG = {
   flare: process.env.NEXT_PUBLIC_FLARE_RPC_URL || 'https://flare-api.flare.network/ext/C/rpc',
   flareTestnet: process.env.NEXT_PUBLIC_FLARE_TESTNET_RPC_URL || 'https://coston2-api.flare.network/ext/C/rpc',
   lisk: process.env.NEXT_PUBLIC_LISK_RPC_URL || 'https://rpc.api.lisk.com',
+  citreaTestnet: process.env.NEXT_PUBLIC_CITREA_TESTNET_RPC_URL || 'https://rpc.citrea.xyz',
 }
 
 // Helper function to get contract address

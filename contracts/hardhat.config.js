@@ -89,6 +89,13 @@ module.exports = {
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
       chainId: 4202, // Lisk Sepolia testnet chain ID
     },
+    
+    // Citrea Network (Bitcoin ZK Rollup)
+    citreaTestnet: {
+      url: process.env.CITREA_TESTNET_RPC_URL || "https://rpc.citrea.xyz",
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      chainId: 1001, // Citrea testnet chain ID
+    },
   },
   
   // Gas configuration
